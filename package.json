@@ -26,6 +26,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.47",
     "@sudocode/lambda-utils-js": "git+ssh://git@github.com:tleef/lambda-utils-js.git",
+    "@sudocode/utils-js": "https://s3.amazonaws.com/sudocode-npm-packages/sudocode-utils-js-v1.0.0.tgz",
     "aws-sdk": "^2.245.1"
   }
 }
