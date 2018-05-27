@@ -7,7 +7,7 @@ export default class Bool {
     return o.BOOL
   }
 
-  static validate(o) {
+  static validate (o) {
     return o === true || o === false
   }
 }

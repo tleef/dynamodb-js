@@ -7,7 +7,7 @@ export default class Null {
     return null
   }
 
-  static validate(o) {
+  static validate (o) {
     return o === null
   }
 }

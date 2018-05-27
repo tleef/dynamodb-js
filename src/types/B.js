@@ -7,7 +7,7 @@ export default class B {
     return Buffer.from(o.B, 'base64')
   }
 
-  static validate(o) {
+  static validate (o) {
     return Buffer.isBuffer(o)
   }
 }
