@@ -3,15 +3,7 @@
 import chai from 'chai'
 
 import Schema from './Schema'
-import B from './types/B'
-import Bool from './types/Bool'
-import BS from './types/BS'
-import Json from './types/Json'
-import N from './types/N'
-import NS from './types/NS'
-import Null from './types/Null'
-import S from './types/S'
-import SS from './types/SS'
+import types from './types'
 
 const expect = chai.expect
 
@@ -19,15 +11,15 @@ describe('Schema', () => {
   describe('Schema.toDynamo()', () => {
     it('should correctly transform the input object', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const item = schema.toDynamo({
@@ -65,15 +57,15 @@ describe('Schema', () => {
 
     it('should ignore unknown keys', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const item = schema.toDynamo({
@@ -99,15 +91,15 @@ describe('Schema', () => {
   describe('Schema.fromDynamo()', () => {
     it('should correct transform the dynamo item', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const js = schema.fromDynamo({
@@ -145,15 +137,15 @@ describe('Schema', () => {
 
     it('should ignore unknown keys', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const js = schema.fromDynamo({
@@ -181,15 +173,15 @@ describe('Schema', () => {
   describe('Schema.validate()', () => {
     it('should return true for valid objects', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const res = schema.validate({
@@ -212,15 +204,15 @@ describe('Schema', () => {
 
     it('should return true for partial objects', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const res = schema.validate({
@@ -232,15 +224,15 @@ describe('Schema', () => {
 
     it('should return false for invalid objects', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const bRes = schema.validate({b: 'test'})
@@ -271,15 +263,15 @@ describe('Schema', () => {
 
     it('should return false if unknown key is found', () => {
       const schema = new Schema({
-        b: B,
-        bool: Bool,
-        bs: BS,
-        json: Json,
-        n: N,
-        ns: NS,
-        null: Null,
-        s: S,
-        ss: SS
+        b: types.B,
+        bool: types.Bool,
+        bs: types.BS,
+        json: types.Json,
+        n: types.N,
+        ns: types.NS,
+        null: types.Null,
+        s: types.S,
+        ss: types.SS
       })
 
       const res = schema.validate({
