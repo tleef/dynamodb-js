@@ -1,10 +1,14 @@
 import AWS from 'aws-sdk'
 
+import Schema from './Schema'
+
 const dynamodb = new AWS.DynamoDB()
 
 export default class DynamoDB {
   constructor (tableName, keySchema, itemSchema) {
-    itemSchema = Object.assign({}, itemSchema, keySchema)
+    if (itemSchema) {
+      itemSchema = new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+    }
 
     this.tableName = tableName
     this.keySchema = keySchema
@@ -16,7 +20,7 @@ export default class DynamoDB {
     const expressionAttributeNames = {}
     let conditionExpression = ''
 
-    Object.keys(this.keySchema).forEach((name) => {
+    Object.keys(this.keySchema.template).forEach((name) => {
       let key = this.makeKey()
       while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
         key = this.makeKey()
@@ -57,7 +61,7 @@ export default class DynamoDB {
     const expressionAttributeNames = {}
     let conditionExpression = ''
 
-    Object.keys(this.keySchema).forEach((name) => {
+    Object.keys(this.keySchema.template).forEach((name) => {
       let key = this.makeKey()
       while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
         key = this.makeKey()
@@ -97,7 +101,7 @@ export default class DynamoDB {
 
       expressionAttributeNames[`#${key}`] = name
 
-      if (this.keySchema.hasOwnProperty(name)) {
+      if (this.keySchema.template.hasOwnProperty(name)) {
         if (conditionExpression) {
           conditionExpression += ' AND '
         }
@@ -138,7 +142,7 @@ export default class DynamoDB {
         key = this.makeKey()
       }
 
-      if (!this.keySchema.hasOwnProperty(name)) {
+      if (!this.keySchema.template.hasOwnProperty(name)) {
         expressionAttributeNames[`#${key}`] = name
         expressionAttributeValues[`:${key}`] = item[name]
 
