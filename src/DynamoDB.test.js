@@ -338,4 +338,95 @@ describe('DynamoDB', () => {
       console.log(JSON.stringify(client.updateItem.getCall(0).args, null, 2))
     })
   })
+
+  describe('#getItem()', () => {
+    beforeEach(() => {
+      sinon.stub(DynamoDB.prototype, 'dynamodb')
+    })
+    afterEach(() => {
+      DynamoDB.prototype.dynamodb.restore()
+    })
+
+    it('should call #dynamodb().getItem() with correct params', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const dynamo = new DynamoDB('tableName', keySchema)
+
+      const client = {
+        getItem: sinon.stub().returns({
+          promise: sinon.stub().resolves()
+        })
+      }
+
+      dynamo.dynamodb.returns(client)
+
+      await dynamo.getItem({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      console.log(JSON.stringify(client.getItem.getCall(0).args, null, 2))
+    })
+  })
+
+  describe('#query()', () => {
+    beforeEach(() => {
+      sinon.stub(DynamoDB.prototype, 'dynamodb')
+    })
+    afterEach(() => {
+      DynamoDB.prototype.dynamodb.restore()
+    })
+
+    it('should call #dynamodb().query() with correct params', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const dynamo = new DynamoDB('tableName', keySchema)
+
+      const client = {
+        query: sinon.stub().returns({
+          promise: sinon.stub().resolves()
+        })
+      }
+
+      dynamo.dynamodb.returns(client)
+
+      await dynamo.query({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      console.log(JSON.stringify(client.query.getCall(0).args, null, 2))
+    })
+  })
+
+  describe('#scan()', () => {
+    beforeEach(() => {
+      sinon.stub(DynamoDB.prototype, 'dynamodb')
+    })
+    afterEach(() => {
+      DynamoDB.prototype.dynamodb.restore()
+    })
+
+    it('should call #dynamodb().scan() with correct params', async () => {
+      const dynamo = new DynamoDB('tableName')
+
+      const client = {
+        scan: sinon.stub().returns({
+          promise: sinon.stub().resolves()
+        })
+      }
+
+      dynamo.dynamodb.returns(client)
+
+      await dynamo.scan()
+
+      console.log(JSON.stringify(client.scan.getCall(0).args, null, 2))
+    })
+  })
 })

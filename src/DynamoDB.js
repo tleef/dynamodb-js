@@ -165,6 +165,104 @@ export default class DynamoDB {
     return this.dynamodb().updateItem(params).promise()
   }
 
+  getItem (key) {
+    const params = {
+      Key: this.keySchema.toDynamo(key),
+      TableName: this.tableName
+    }
+
+    const data = this.dynamodb().getItem(params).promise()
+
+    if (!data || !data.Item) {
+      return null
+    }
+
+    const item = this.itemSchema.fromDynamo(data.Item)
+
+    return {item}
+  }
+
+  query (key, exclusiveStartKey) {
+    const expressionAttributeNames = {}
+    const expressionAttributeValues = {}
+    let keyConditionExpression = ''
+
+    const dynamoKey = this.keySchema.toDynamo(key)
+
+    Object.keys(dynamoKey).forEach((name) => {
+      let k = this.makeKey()
+      while (expressionAttributeNames.hasOwnProperty(`#${k}`)) {
+        k = this.makeKey()
+      }
+
+      expressionAttributeNames[`#${k}`] = name
+      expressionAttributeValues[`:${k}`] = dynamoKey[name]
+
+      if (keyConditionExpression) {
+        keyConditionExpression += ' AND '
+      }
+
+      keyConditionExpression += `#${k} = :${k}`
+    })
+
+    const params = {
+      TableName: this.tableName,
+      KeyConditionExpression: keyConditionExpression,
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues
+    }
+
+    if (exclusiveStartKey) {
+      params.ExclusiveStartKey = this.keySchema.toDynamo(exclusiveStartKey)
+    }
+
+    const data = this.dynamodb().query(params).promise()
+
+    if (!data || !data.Items) {
+      return null
+    }
+
+    const items = data.Items.map((item) => {
+      return this.itemSchema.fromDynamo(item)
+    })
+
+    const ret = {items}
+
+    if (data.LastEvaluatedKey) {
+      ret.lastEvaluatedKey = this.keySchema.fromDynamo(data.LastEvaluatedKey)
+    }
+
+    return ret
+  }
+
+  scan (exclusiveStartKey) {
+    const params = {
+      TableName: this.tableName
+    }
+
+    if (exclusiveStartKey) {
+      params.ExclusiveStartKey = this.keySchema.toDynamo(exclusiveStartKey)
+    }
+
+    const data = this.dynamodb().scan(params).promise()
+
+    if (!data || !data.Items) {
+      return null
+    }
+
+    const items = data.Items.map((item) => {
+      return this.itemSchema.fromDynamo(item)
+    })
+
+    const ret = {items}
+
+    if (data.LastEvaluatedKey) {
+      ret.lastEvaluatedKey = this.keySchema.fromDynamo(data.LastEvaluatedKey)
+    }
+
+    return ret
+  }
+
   dynamodb () {
     return dynamodb
   }
