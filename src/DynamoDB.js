@@ -165,13 +165,13 @@ export default class DynamoDB {
     return this.dynamodb().updateItem(params).promise()
   }
 
-  getItem (key) {
+  async getItem (key) {
     const params = {
       Key: this.keySchema.toDynamo(key),
       TableName: this.tableName
     }
 
-    const data = this.dynamodb().getItem(params).promise()
+    const data = await this.dynamodb().getItem(params).promise()
 
     if (!data || !data.Item) {
       return null
@@ -182,7 +182,7 @@ export default class DynamoDB {
     return {item}
   }
 
-  query (key, exclusiveStartKey) {
+  async query (key, exclusiveStartKey) {
     const expressionAttributeNames = {}
     const expressionAttributeValues = {}
     let keyConditionExpression = ''
@@ -216,7 +216,7 @@ export default class DynamoDB {
       params.ExclusiveStartKey = this.keySchema.toDynamo(exclusiveStartKey)
     }
 
-    const data = this.dynamodb().query(params).promise()
+    const data = await this.dynamodb().query(params).promise()
 
     if (!data || !data.Items) {
       return null
@@ -235,7 +235,7 @@ export default class DynamoDB {
     return ret
   }
 
-  scan (exclusiveStartKey) {
+  async scan (exclusiveStartKey) {
     const params = {
       TableName: this.tableName
     }
@@ -244,7 +244,7 @@ export default class DynamoDB {
       params.ExclusiveStartKey = this.keySchema.toDynamo(exclusiveStartKey)
     }
 
-    const data = this.dynamodb().scan(params).promise()
+    const data = await this.dynamodb().scan(params).promise()
 
     if (!data || !data.Items) {
       return null
