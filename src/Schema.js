@@ -7,7 +7,7 @@ export default class Schema {
     return Object.keys(o).reduce((previous, key) => {
       const type = this.template[key]
 
-      if (type) {
+      if (type && type.validate(o[key])) {
         previous[key] = type.toDynamo(o[key])
       }
 
