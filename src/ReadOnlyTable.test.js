@@ -86,13 +86,13 @@ describe('ReadOnlyTable', () => {
       expect(client.getItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash"
+            S: 'hash'
           },
           range: {
-            S: "range"
+            S: 'range'
           }
         },
-        TableName: "tableName"
+        TableName: 'tableName'
       })
     })
   })
@@ -128,18 +128,18 @@ describe('ReadOnlyTable', () => {
       })
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
-        TableName: "tableName",
-        KeyConditionExpression: "#hash = :hash AND #range = :range",
+        TableName: 'tableName',
+        KeyConditionExpression: '#hash = :hash AND #range = :range',
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range"
+          '#hash': 'hash',
+          '#range': 'range'
         },
         ExpressionAttributeValues: {
-          ":hash": {
-            S: "hash"
+          ':hash': {
+            S: 'hash'
           },
-          ":range": {
-            S: "range"
+          ':range': {
+            S: 'range'
           }
         }
       })
@@ -168,7 +168,7 @@ describe('ReadOnlyTable', () => {
       await roTable.scan()
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
-        TableName: "tableName"
+        TableName: 'tableName'
       })
     })
   })

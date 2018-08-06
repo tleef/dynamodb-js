@@ -166,7 +166,7 @@ describe('Table', () => {
       })
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       })
 
       const table = new Table('tableName', keySchema, itemSchema)
@@ -186,7 +186,7 @@ describe('Table', () => {
       await table.insert({
         hash: 'hash',
         range: 'range',
-        abc: 'abc',
+        abc: 'abc'
       })
 
       expect(table.makeKey).to.have.callCount(3)
@@ -431,7 +431,7 @@ describe('Table', () => {
       })
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       })
 
       const table = new Table('tableName', keySchema, itemSchema)
@@ -451,7 +451,7 @@ describe('Table', () => {
       await table.replace({
         hash: 'hash',
         range: 'range',
-        abc: 'abc',
+        abc: 'abc'
       })
 
       expect(table.makeKey).to.have.callCount(3)
@@ -604,7 +604,7 @@ describe('Table', () => {
       })
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       })
 
       const table = new Table('tableName', keySchema, itemSchema)
@@ -625,7 +625,7 @@ describe('Table', () => {
       await table.update({
         hash: 'hash',
         range: 'range',
-        abc: 'abc',
+        abc: 'abc'
       })
 
       expect(table.makeKey).to.have.callCount(4)
@@ -780,7 +780,7 @@ describe('Table', () => {
 
       const itemSchema = new Schema({
         abc: types.S,
-        xyz: types.S,
+        xyz: types.S
       })
 
       const table = new Table('tableName', keySchema, itemSchema)
@@ -801,7 +801,7 @@ describe('Table', () => {
         hash: 'hash',
         range: 'range',
         abc: 'abc',
-        xyz: 'xyz',
+        xyz: 'xyz'
       })
 
       expect(table.makeKey).to.have.callCount(3)
@@ -818,7 +818,7 @@ describe('Table', () => {
         UpdateExpression: 'SET #one = :one, #two = :two',
         ExpressionAttributeNames: {
           '#one': 'abc',
-          '#two': 'xyz',
+          '#two': 'xyz'
         },
         ExpressionAttributeValues: {
           ':one': {
@@ -826,7 +826,7 @@ describe('Table', () => {
           },
           ':two': {
             S: 'xyz'
-          },
+          }
         }
       })
     })

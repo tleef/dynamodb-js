@@ -7,12 +7,12 @@ export default {
   ReadOnlyTable,
   Table,
   Schema,
-  types,
+  types
 }
 
 export {
   ReadOnlyTable,
   Table,
   Schema,
-  types,
+  types
 }

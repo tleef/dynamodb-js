@@ -92,21 +92,21 @@ describe('Gsi', () => {
       })
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
-        TableName: "tableName",
-        KeyConditionExpression: "#hash = :hash AND #range = :range",
+        TableName: 'tableName',
+        KeyConditionExpression: '#hash = :hash AND #range = :range',
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range"
+          '#hash': 'hash',
+          '#range': 'range'
         },
         ExpressionAttributeValues: {
-          ":hash": {
-            S: "hash"
+          ':hash': {
+            S: 'hash'
           },
-          ":range": {
-            S: "range"
+          ':range': {
+            S: 'range'
           }
         },
-        IndexName: "indexName"
+        IndexName: 'indexName'
       })
     })
   })
@@ -133,8 +133,8 @@ describe('Gsi', () => {
       await gsi.scan()
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
-        TableName: "tableName",
-        IndexName: "indexName"
+        TableName: 'tableName',
+        IndexName: 'indexName'
       })
     })
   })

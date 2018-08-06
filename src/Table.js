@@ -1,10 +1,6 @@
 import ReadOnlyTable from './ReadOnlyTable'
 
 export default class Table extends ReadOnlyTable {
-  constructor (tableName, keySchema, itemSchema) {
-    super(tableName, keySchema, itemSchema)
-  }
-
   async insert (o, opts = {}) {
     const item = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
