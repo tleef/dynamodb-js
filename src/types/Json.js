@@ -1,4 +1,4 @@
-import type from '@sudocode/utils-js/lib/validation/type'
+import type from '@tleef/type-js'
 
 export default class Json {
   static toDynamo (o) {

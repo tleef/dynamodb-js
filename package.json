@@ -1,7 +1,7 @@
 {
   "name": "@sudocode/dynamodb-js",
   "version": "1.0.0",
-  "main": "lib/",
+  "main": "lib/dynamodb.js",
   "scripts": {
     "build": "babel src --out-dir lib",
     "lint": "standard \"src/**/*.js\"",
@@ -11,22 +11,21 @@
   "repository": "git+https://github.com/tleef/dynamodb-js.git",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
-    "@babel/register": "^7.0.0-beta.49",
+    "@babel/cli": "^7.0.0-beta.56",
+    "@babel/core": "^7.0.0-beta.56",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.56",
+    "@babel/preset-env": "^7.0.0-beta.56",
+    "@babel/register": "^7.0.0-beta.56",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
-    "sinon": "^5.0.10",
-    "sinon-chai": "^3.1.0",
+    "sinon": "^6.1.4",
+    "sinon-chai": "^3.2.0",
     "standard": "^11.0.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.49",
-    "@sudocode/lambda-utils-js": "git+ssh://git@github.com:tleef/lambda-utils-js.git",
-    "@sudocode/utils-js": "https://s3.amazonaws.com/sudocode-npm-packages/sudocode-utils-js-v1.0.0.tgz",
+    "@babel/runtime": "^7.0.0-beta.56",
+    "@tleef/type-js": "^1.2.0",
     "aws-sdk": "^2.250.1"
   }
 }
