@@ -1,7 +1,6 @@
 import AWS from 'aws-sdk'
 
 import Schema from './Schema'
-import Gsi from './Gsi'
 
 const dynamodb = new AWS.DynamoDB()
 
@@ -14,10 +13,6 @@ export default class ReadOnlyTable {
     this.tableName = tableName
     this.keySchema = keySchema
     this.itemSchema = itemSchema
-  }
-
-  makeGsi (indexName, keySchema) {
-    return new Gsi(indexName, this.tableName, keySchema, this.itemSchema)
   }
 
   async getItem (key, opts = {}) {

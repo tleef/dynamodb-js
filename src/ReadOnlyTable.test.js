@@ -7,7 +7,6 @@ import sinonChai from 'sinon-chai'
 import AWS from 'aws-sdk'
 
 import ReadOnlyTable from './ReadOnlyTable'
-import Gsi from './Gsi'
 import Schema from './Schema'
 import types from './types'
 
@@ -52,53 +51,6 @@ describe('ReadOnlyTable', () => {
       const roTable = new ReadOnlyTable()
 
       expect(roTable.dynamodb()).to.be.an.instanceof(AWS.DynamoDB)
-    })
-  })
-
-  describe('makeGsi()', () => {
-    it('should return a Gsi', () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.N
-      })
-      const itemSchema = new Schema({
-        one: types.S,
-        two: types.S
-      })
-      const gsiKeySchema = new Schema({
-        one: types.S,
-        two: types.S
-      })
-
-      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
-      const gsi = roTable.makeGsi('indexName', gsiKeySchema)
-
-      expect(gsi).to.be.an.instanceof(Gsi)
-    })
-
-    it('should correctly assign values', () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.N
-      })
-      const itemSchema = new Schema({
-        one: types.S,
-        two: types.S
-      })
-      const gsiKeySchema = new Schema({
-        one: types.S,
-        two: types.S
-      })
-
-      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
-      const gsi = roTable.makeGsi('indexName', gsiKeySchema)
-
-      expect(gsi).to.be.an.instanceof(Gsi)
-
-      expect(gsi.indexName).to.equal('indexName')
-      expect(gsi.tableName).to.equal(roTable.tableName)
-      expect(gsi.keySchema).to.equal(gsiKeySchema)
-      expect(gsi.itemSchema).to.deep.equal(new Schema(Object.assign({}, roTable.itemSchema.template, gsiKeySchema.template)))
     })
   })
 

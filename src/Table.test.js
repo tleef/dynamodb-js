@@ -8,6 +8,7 @@ import Table from './Table'
 import ReadOnlyTable from './ReadOnlyTable'
 import Schema from './Schema'
 import types from './types'
+import Gsi from './Gsi'
 
 const expect = chai.expect
 
@@ -48,6 +49,53 @@ describe('Table', () => {
       expect(table.tableName).to.equal('tableName')
       expect(table.keySchema).to.equal(keySchema)
       expect(table.itemSchema).to.deep.equal(new Schema(Object.assign({}, itemSchema.template, keySchema.template)))
+    })
+  })
+
+  describe('makeGsi()', () => {
+    it('should return a Gsi', () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.N
+      })
+      const itemSchema = new Schema({
+        one: types.S,
+        two: types.S
+      })
+      const gsiKeySchema = new Schema({
+        one: types.S,
+        two: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+      const gsi = table.makeGsi('indexName', gsiKeySchema)
+
+      expect(gsi).to.be.an.instanceof(Gsi)
+    })
+
+    it('should correctly assign values', () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.N
+      })
+      const itemSchema = new Schema({
+        one: types.S,
+        two: types.S
+      })
+      const gsiKeySchema = new Schema({
+        one: types.S,
+        two: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+      const gsi = table.makeGsi('indexName', gsiKeySchema)
+
+      expect(gsi).to.be.an.instanceof(Gsi)
+
+      expect(gsi.indexName).to.equal('indexName')
+      expect(gsi.tableName).to.equal(table.tableName)
+      expect(gsi.keySchema).to.equal(gsiKeySchema)
+      expect(gsi.itemSchema).to.deep.equal(new Schema(Object.assign({}, table.itemSchema.template, gsiKeySchema.template)))
     })
   })
 

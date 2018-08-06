@@ -7,10 +7,6 @@ export default class Gsi extends ReadOnlyTable {
     this.indexName = indexName
   }
 
-  makeGsi () {
-    throw new Error('makeGsi is not allowed on a GSI')
-  }
-
   getItem () {
     throw new Error('getItem is not allowed on a GSI')
   }

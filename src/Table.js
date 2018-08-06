@@ -1,6 +1,11 @@
 import ReadOnlyTable from './ReadOnlyTable'
+import Gsi from './Gsi'
 
 export default class Table extends ReadOnlyTable {
+  makeGsi (indexName, keySchema) {
+    return new Gsi(indexName, this.tableName, keySchema, this.itemSchema)
+  }
+
   async insert (o, opts = {}) {
     const item = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
