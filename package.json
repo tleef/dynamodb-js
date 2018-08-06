@@ -10,7 +10,7 @@
   },
   "repository": "git+https://github.com/tleef/dynamodb-js.git",
   "author": "Tom Lee",
-  "license": "MIT",,
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/tleef/dynamodb-js/issues"
   },
