@@ -54,6 +54,29 @@ describe('ReadOnlyTable', () => {
     })
   })
 
+  describe('#makeKey()', () => {
+    it('should return a string', () => {
+      const roTable = new ReadOnlyTable()
+
+      expect(roTable.makeKey()).to.be.a('string')
+    })
+
+    it('should return a random string', () => {
+      const roTable = new ReadOnlyTable()
+
+      const one = roTable.makeKey()
+      const two = roTable.makeKey()
+
+      expect(one).to.not.equal(two)
+    })
+
+    it('should return a string of given length', () => {
+      const roTable = new ReadOnlyTable()
+
+      expect(roTable.makeKey(null, 10).length).to.equal(10)
+    })
+  })
+
   describe('#getItem()', () => {
     beforeEach(() => {
       sinon.stub(ReadOnlyTable.prototype, 'dynamodb')
@@ -95,6 +118,46 @@ describe('ReadOnlyTable', () => {
         TableName: 'tableName'
       })
     })
+
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
+
+      const client = {
+        getItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Item: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+
+      const res = await roTable.getItem({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
   })
 
   describe('#query()', () => {
@@ -125,6 +188,9 @@ describe('ReadOnlyTable', () => {
       await roTable.query({
         hash: 'hash',
         range: 'range'
+      }, {
+        hash: 'hash',
+        range: 'range'
       })
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
@@ -141,6 +207,146 @@ describe('ReadOnlyTable', () => {
           ':range': {
             S: 'range'
           }
+        },
+        ExclusiveStartKey: {
+          hash: { S: 'hash' },
+          range: { S: 'range' }
+        }
+      })
+    })
+
+    it('should retry if key is not unique', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema)
+
+      const client = {
+        query: sinon.stub().returns({
+          promise: sinon.stub().resolves()
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+      roTable.makeKey = sinon.stub()
+        .onCall(0).returns('one')
+        .onCall(1).returns('one')
+        .onCall(2).returns('two')
+
+      await roTable.query({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      expect(roTable.makeKey).to.have.callCount(3)
+      expect(client.query.getCall(0).args[0]).to.deep.equal({
+        TableName: 'tableName',
+        KeyConditionExpression: '#one = :one AND #two = :two',
+        ExpressionAttributeNames: {
+          '#one': 'hash',
+          '#two': 'range'
+        },
+        ExpressionAttributeValues: {
+          ':one': {
+            S: 'hash'
+          },
+          ':two': {
+            S: 'range'
+          }
+        }
+      })
+    })
+
+    it('should unmarshall returned items', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
+
+      const client = {
+        query: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Items: [
+              {
+                hash: {S: 'one'},
+                range: {S: 'one'},
+                abc: {S: 'one'}
+              },
+              {
+                hash: {S: 'two'},
+                range: {S: 'two'},
+                abc: {S: 'two'}
+              }
+            ]
+          })
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+
+      const res = await roTable.query({
+        hash: 'hash'
+      })
+
+      expect(res).to.deep.equal({
+        items: [
+          {
+            hash: 'one',
+            range: 'one',
+            abc: 'one'
+          },
+          {
+            hash: 'two',
+            range: 'two',
+            abc: 'two'
+          }
+        ]
+      })
+    })
+
+    it('should unmarshall returned start key', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
+
+      const client = {
+        query: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Items: [],
+            LastEvaluatedKey: {
+              hash: {S: 'hash'},
+              range: {S: 'range'}
+            }
+          })
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+
+      const res = await roTable.query({
+        hash: 'hash'
+      })
+
+      expect(res).to.deep.equal({
+        items: [],
+        lastEvaluatedKey: {
+          hash: 'hash',
+          range: 'range'
         }
       })
     })
@@ -155,7 +361,12 @@ describe('ReadOnlyTable', () => {
     })
 
     it('should call #dynamodb().scan() with correct params', async () => {
-      const roTable = new ReadOnlyTable('tableName')
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema)
 
       const client = {
         scan: sinon.stub().returns({
@@ -165,10 +376,105 @@ describe('ReadOnlyTable', () => {
 
       roTable.dynamodb.returns(client)
 
-      await roTable.scan()
+      await roTable.scan({
+        hash: 'hash',
+        range: 'range'
+      })
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
-        TableName: 'tableName'
+        TableName: 'tableName',
+        ExclusiveStartKey: {
+          hash: { S: 'hash' },
+          range: { S: 'range' }
+        }
+      })
+    })
+
+    it('should unmarshall returned items', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
+
+      const client = {
+        scan: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Items: [
+              {
+                hash: {S: 'one'},
+                range: {S: 'one'},
+                abc: {S: 'one'}
+              },
+              {
+                hash: {S: 'two'},
+                range: {S: 'two'},
+                abc: {S: 'two'}
+              }
+            ]
+          })
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+
+      const res = await roTable.scan()
+
+      expect(res).to.deep.equal({
+        items: [
+          {
+            hash: 'one',
+            range: 'one',
+            abc: 'one'
+          },
+          {
+            hash: 'two',
+            range: 'two',
+            abc: 'two'
+          }
+        ]
+      })
+    })
+
+    it('should unmarshall returned start key', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const roTable = new ReadOnlyTable('tableName', keySchema, itemSchema)
+
+      const client = {
+        scan: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Items: [],
+            LastEvaluatedKey: {
+              hash: {S: 'hash'},
+              range: {S: 'range'}
+            }
+          })
+        })
+      }
+
+      roTable.dynamodb.returns(client)
+
+      const res = await roTable.scan()
+
+      expect(res).to.deep.equal({
+        items: [],
+        lastEvaluatedKey: {
+          hash: 'hash',
+          range: 'range'
+        }
       })
     })
   })
