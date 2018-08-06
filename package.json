@@ -1,5 +1,5 @@
 {
-  "name": "@sudocode/dynamodb-js",
+  "name": "@tleef/dynamodb-js",
   "version": "1.0.0",
   "main": "lib/dynamodb.js",
   "scripts": {
@@ -9,7 +9,12 @@
     "test-coverage": "nyc yarn test"
   },
   "repository": "git+https://github.com/tleef/dynamodb-js.git",
-  "license": "UNLICENSED",
+  "author": "Tom Lee",
+  "license": "MIT",,
+  "bugs": {
+    "url": "https://github.com/tleef/dynamodb-js/issues"
+  },
+  "homepage": "https://github.com/tleef/dynamodb-js#readme",
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.56",
     "@babel/core": "^7.0.0-beta.56",
