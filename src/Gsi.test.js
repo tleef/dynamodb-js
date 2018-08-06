@@ -53,6 +53,14 @@ describe('Gsi', () => {
     })
   })
 
+  describe('#makeGsi()', () => {
+    it('should throw an Error', async () => {
+      const gsi = new Gsi()
+
+      expect(gsi.makeGsi).to.throw('makeGsi is not allowed on a GSI')
+    })
+  })
+
   describe('#getItem()', () => {
     it('should throw an Error', async () => {
       const gsi = new Gsi()
