@@ -6,7 +6,8 @@
     "build": "babel src --out-dir lib",
     "lint": "standard \"src/**/*.js\"",
     "test": "mocha \"src/**/*.test.js\" --require @babel/register",
-    "test-coverage": "nyc yarn test"
+    "test:coverage": "nyc --reporter lcovonly --reporter text yarn test",
+    "prepare": "yarn build"
   },
   "repository": "git+https://github.com/tleef/dynamodb-js.git",
   "author": "Tom Lee",
@@ -22,6 +23,7 @@
     "@babel/preset-env": "^7.0.0-beta.56",
     "@babel/register": "^7.0.0-beta.56",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "sinon": "^6.1.4",
