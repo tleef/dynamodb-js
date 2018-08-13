@@ -6,8 +6,8 @@ export default class Table extends ReadOnlyTable {
     return new Gsi(indexName, this.tableName, keySchema, this.itemSchema)
   }
 
-  async insert (o, opts = {}) {
-    const item = this.itemSchema.toDynamo(o)
+  async insertItem (o, opts = {}) {
+    const object = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
     let conditionExpression = ''
 
@@ -27,28 +27,44 @@ export default class Table extends ReadOnlyTable {
     })
 
     const params = Object.assign({
-      Item: item,
+      Item: object,
       TableName: this.tableName,
       ConditionExpression: conditionExpression,
       ExpressionAttributeNames: expressionAttributeNames
     }, opts)
 
-    return this.dynamodb().putItem(params).promise()
+    const data = await this.dynamodb().putItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 
-  async put (o, opts = {}) {
-    const item = this.itemSchema.toDynamo(o)
+  async putItem (o, opts = {}) {
+    const object = this.itemSchema.toDynamo(o)
 
     const params = Object.assign({
-      Item: item,
+      Item: object,
       TableName: this.tableName
     }, opts)
 
-    return this.dynamodb().putItem(params).promise()
+    const data = await this.dynamodb().putItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 
-  async replace (o, opts = {}) {
-    const item = this.itemSchema.toDynamo(o)
+  async replaceItem (o, opts = {}) {
+    const object = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
     let conditionExpression = ''
 
@@ -68,23 +84,31 @@ export default class Table extends ReadOnlyTable {
     })
 
     const params = Object.assign({
-      Item: item,
+      Item: object,
       TableName: this.tableName,
       ConditionExpression: conditionExpression,
       ExpressionAttributeNames: expressionAttributeNames
     }, opts)
 
-    return this.dynamodb().putItem(params).promise()
+    const data = await this.dynamodb().putItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 
-  async update (o, opts = {}) {
-    const item = this.itemSchema.toDynamo(o)
+  async updateItem (o, opts = {}) {
+    const object = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
     const expressionAttributeValues = {}
     let updateExpression = ''
     let conditionExpression = ''
 
-    Object.keys(item).forEach((name) => {
+    Object.keys(object).forEach((name) => {
       let key = this.makeKey(name)
       while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
         key = this.makeKey(name)
@@ -99,7 +123,7 @@ export default class Table extends ReadOnlyTable {
 
         conditionExpression += `attribute_exists(#${key})`
       } else {
-        expressionAttributeValues[`:${key}`] = item[name]
+        expressionAttributeValues[`:${key}`] = object[name]
 
         if (!updateExpression) {
           updateExpression = `SET #${key} = :${key}`
@@ -118,16 +142,24 @@ export default class Table extends ReadOnlyTable {
       ExpressionAttributeValues: expressionAttributeValues
     }, opts)
 
-    return this.dynamodb().updateItem(params).promise()
+    const data = await this.dynamodb().updateItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 
-  async upsert (o, opts = {}) {
-    const item = this.itemSchema.toDynamo(o)
+  async upsertItem (o, opts = {}) {
+    const object = this.itemSchema.toDynamo(o)
     const expressionAttributeNames = {}
     const expressionAttributeValues = {}
     let updateExpression = ''
 
-    Object.keys(item).forEach((name) => {
+    Object.keys(object).forEach((name) => {
       if (!this.keySchema.template.hasOwnProperty(name)) {
         let key = this.makeKey(name)
         while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
@@ -135,7 +167,7 @@ export default class Table extends ReadOnlyTable {
         }
 
         expressionAttributeNames[`#${key}`] = name
-        expressionAttributeValues[`:${key}`] = item[name]
+        expressionAttributeValues[`:${key}`] = object[name]
 
         if (!updateExpression) {
           updateExpression = `SET #${key} = :${key}`
@@ -153,7 +185,15 @@ export default class Table extends ReadOnlyTable {
       ExpressionAttributeValues: expressionAttributeValues
     }, opts)
 
-    return this.dynamodb().updateItem(params).promise()
+    const data = await this.dynamodb().updateItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 
   async deleteItem (key, opts = {}) {
@@ -162,6 +202,14 @@ export default class Table extends ReadOnlyTable {
       TableName: this.tableName
     }, opts)
 
-    return this.dynamodb().deleteItem(params).promise()
+    const data = await this.dynamodb().deleteItem(params).promise()
+
+    let item = null
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes)
+    }
+
+    return {item}
   }
 }

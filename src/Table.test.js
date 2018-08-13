@@ -99,7 +99,7 @@ describe('Table', () => {
     })
   })
 
-  describe('#insert()', () => {
+  describe('#insertItem()', () => {
     beforeEach(() => {
       sinon.stub(Table.prototype, 'dynamodb')
     })
@@ -136,7 +136,7 @@ describe('Table', () => {
       table.dynamodb.returns(client)
       table.makeKey = sinon.stub().returnsArg(0)
 
-      await table.insert({
+      await table.insertItem({
         hash: 'hash',
         range: 'range',
         b: Buffer.from('test'),
@@ -207,6 +207,47 @@ describe('Table', () => {
       })
     })
 
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        putItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.insertItem({
+        hash: 'hash',
+        range: 'range',
+        abc: 'abc'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
+
     it('should retry if key is not unique', async () => {
       const keySchema = new Schema({
         hash: types.S,
@@ -231,7 +272,7 @@ describe('Table', () => {
         .onCall(1).returns('one')
         .onCall(2).returns('two')
 
-      await table.insert({
+      await table.insertItem({
         hash: 'hash',
         range: 'range',
         abc: 'abc'
@@ -260,7 +301,7 @@ describe('Table', () => {
     })
   })
 
-  describe('#put()', () => {
+  describe('#putItem()', () => {
     beforeEach(() => {
       sinon.stub(Table.prototype, 'dynamodb')
     })
@@ -297,7 +338,7 @@ describe('Table', () => {
       table.dynamodb.returns(client)
       table.makeKey = sinon.stub().returnsArg(0)
 
-      await table.put({
+      await table.putItem({
         hash: 'hash',
         range: 'range',
         b: Buffer.from('test'),
@@ -362,9 +403,50 @@ describe('Table', () => {
         TableName: 'tableName'
       })
     })
+
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        putItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.putItem({
+        hash: 'hash',
+        range: 'range',
+        abc: 'abc'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
   })
 
-  describe('#replace()', () => {
+  describe('#replaceItem()', () => {
     beforeEach(() => {
       sinon.stub(Table.prototype, 'dynamodb')
     })
@@ -401,7 +483,7 @@ describe('Table', () => {
       table.dynamodb.returns(client)
       table.makeKey = sinon.stub().returnsArg(0)
 
-      await table.replace({
+      await table.replaceItem({
         hash: 'hash',
         range: 'range',
         b: Buffer.from('test'),
@@ -472,6 +554,47 @@ describe('Table', () => {
       })
     })
 
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        putItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.replaceItem({
+        hash: 'hash',
+        range: 'range',
+        abc: 'abc'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
+
     it('should retry if key is not unique', async () => {
       const keySchema = new Schema({
         hash: types.S,
@@ -496,7 +619,7 @@ describe('Table', () => {
         .onCall(1).returns('one')
         .onCall(2).returns('two')
 
-      await table.replace({
+      await table.replaceItem({
         hash: 'hash',
         range: 'range',
         abc: 'abc'
@@ -525,7 +648,7 @@ describe('Table', () => {
     })
   })
 
-  describe('#update()', () => {
+  describe('#updateItem()', () => {
     beforeEach(() => {
       sinon.stub(Table.prototype, 'dynamodb')
     })
@@ -562,7 +685,7 @@ describe('Table', () => {
       table.dynamodb.returns(client)
       table.makeKey = sinon.stub().returnsArg(0)
 
-      await table.update({
+      await table.updateItem({
         hash: 'hash',
         range: 'range',
         b: Buffer.from('test'),
@@ -645,6 +768,47 @@ describe('Table', () => {
       })
     })
 
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        updateItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.updateItem({
+        hash: 'hash',
+        range: 'range',
+        abc: 'abc'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
+
     it('should retry if key is not unique', async () => {
       const keySchema = new Schema({
         hash: types.S,
@@ -670,7 +834,7 @@ describe('Table', () => {
         .onCall(2).returns('two')
         .onCall(3).returns('three')
 
-      await table.update({
+      await table.updateItem({
         hash: 'hash',
         range: 'range',
         abc: 'abc'
@@ -703,7 +867,7 @@ describe('Table', () => {
     })
   })
 
-  describe('#upsert()', () => {
+  describe('#upsertItem()', () => {
     beforeEach(() => {
       sinon.stub(Table.prototype, 'dynamodb')
     })
@@ -740,7 +904,7 @@ describe('Table', () => {
       table.dynamodb.returns(client)
       table.makeKey = sinon.stub().returnsArg(0)
 
-      await table.upsert({
+      await table.upsertItem({
         hash: 'hash',
         range: 'range',
         b: Buffer.from('test'),
@@ -820,6 +984,47 @@ describe('Table', () => {
       })
     })
 
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        updateItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.upsertItem({
+        hash: 'hash',
+        range: 'range',
+        abc: 'abc'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
+      })
+    })
+
     it('should retry if key is not unique', async () => {
       const keySchema = new Schema({
         hash: types.S,
@@ -845,7 +1050,7 @@ describe('Table', () => {
         .onCall(1).returns('one')
         .onCall(2).returns('two')
 
-      await table.upsert({
+      await table.upsertItem({
         hash: 'hash',
         range: 'range',
         abc: 'abc',
@@ -919,6 +1124,46 @@ describe('Table', () => {
           }
         },
         TableName: 'tableName'
+      })
+    })
+
+    it('should unmarshall returned item', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const itemSchema = new Schema({
+        abc: types.S
+      })
+
+      const table = new Table('tableName', keySchema, itemSchema)
+
+      const client = {
+        deleteItem: sinon.stub().returns({
+          promise: sinon.stub().resolves({
+            Attributes: {
+              hash: {S: 'hash'},
+              range: {S: 'range'},
+              abc: {S: 'abc'}
+            }
+          })
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      const res = await table.deleteItem({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      expect(res).to.deep.equal({
+        item: {
+          hash: 'hash',
+          range: 'range',
+          abc: 'abc'
+        }
       })
     })
   })

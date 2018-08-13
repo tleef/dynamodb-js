@@ -23,11 +23,11 @@ export default class ReadOnlyTable {
 
     const data = await this.dynamodb().getItem(params).promise()
 
-    if (!data || !data.Item) {
-      return null
-    }
+    let item = null
 
-    const item = this.itemSchema.fromDynamo(data.Item)
+    if (data && data.Item) {
+      item = this.itemSchema.fromDynamo(data.Item)
+    }
 
     return {item}
   }
@@ -68,17 +68,17 @@ export default class ReadOnlyTable {
 
     const data = await this.dynamodb().query(params).promise()
 
-    if (!data || !data.Items) {
-      return null
-    }
+    let items = []
 
-    const items = data.Items.map((item) => {
-      return this.itemSchema.fromDynamo(item)
-    })
+    if (data && data.Items && data.Items.length) {
+      items = data.Items.map((item) => {
+        return this.itemSchema.fromDynamo(item)
+      })
+    }
 
     const ret = {items}
 
-    if (data.LastEvaluatedKey) {
+    if (data && data.LastEvaluatedKey) {
       ret.lastEvaluatedKey = this.keySchema.fromDynamo(data.LastEvaluatedKey)
     }
 
@@ -96,17 +96,17 @@ export default class ReadOnlyTable {
 
     const data = await this.dynamodb().scan(params).promise()
 
-    if (!data || !data.Items) {
-      return null
-    }
+    let items = []
 
-    const items = data.Items.map((item) => {
-      return this.itemSchema.fromDynamo(item)
-    })
+    if (data && data.Items && data.Items.length) {
+      items = data.Items.map((item) => {
+        return this.itemSchema.fromDynamo(item)
+      })
+    }
 
     const ret = {items}
 
-    if (data.LastEvaluatedKey) {
+    if (data && data.LastEvaluatedKey) {
       ret.lastEvaluatedKey = this.keySchema.fromDynamo(data.LastEvaluatedKey)
     }
 
