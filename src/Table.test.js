@@ -879,4 +879,47 @@ describe('Table', () => {
       })
     })
   })
+
+  describe('#deleteItem()', () => {
+    beforeEach(() => {
+      sinon.stub(ReadOnlyTable.prototype, 'dynamodb')
+    })
+    afterEach(() => {
+      ReadOnlyTable.prototype.dynamodb.restore()
+    })
+
+    it('should call #dynamodb().deleteItem() with correct params', async () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      })
+
+      const table = new Table('tableName', keySchema)
+
+      const client = {
+        deleteItem: sinon.stub().returns({
+          promise: sinon.stub().resolves()
+        })
+      }
+
+      table.dynamodb.returns(client)
+
+      await table.deleteItem({
+        hash: 'hash',
+        range: 'range'
+      })
+
+      expect(client.deleteItem.getCall(0).args[0]).to.deep.equal({
+        Key: {
+          hash: {
+            S: 'hash'
+          },
+          range: {
+            S: 'range'
+          }
+        },
+        TableName: 'tableName'
+      })
+    })
+  })
 })

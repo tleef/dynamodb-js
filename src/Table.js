@@ -155,4 +155,13 @@ export default class Table extends ReadOnlyTable {
 
     return this.dynamodb().updateItem(params).promise()
   }
+
+  async deleteItem (key, opts = {}) {
+    const params = Object.assign({
+      Key: this.keySchema.toDynamo(key),
+      TableName: this.tableName
+    }, opts)
+
+    return this.dynamodb().deleteItem(params).promise()
+  }
 }
