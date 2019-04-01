@@ -3,10 +3,10 @@
   "version": "2.0.0",
   "main": "lib/dynamodb.js",
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "lint": "standard \"src/**/*.js\"",
-    "test": "mocha \"src/**/*.test.js\" --require @babel/register",
-    "test:coverage": "nyc --reporter lcovonly --reporter text yarn test",
+    "build": "tsc",
+    "lint": "tslint --fix --project .",
+    "test": "mocha \"src/**/*.test.ts\" --require ts-node/register --require source-map-support/register",
+    "test:coverage": "nyc --extension .ts --exclude \"src/**/*.test.ts\" --reporter lcovonly --reporter text yarn test",
     "prepare": "yarn build"
   },
   "repository": "git+https://github.com/tleef/dynamodb-js.git",
@@ -17,22 +17,23 @@
   },
   "homepage": "https://github.com/tleef/dynamodb-js#readme",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.56",
-    "@babel/core": "^7.0.0-beta.56",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.56",
-    "@babel/preset-env": "^7.0.0-beta.56",
-    "@babel/register": "^7.0.0-beta.56",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.12.2",
+    "@types/sinon": "^7.0.11",
+    "@types/sinon-chai": "^3.2.2",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
-    "standard": "^11.0.1"
+    "ts-node": "^8.0.3",
+    "tslint": "^5.14.0",
+    "typescript": "^3.4.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.56",
-    "@tleef/type-js": "^1.2.0",
+    "@tleef/type-js": "^1.4.2",
     "aws-sdk": "^2.250.1"
   }
 }

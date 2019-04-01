@@ -1,4 +1,2 @@
-src/
-.idea/
-.nyc_output/
-.babelrc
+*
+!lib/**
