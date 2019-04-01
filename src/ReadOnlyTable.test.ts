@@ -1,8 +1,8 @@
 import * as chai from "chai";
-import sinon from "sinon";
-import sinonChai from "sinon-chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
-import AWS from "aws-sdk";
+import * as AWS from "aws-sdk";
 
 import ReadOnlyTable from "./ReadOnlyTable";
 import Schema from "./Schema";
@@ -15,17 +15,20 @@ chai.use(sinonChai);
 describe("ReadOnlyTable", () => {
   describe("#constructor()", () => {
     it("should be instantiable without arguments", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       expect(roTable).to.be.an.instanceof(ReadOnlyTable);
     });
 
     it("should have undefined values", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       expect(roTable.tableName).to.equal(undefined);
-      expect(roTable.keySchema).to.equal(undefined);
-      expect(roTable.itemSchema).to.equal(undefined);
+      expect(roTable.keySchema).to.be.an.instanceof(Schema);
+      expect(roTable.keySchema.template).to.deep.equal({});
+      expect(roTable.itemSchema).to.deep.equal(roTable.keySchema);
     });
 
     it("should correctly assign values", () => {
@@ -46,6 +49,7 @@ describe("ReadOnlyTable", () => {
 
   describe("#dynamodb()", () => {
     it("should return DynamoDB client", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       expect(roTable.dynamodb()).to.be.an.instanceof(AWS.DynamoDB);
@@ -54,12 +58,14 @@ describe("ReadOnlyTable", () => {
 
   describe("#makeKey()", () => {
     it("should return a string", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       expect(roTable.makeKey()).to.be.a("string");
     });
 
     it("should return a random string", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       const one = roTable.makeKey();
@@ -69,6 +75,7 @@ describe("ReadOnlyTable", () => {
     });
 
     it("should return a string of given length", () => {
+      // @ts-ignore
       const roTable = new ReadOnlyTable();
 
       expect(roTable.makeKey(null, 10).length).to.equal(10);
@@ -80,6 +87,7 @@ describe("ReadOnlyTable", () => {
       sinon.stub(ReadOnlyTable.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       ReadOnlyTable.prototype.dynamodb.restore();
     });
 
@@ -97,6 +105,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       await roTable.getItem({
@@ -141,6 +150,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       const res = await roTable.getItem({
@@ -163,6 +173,7 @@ describe("ReadOnlyTable", () => {
       sinon.stub(ReadOnlyTable.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       ReadOnlyTable.prototype.dynamodb.restore();
     });
 
@@ -180,6 +191,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
       roTable.makeKey = sinon.stub().returnsArg(0);
 
@@ -227,6 +239,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
       roTable.makeKey = sinon.stub()
         .onCall(0).returns("one")
@@ -288,6 +301,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       const res = await roTable.query({
@@ -334,6 +348,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       const res = await roTable.query({
@@ -355,6 +370,7 @@ describe("ReadOnlyTable", () => {
       sinon.stub(ReadOnlyTable.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       ReadOnlyTable.prototype.dynamodb.restore();
     });
 
@@ -372,6 +388,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       await roTable.scan({
@@ -419,6 +436,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       const res = await roTable.scan();
@@ -463,6 +481,7 @@ describe("ReadOnlyTable", () => {
         }),
       };
 
+      // @ts-ignore
       roTable.dynamodb.returns(client);
 
       const res = await roTable.scan();

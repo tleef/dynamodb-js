@@ -24,6 +24,10 @@ export default class ReadOnlyTable {
   private readonly _itemSchema: Schema;
 
   constructor(tableName: string, keySchema: Schema, itemSchema?: Schema) {
+    if (!keySchema) {
+      keySchema = new Schema({})
+    }
+
     if (!itemSchema) {
       itemSchema = keySchema;
     }

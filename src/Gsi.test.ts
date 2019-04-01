@@ -1,6 +1,6 @@
 import * as chai from "chai";
-import sinon from "sinon";
-import sinonChai from "sinon-chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
 import ReadOnlyTable from "./ReadOnlyTable";
@@ -14,24 +14,28 @@ chai.use(sinonChai);
 describe("Gsi", () => {
   describe("#constructor()", () => {
     it("should be instantiable without arguments", () => {
+      // @ts-ignore
       const gsi = new Gsi();
 
       expect(gsi).to.be.an.instanceof(Gsi);
     });
 
     it("should be an instance of ReadOnlyTable", () => {
+      // @ts-ignore
       const gsi = new Gsi();
 
       expect(gsi).to.be.an.instanceof(ReadOnlyTable);
     });
 
     it("should have undefined values", () => {
+      // @ts-ignore
       const gsi = new Gsi();
 
       expect(gsi.indexName).to.equal(undefined);
       expect(gsi.tableName).to.equal(undefined);
-      expect(gsi.keySchema).to.equal(undefined);
-      expect(gsi.itemSchema).to.equal(undefined);
+      expect(gsi.keySchema).to.be.an.instanceof(Schema);
+      expect(gsi.keySchema.template).to.deep.equal({});
+      expect(gsi.itemSchema).to.deep.equal(gsi.keySchema);
     });
 
     it("should correctly assign values", () => {
@@ -53,6 +57,7 @@ describe("Gsi", () => {
 
   describe("#getItem()", () => {
     it("should throw an Error", async () => {
+      // @ts-ignore
       const gsi = new Gsi();
 
       expect(gsi.getItem).to.throw("getItem is not allowed on a GSI");
@@ -64,6 +69,7 @@ describe("Gsi", () => {
       sinon.stub(Gsi.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Gsi.prototype.dynamodb.restore();
     });
 
@@ -81,6 +87,7 @@ describe("Gsi", () => {
         }),
       };
 
+      // @ts-ignore
       gsi.dynamodb.returns(client);
       gsi.makeKey = sinon.stub().returnsArg(0);
 
@@ -114,10 +121,12 @@ describe("Gsi", () => {
       sinon.stub(Gsi.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Gsi.prototype.dynamodb.restore();
     });
 
     it("should call #dynamodb().scan() with correct params", async () => {
+      // @ts-ignore
       const gsi = new Gsi("indexName", "tableName");
 
       const client = {

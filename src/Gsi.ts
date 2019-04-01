@@ -23,7 +23,7 @@ export default class Gsi extends ReadOnlyTable {
     throw new Error("getItem is not allowed on a GSI");
   }
 
-  public query(key: any, exclusiveStartKey: any, opts: IOpts = {}) {
+  public query(key: any, exclusiveStartKey?: any, opts: IOpts = {}) {
     opts.IndexName = this.indexName;
 
     return super.query(key, exclusiveStartKey, opts);

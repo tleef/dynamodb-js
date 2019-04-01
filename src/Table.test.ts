@@ -1,6 +1,6 @@
 import * as chai from "chai";
-import sinon from "sinon";
-import sinonChai from "sinon-chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
 import ReadOnlyTable from "./ReadOnlyTable";
@@ -15,23 +15,27 @@ chai.use(sinonChai);
 describe("Table", () => {
   describe("#constructor()", () => {
     it("should be instantiable without arguments", () => {
+      // @ts-ignore
       const table = new Table();
 
       expect(table).to.be.an.instanceof(Table);
     });
 
     it("should be an instance of ReadOnlyTable", () => {
+      // @ts-ignore
       const table = new Table();
 
       expect(table).to.be.an.instanceof(ReadOnlyTable);
     });
 
     it("should have undefined values", () => {
+      // @ts-ignore
       const table = new Table();
 
       expect(table.tableName).to.equal(undefined);
-      expect(table.keySchema).to.equal(undefined);
-      expect(table.itemSchema).to.equal(undefined);
+      expect(table.keySchema).to.be.an.instanceof(Schema);
+      expect(table.keySchema.template).to.deep.equal({});
+      expect(table.itemSchema).to.deep.equal(table.keySchema);
     });
 
     it("should correctly assign values", () => {
@@ -102,6 +106,7 @@ describe("Table", () => {
       sinon.stub(Table.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Table.prototype.dynamodb.restore();
     });
 
@@ -131,6 +136,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub().returnsArg(0);
 
@@ -229,6 +235,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.insertItem({
@@ -264,6 +271,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub()
         .onCall(0).returns("one")
@@ -304,6 +312,7 @@ describe("Table", () => {
       sinon.stub(Table.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Table.prototype.dynamodb.restore();
     });
 
@@ -333,6 +342,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub().returnsArg(0);
 
@@ -426,6 +436,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.putItem({
@@ -449,6 +460,7 @@ describe("Table", () => {
       sinon.stub(Table.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Table.prototype.dynamodb.restore();
     });
 
@@ -478,6 +490,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub().returnsArg(0);
 
@@ -576,6 +589,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.replaceItem({
@@ -611,6 +625,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub()
         .onCall(0).returns("one")
@@ -651,6 +666,7 @@ describe("Table", () => {
       sinon.stub(Table.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Table.prototype.dynamodb.restore();
     });
 
@@ -680,6 +696,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub().returnsArg(0);
 
@@ -790,6 +807,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.updateItem({
@@ -825,6 +843,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub()
         .onCall(0).returns("one")
@@ -870,6 +889,7 @@ describe("Table", () => {
       sinon.stub(Table.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       Table.prototype.dynamodb.restore();
     });
 
@@ -899,6 +919,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub().returnsArg(0);
 
@@ -1006,6 +1027,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.upsertItem({
@@ -1042,6 +1064,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
       table.makeKey = sinon.stub()
         .onCall(0).returns("one")
@@ -1088,6 +1111,7 @@ describe("Table", () => {
       sinon.stub(ReadOnlyTable.prototype, "dynamodb");
     });
     afterEach(() => {
+      // @ts-ignore
       ReadOnlyTable.prototype.dynamodb.restore();
     });
 
@@ -1105,6 +1129,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       await table.deleteItem({
@@ -1149,6 +1174,7 @@ describe("Table", () => {
         }),
       };
 
+      // @ts-ignore
       table.dynamodb.returns(client);
 
       const res = await table.deleteItem({
