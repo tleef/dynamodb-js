@@ -1,9 +1,17 @@
+import {
+  attributeExists,
+  attributeNotExists,
+  AttributeValue,
+  ConditionExpression,
+  ExpressionAttributes,
+  serializeConditionExpression,
+  UpdateExpression,
+} from "@aws/dynamodb-expressions";
+
 import Gsi from "./Gsi";
 import ReadOnlyTable from "./ReadOnlyTable";
 import Schema from "./Schema";
-
-interface IAttributeNames {[key: string]: string; }
-interface IAttributeValues {[key: string]: any; }
+import {and, condition} from "./util/DynamoDBExpression";
 
 export default class Table extends ReadOnlyTable {
   public makeGsi(indexName: string, keySchema: Schema) {
@@ -12,27 +20,28 @@ export default class Table extends ReadOnlyTable {
 
   public async insertItem(o: any, opts = {}) {
     const object = this.itemSchema.toDynamo(o);
-    const expressionAttributeNames: IAttributeNames = {};
-    let conditionExpression = "";
+
+    const attributes = new ExpressionAttributes();
+    const conditions: ConditionExpression[] = [];
+    let conditionExpression: ConditionExpression;
 
     Object.keys(this.keySchema.template).forEach((name) => {
-      let key = this.makeKey(name);
-      while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
-        key = this.makeKey(name);
-      }
-
-      expressionAttributeNames[`#${key}`] = name;
-
-      if (conditionExpression) {
-        conditionExpression += " AND ";
-      }
-
-      conditionExpression += `attribute_not_exists(#${key})`;
+      conditions.push(condition(name, attributeNotExists));
     });
 
+    if (conditions.length === 1) {
+      conditionExpression = conditions[0];
+    } else if (conditions.length > 1) {
+      conditionExpression = and.apply(null, conditions);
+    } else {
+      throw new Error("Malformed key");
+    }
+
+    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+
     const params = Object.assign({
-      ConditionExpression: conditionExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
+      ConditionExpression: keyConditionExpression,
+      ExpressionAttributeNames: attributes.names,
       Item: object,
       TableName: this.tableName,
     }, opts);
@@ -69,27 +78,28 @@ export default class Table extends ReadOnlyTable {
 
   public async replaceItem(o: any, opts = {}) {
     const object = this.itemSchema.toDynamo(o);
-    const expressionAttributeNames: IAttributeNames = {};
-    let conditionExpression = "";
+
+    const attributes = new ExpressionAttributes();
+    const conditions: ConditionExpression[] = [];
+    let conditionExpression: ConditionExpression;
 
     Object.keys(this.keySchema.template).forEach((name) => {
-      let key = this.makeKey(name);
-      while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
-        key = this.makeKey(name);
-      }
-
-      expressionAttributeNames[`#${key}`] = name;
-
-      if (conditionExpression) {
-        conditionExpression += " AND ";
-      }
-
-      conditionExpression += `attribute_exists(#${key})`;
+      conditions.push(condition(name, attributeExists));
     });
 
+    if (conditions.length === 1) {
+      conditionExpression = conditions[0];
+    } else if (conditions.length > 1) {
+      conditionExpression = and.apply(null, conditions);
+    } else {
+      throw new Error("Malformed key");
+    }
+
+    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+
     const params = Object.assign({
-      ConditionExpression: conditionExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
+      ConditionExpression: keyConditionExpression,
+      ExpressionAttributeNames: attributes.names,
       Item: object,
       TableName: this.tableName,
     }, opts);
@@ -107,43 +117,38 @@ export default class Table extends ReadOnlyTable {
 
   public async updateItem(o: any, opts = {}) {
     const object = this.itemSchema.toDynamo(o);
-    const expressionAttributeNames: IAttributeNames = {};
-    const expressionAttributeValues: IAttributeValues = {};
-    let updateExpression = "";
-    let conditionExpression = "";
+
+    const attributes = new ExpressionAttributes();
+    const conditions: ConditionExpression[] = [];
+    let conditionExpression: ConditionExpression;
+    const updateExpression = new UpdateExpression();
 
     Object.keys(object).forEach((name) => {
-      let key = this.makeKey(name);
-      while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
-        key = this.makeKey(name);
-      }
-
-      expressionAttributeNames[`#${key}`] = name;
-
       if (this.keySchema.template.hasOwnProperty(name)) {
-        if (conditionExpression) {
-          conditionExpression += " AND ";
-        }
-
-        conditionExpression += `attribute_exists(#${key})`;
+        conditions.push(condition(name, attributeExists));
       } else {
-        expressionAttributeValues[`:${key}`] = object[name];
-
-        if (!updateExpression) {
-          updateExpression = `SET #${key} = :${key}`;
-        } else {
-          updateExpression += `, #${key} = :${key}`;
-        }
+        updateExpression.set(name, new AttributeValue(object[name]));
       }
     });
 
+    if (conditions.length === 1) {
+      conditionExpression = conditions[0];
+    } else if (conditions.length > 1) {
+      conditionExpression = and.apply(null, conditions);
+    } else {
+      throw new Error("Malformed key");
+    }
+
+    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+    const itemUpdateExpression = updateExpression.serialize(attributes);
+
     const params = Object.assign({
-      ConditionExpression: conditionExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
+      ConditionExpression: keyConditionExpression,
+      ExpressionAttributeNames: attributes.names,
+      ExpressionAttributeValues: attributes.values,
       Key: this.keySchema.toDynamo(o),
       TableName: this.tableName,
-      UpdateExpression: updateExpression,
+      UpdateExpression: itemUpdateExpression,
     }, opts);
 
     const data = await this.dynamodb().updateItem(params).promise();
@@ -159,34 +164,24 @@ export default class Table extends ReadOnlyTable {
 
   public async upsertItem(o: any, opts = {}) {
     const object = this.itemSchema.toDynamo(o);
-    const expressionAttributeNames: IAttributeNames = {};
-    const expressionAttributeValues: IAttributeValues = {};
-    let updateExpression = "";
+
+    const attributes = new ExpressionAttributes();
+    const updateExpression = new UpdateExpression();
 
     Object.keys(object).forEach((name) => {
       if (!this.keySchema.template.hasOwnProperty(name)) {
-        let key = this.makeKey(name);
-        while (expressionAttributeNames.hasOwnProperty(`#${key}`)) {
-          key = this.makeKey(name);
-        }
-
-        expressionAttributeNames[`#${key}`] = name;
-        expressionAttributeValues[`:${key}`] = object[name];
-
-        if (!updateExpression) {
-          updateExpression = `SET #${key} = :${key}`;
-        } else {
-          updateExpression += `, #${key} = :${key}`;
-        }
+        updateExpression.set(name, new AttributeValue(object[name]));
       }
     });
 
+    const itemUpdateExpression = updateExpression.serialize(attributes);
+
     const params = Object.assign({
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
+      ExpressionAttributeNames: attributes.names,
+      ExpressionAttributeValues: attributes.values,
       Key: this.keySchema.toDynamo(o),
       TableName: this.tableName,
-      UpdateExpression: updateExpression,
+      UpdateExpression: itemUpdateExpression,
     }, opts);
 
     const data = await this.dynamodb().updateItem(params).promise();

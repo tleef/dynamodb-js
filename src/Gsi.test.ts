@@ -89,7 +89,6 @@ describe("Gsi", () => {
 
       // @ts-ignore
       gsi.dynamodb.returns(client);
-      gsi.makeKey = sinon.stub().returnsArg(0);
 
       await gsi.query({
         hash: "hash",
@@ -98,16 +97,16 @@ describe("Gsi", () => {
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
         TableName: "tableName",
-        KeyConditionExpression: "#hash = :hash AND #range = :range",
+        KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range",
+          "#attr0": "hash",
+          "#attr2": "range",
         },
         ExpressionAttributeValues: {
-          ":hash": {
+          ":val1": {
             S: "hash",
           },
-          ":range": {
+          ":val3": {
             S: "range",
           },
         },

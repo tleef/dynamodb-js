@@ -138,7 +138,6 @@ describe("Table", () => {
 
       // @ts-ignore
       table.dynamodb.returns(client);
-      table.makeKey = sinon.stub().returnsArg(0);
 
       await table.insertItem({
         hash: "hash",
@@ -203,10 +202,10 @@ describe("Table", () => {
           },
         },
         TableName: "tableName",
-        ConditionExpression: "attribute_not_exists(#hash) AND attribute_not_exists(#range)",
+        ConditionExpression: "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range",
+          "#attr0": "hash",
+          "#attr1": "range",
         },
       });
     });
@@ -252,59 +251,6 @@ describe("Table", () => {
         },
       });
     });
-
-    it("should retry if key is not unique", async () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
-      });
-
-      const itemSchema = new Schema({
-        abc: types.S,
-      });
-
-      const table = new Table("tableName", keySchema, itemSchema);
-
-      const client = {
-        putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
-      };
-
-      // @ts-ignore
-      table.dynamodb.returns(client);
-      table.makeKey = sinon.stub()
-        .onCall(0).returns("one")
-        .onCall(1).returns("one")
-        .onCall(2).returns("two");
-
-      await table.insertItem({
-        hash: "hash",
-        range: "range",
-        abc: "abc",
-      });
-
-      expect(table.makeKey).to.have.callCount(3);
-      expect(client.putItem.getCall(0).args[0]).to.deep.equal({
-        Item: {
-          hash: {
-            S: "hash",
-          },
-          range: {
-            S: "range",
-          },
-          abc: {
-            S: "abc",
-          },
-        },
-        TableName: "tableName",
-        ConditionExpression: "attribute_not_exists(#one) AND attribute_not_exists(#two)",
-        ExpressionAttributeNames: {
-          "#one": "hash",
-          "#two": "range",
-        },
-      });
-    });
   });
 
   describe("#putItem()", () => {
@@ -344,7 +290,6 @@ describe("Table", () => {
 
       // @ts-ignore
       table.dynamodb.returns(client);
-      table.makeKey = sinon.stub().returnsArg(0);
 
       await table.putItem({
         hash: "hash",
@@ -492,7 +437,6 @@ describe("Table", () => {
 
       // @ts-ignore
       table.dynamodb.returns(client);
-      table.makeKey = sinon.stub().returnsArg(0);
 
       await table.replaceItem({
         hash: "hash",
@@ -557,10 +501,10 @@ describe("Table", () => {
           },
         },
         TableName: "tableName",
-        ConditionExpression: "attribute_exists(#hash) AND attribute_exists(#range)",
+        ConditionExpression: "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range",
+          "#attr0": "hash",
+          "#attr1": "range",
         },
       });
     });
@@ -606,59 +550,6 @@ describe("Table", () => {
         },
       });
     });
-
-    it("should retry if key is not unique", async () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
-      });
-
-      const itemSchema = new Schema({
-        abc: types.S,
-      });
-
-      const table = new Table("tableName", keySchema, itemSchema);
-
-      const client = {
-        putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
-      };
-
-      // @ts-ignore
-      table.dynamodb.returns(client);
-      table.makeKey = sinon.stub()
-        .onCall(0).returns("one")
-        .onCall(1).returns("one")
-        .onCall(2).returns("two");
-
-      await table.replaceItem({
-        hash: "hash",
-        range: "range",
-        abc: "abc",
-      });
-
-      expect(table.makeKey).to.have.callCount(3);
-      expect(client.putItem.getCall(0).args[0]).to.deep.equal({
-        Item: {
-          hash: {
-            S: "hash",
-          },
-          range: {
-            S: "range",
-          },
-          abc: {
-            S: "abc",
-          },
-        },
-        TableName: "tableName",
-        ConditionExpression: "attribute_exists(#one) AND attribute_exists(#two)",
-        ExpressionAttributeNames: {
-          "#one": "hash",
-          "#two": "range",
-        },
-      });
-    });
   });
 
   describe("#updateItem()", () => {
@@ -698,7 +589,6 @@ describe("Table", () => {
 
       // @ts-ignore
       table.dynamodb.returns(client);
-      table.makeKey = sinon.stub().returnsArg(0);
 
       await table.updateItem({
         hash: "hash",
@@ -727,53 +617,53 @@ describe("Table", () => {
           },
         },
         TableName: "tableName",
-        UpdateExpression: "SET #b = :b, #bool = :bool, #bs = :bs, #json = :json, #n = :n, #ns = :ns, #null = :null, #s = :s, #ss = :ss",
-        ConditionExpression: "attribute_exists(#hash) AND attribute_exists(#range)",
+        UpdateExpression: "SET #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17, #attr18 = :val19",
+        ConditionExpression: "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range",
-          "#b": "b",
-          "#bool": "bool",
-          "#bs": "bs",
-          "#json": "json",
-          "#n": "n",
-          "#ns": "ns",
-          "#null": "null",
-          "#s": "s",
-          "#ss": "ss",
+          "#attr0": "hash",
+          "#attr1": "range",
+          "#attr2": "b",
+          "#attr4": "bool",
+          "#attr6": "bs",
+          "#attr8": "json",
+          "#attr10": "n",
+          "#attr12": "ns",
+          "#attr14": "null",
+          "#attr16": "s",
+          "#attr18": "ss",
         },
         ExpressionAttributeValues: {
-          ":b": {
+          ":val3": {
             B: "dGVzdA==",
           },
-          ":bool": {
+          ":val5": {
             BOOL: true,
           },
-          ":bs": {
+          ":val7": {
             BS: [
               "b25l",
               "dHdv",
             ],
           },
-          ":json": {
+          ":val9": {
             S: '{"key":"value"}',
           },
-          ":n": {
+          ":val11": {
             N: "1",
           },
-          ":ns": {
+          ":val13": {
             NS: [
               "1",
               "2",
             ],
           },
-          ":null": {
+          ":val15": {
             NULL: true,
           },
-          ":s": {
+          ":val17": {
             S: "test",
           },
-          ":ss": {
+          ":val19": {
             SS: [
               "one",
               "two",
@@ -824,64 +714,6 @@ describe("Table", () => {
         },
       });
     });
-
-    it("should retry if key is not unique", async () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
-      });
-
-      const itemSchema = new Schema({
-        abc: types.S,
-      });
-
-      const table = new Table("tableName", keySchema, itemSchema);
-
-      const client = {
-        updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
-      };
-
-      // @ts-ignore
-      table.dynamodb.returns(client);
-      table.makeKey = sinon.stub()
-        .onCall(0).returns("one")
-        .onCall(1).returns("one")
-        .onCall(2).returns("two")
-        .onCall(3).returns("three");
-
-      await table.updateItem({
-        hash: "hash",
-        range: "range",
-        abc: "abc",
-      });
-
-      expect(table.makeKey).to.have.callCount(4);
-      expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
-        Key: {
-          hash: {
-            S: "hash",
-          },
-          range: {
-            S: "range",
-          },
-        },
-        TableName: "tableName",
-        UpdateExpression: "SET #three = :three",
-        ConditionExpression: "attribute_exists(#one) AND attribute_exists(#two)",
-        ExpressionAttributeNames: {
-          "#one": "hash",
-          "#two": "range",
-          "#three": "abc",
-        },
-        ExpressionAttributeValues: {
-          ":three": {
-            S: "abc",
-          },
-        },
-      });
-    });
   });
 
   describe("#upsertItem()", () => {
@@ -921,7 +753,6 @@ describe("Table", () => {
 
       // @ts-ignore
       table.dynamodb.returns(client);
-      table.makeKey = sinon.stub().returnsArg(0);
 
       await table.upsertItem({
         hash: "hash",
@@ -950,50 +781,50 @@ describe("Table", () => {
           },
         },
         TableName: "tableName",
-        UpdateExpression: "SET #b = :b, #bool = :bool, #bs = :bs, #json = :json, #n = :n, #ns = :ns, #null = :null, #s = :s, #ss = :ss",
+        UpdateExpression: "SET #attr0 = :val1, #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17",
         ExpressionAttributeNames: {
-          "#b": "b",
-          "#bool": "bool",
-          "#bs": "bs",
-          "#json": "json",
-          "#n": "n",
-          "#ns": "ns",
-          "#null": "null",
-          "#s": "s",
-          "#ss": "ss",
+          "#attr0": "b",
+          "#attr2": "bool",
+          "#attr4": "bs",
+          "#attr6": "json",
+          "#attr8": "n",
+          "#attr10": "ns",
+          "#attr12": "null",
+          "#attr14": "s",
+          "#attr16": "ss",
         },
         ExpressionAttributeValues: {
-          ":b": {
+          ":val1": {
             B: "dGVzdA==",
           },
-          ":bool": {
+          ":val3": {
             BOOL: true,
           },
-          ":bs": {
+          ":val5": {
             BS: [
               "b25l",
               "dHdv",
             ],
           },
-          ":json": {
+          ":val7": {
             S: '{"key":"value"}',
           },
-          ":n": {
+          ":val9": {
             N: "1",
           },
-          ":ns": {
+          ":val11": {
             NS: [
               "1",
               "2",
             ],
           },
-          ":null": {
+          ":val13": {
             NULL: true,
           },
-          ":s": {
+          ":val15": {
             S: "test",
           },
-          ":ss": {
+          ":val17": {
             SS: [
               "one",
               "two",
@@ -1041,66 +872,6 @@ describe("Table", () => {
           hash: "hash",
           range: "range",
           abc: "abc",
-        },
-      });
-    });
-
-    it("should retry if key is not unique", async () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
-      });
-
-      const itemSchema = new Schema({
-        abc: types.S,
-        xyz: types.S,
-      });
-
-      const table = new Table("tableName", keySchema, itemSchema);
-
-      const client = {
-        updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
-      };
-
-      // @ts-ignore
-      table.dynamodb.returns(client);
-      table.makeKey = sinon.stub()
-        .onCall(0).returns("one")
-        .onCall(1).returns("one")
-        .onCall(2).returns("two");
-
-      await table.upsertItem({
-        hash: "hash",
-        range: "range",
-        abc: "abc",
-        xyz: "xyz",
-      });
-
-      expect(table.makeKey).to.have.callCount(3);
-      expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
-        Key: {
-          hash: {
-            S: "hash",
-          },
-          range: {
-            S: "range",
-          },
-        },
-        TableName: "tableName",
-        UpdateExpression: "SET #one = :one, #two = :two",
-        ExpressionAttributeNames: {
-          "#one": "abc",
-          "#two": "xyz",
-        },
-        ExpressionAttributeValues: {
-          ":one": {
-            S: "abc",
-          },
-          ":two": {
-            S: "xyz",
-          },
         },
       });
     });

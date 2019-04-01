@@ -1,6 +1,14 @@
+import {
+  AttributeValue,
+  ConditionExpression,
+  equals,
+  ExpressionAttributes,
+  serializeConditionExpression,
+} from "@aws/dynamodb-expressions";
 import * as AWS from "aws-sdk";
 
 import Schema from "./Schema";
+import {and, condition} from "./util/DynamoDBExpression";
 
 const dynamodb = new AWS.DynamoDB();
 
@@ -69,31 +77,29 @@ export default class ReadOnlyTable {
   }
 
   public async query(key: any, exclusiveStartKey?: any, opts = {}): Promise<IQueryOutput> {
-    const expressionAttributeNames: {[key: string]: string} = {};
-    const expressionAttributeValues: {[key: string]: any} = {};
-    let keyConditionExpression = "";
-
     const dynamoKey = this.keySchema.toDynamo(key);
 
+    const attributes = new ExpressionAttributes();
+    const conditions: ConditionExpression[] = [];
+    let conditionExpression: ConditionExpression;
+
     Object.keys(dynamoKey).forEach((name) => {
-      let k = this.makeKey(name);
-      while (expressionAttributeNames.hasOwnProperty(`#${k}`)) {
-        k = this.makeKey(name);
-      }
-
-      expressionAttributeNames[`#${k}`] = name;
-      expressionAttributeValues[`:${k}`] = dynamoKey[name];
-
-      if (keyConditionExpression) {
-        keyConditionExpression += " AND ";
-      }
-
-      keyConditionExpression += `#${k} = :${k}`;
+      conditions.push(condition(name, equals, new AttributeValue(dynamoKey[name])));
     });
 
+    if (conditions.length === 1) {
+      conditionExpression = conditions[0];
+    } else if (conditions.length > 1) {
+      conditionExpression = and.apply(null, conditions);
+    } else {
+      throw new Error("Malformed key");
+    }
+
+    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+
     const params: AWS.DynamoDB.QueryInput = Object.assign({
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
+      ExpressionAttributeNames: attributes.names,
+      ExpressionAttributeValues: attributes.values,
       KeyConditionExpression: keyConditionExpression,
       TableName: this.tableName,
     }, opts);
@@ -151,16 +157,5 @@ export default class ReadOnlyTable {
 
   public dynamodb() {
     return dynamodb;
-  }
-
-  public makeKey(name: string, length = 5) {
-    let text = "";
-    const possible = "abcdefghijklmnopqrstuvwxyz";
-
-    for (let i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return text;
   }
 }

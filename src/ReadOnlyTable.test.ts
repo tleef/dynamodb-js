@@ -56,32 +56,6 @@ describe("ReadOnlyTable", () => {
     });
   });
 
-  describe("#makeKey()", () => {
-    it("should return a string", () => {
-      // @ts-ignore
-      const roTable = new ReadOnlyTable();
-
-      expect(roTable.makeKey()).to.be.a("string");
-    });
-
-    it("should return a random string", () => {
-      // @ts-ignore
-      const roTable = new ReadOnlyTable();
-
-      const one = roTable.makeKey();
-      const two = roTable.makeKey();
-
-      expect(one).to.not.equal(two);
-    });
-
-    it("should return a string of given length", () => {
-      // @ts-ignore
-      const roTable = new ReadOnlyTable();
-
-      expect(roTable.makeKey(null, 10).length).to.equal(10);
-    });
-  });
-
   describe("#getItem()", () => {
     beforeEach(() => {
       sinon.stub(ReadOnlyTable.prototype, "dynamodb");
@@ -193,7 +167,6 @@ describe("ReadOnlyTable", () => {
 
       // @ts-ignore
       roTable.dynamodb.returns(client);
-      roTable.makeKey = sinon.stub().returnsArg(0);
 
       await roTable.query({
         hash: "hash",
@@ -205,67 +178,22 @@ describe("ReadOnlyTable", () => {
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
         TableName: "tableName",
-        KeyConditionExpression: "#hash = :hash AND #range = :range",
+        KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
         ExpressionAttributeNames: {
-          "#hash": "hash",
-          "#range": "range",
+          "#attr0": "hash",
+          "#attr2": "range",
         },
         ExpressionAttributeValues: {
-          ":hash": {
+          ":val1": {
             S: "hash",
           },
-          ":range": {
+          ":val3": {
             S: "range",
           },
         },
         ExclusiveStartKey: {
           hash: { S: "hash" },
           range: { S: "range" },
-        },
-      });
-    });
-
-    it("should retry if key is not unique", async () => {
-      const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
-      });
-
-      const roTable = new ReadOnlyTable("tableName", keySchema);
-
-      const client = {
-        query: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
-      };
-
-      // @ts-ignore
-      roTable.dynamodb.returns(client);
-      roTable.makeKey = sinon.stub()
-        .onCall(0).returns("one")
-        .onCall(1).returns("one")
-        .onCall(2).returns("two");
-
-      await roTable.query({
-        hash: "hash",
-        range: "range",
-      });
-
-      expect(roTable.makeKey).to.have.callCount(3);
-      expect(client.query.getCall(0).args[0]).to.deep.equal({
-        TableName: "tableName",
-        KeyConditionExpression: "#one = :one AND #two = :two",
-        ExpressionAttributeNames: {
-          "#one": "hash",
-          "#two": "range",
-        },
-        ExpressionAttributeValues: {
-          ":one": {
-            S: "hash",
-          },
-          ":two": {
-            S: "range",
-          },
         },
       });
     });
