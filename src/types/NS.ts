@@ -6,7 +6,7 @@ import IType from "./IType";
 @staticImplements<IType<number[], dynamo.INS>>()
 export default class NS {
   public static toDynamo(o: number[]): dynamo.INS {
-    return {NS: o.map(String)};
+    return { NS: o.map(String) };
   }
 
   public static fromDynamo(o: dynamo.INS): number[] {

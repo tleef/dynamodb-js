@@ -5,7 +5,7 @@ import IType from "./IType";
 @staticImplements<IType<null, dynamo.INULL>>()
 export default class Null {
   public static toDynamo(o: null): dynamo.INULL {
-    return {NULL: true};
+    return { NULL: true };
   }
 
   public static fromDynamo(o: dynamo.INULL): null {

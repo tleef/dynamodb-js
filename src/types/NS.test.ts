@@ -11,7 +11,7 @@ describe("NS", () => {
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.NS).to.be.an.instanceof(Array);
-      av.NS.forEach((n) => {
+      av.NS.forEach(n => {
         expect(n).to.be.a("string");
       });
     });
@@ -25,16 +25,16 @@ describe("NS", () => {
 
   describe("NS.fromDynamo()", () => {
     it("should return an array of numbers", () => {
-      const ns = NS.fromDynamo({NS: ["1", "2"]});
+      const ns = NS.fromDynamo({ NS: ["1", "2"] });
 
       expect(ns).to.be.an.instanceof(Array);
-      ns.forEach((n) => {
+      ns.forEach(n => {
         expect(n).to.be.a("number");
       });
     });
 
     it("should return correct value", () => {
-      const ns = NS.fromDynamo({NS: ["1", "2"]});
+      const ns = NS.fromDynamo({ NS: ["1", "2"] });
 
       expect(ns).to.deep.equal([1, 2]);
     });

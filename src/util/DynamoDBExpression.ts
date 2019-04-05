@@ -1,26 +1,28 @@
 import {
-    AndExpression,
-    ComparisonOperand,
-    ConditionExpression,
-    ConditionExpressionPredicate,
+  AndExpression,
+  ComparisonOperand,
+  ConditionExpression,
+  ConditionExpressionPredicate,
 } from "@aws/dynamodb-expressions";
 
-type ExpressionPredicate = (...operands: ComparisonOperand[]) => ConditionExpressionPredicate;
+type ExpressionPredicate = (
+  ...operands: ComparisonOperand[]
+) => ConditionExpressionPredicate;
 
 export function and(...conditions: ConditionExpression[]): AndExpression {
-    return {
-        conditions,
-        type: "And",
-    };
+  return {
+    conditions,
+    type: "And",
+  };
 }
 
 export function condition(
-    subject: string,
-    fn: ExpressionPredicate,
-    ...operands: ComparisonOperand[]
+  subject: string,
+  fn: ExpressionPredicate,
+  ...operands: ComparisonOperand[]
 ): ConditionExpression {
-    return {
-        subject,
-        ...fn(...operands),
-    };
+  return {
+    subject,
+    ...fn(...operands),
+  };
 }

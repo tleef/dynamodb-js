@@ -22,13 +22,13 @@ describe("S", () => {
 
   describe("S.fromDynamo()", () => {
     it("should return a string", () => {
-      const s = S.fromDynamo({S: "test"});
+      const s = S.fromDynamo({ S: "test" });
 
       expect(s).to.be.a("string");
     });
 
     it("should return correct value", () => {
-      const s = S.fromDynamo({S: "test"});
+      const s = S.fromDynamo({ S: "test" });
 
       expect(s).to.equal("test");
     });

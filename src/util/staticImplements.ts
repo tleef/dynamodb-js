@@ -1,4 +1,4 @@
 /* class decorator */
 export default function staticImplements<T>() {
-    return (constructor: T) => constructor;
+  return (constructor: T) => constructor;
 }

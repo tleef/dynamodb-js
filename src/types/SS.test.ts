@@ -11,7 +11,7 @@ describe("SS", () => {
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.SS).to.be.an.instanceof(Array);
-      av.SS.forEach((s) => {
+      av.SS.forEach(s => {
         expect(s).to.be.a("string");
       });
     });
@@ -25,16 +25,16 @@ describe("SS", () => {
 
   describe("SS.fromDynamo()", () => {
     it("should return an array of strings", () => {
-      const ss = SS.fromDynamo({SS: ["one", "two"]});
+      const ss = SS.fromDynamo({ SS: ["one", "two"] });
 
       expect(ss).to.be.an.instanceof(Array);
-      ss.forEach((s) => {
+      ss.forEach(s => {
         expect(s).to.be.a("string");
       });
     });
 
     it("should return correct value", () => {
-      const ss = SS.fromDynamo({SS: ["one", "two"]});
+      const ss = SS.fromDynamo({ SS: ["one", "two"] });
 
       expect(ss).to.deep.equal(["one", "two"]);
     });

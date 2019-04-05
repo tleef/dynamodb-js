@@ -5,7 +5,7 @@ import IType from "./IType";
 @staticImplements<IType<Buffer, dynamo.IB>>()
 export default class B {
   public static toDynamo(o: Buffer): dynamo.IB {
-    return {B: o.toString("base64")};
+    return { B: o.toString("base64") };
   }
 
   public static fromDynamo(o: dynamo.IB): Buffer {

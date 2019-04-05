@@ -1,15 +1,23 @@
-import ReadOnlyTable, {IGetItemOutput} from "./ReadOnlyTable";
+import ReadOnlyTable, {
+  IGetItemOutput,
+  IKey,
+  IQueryInput,
+  IQueryOutput,
+  IScanInput,
+  IScanOutput,
+} from "./ReadOnlyTable";
 
 import Schema from "./Schema";
-
-interface IOpts {
-  [key: string]: any;
-}
 
 export default class Gsi extends ReadOnlyTable {
   private readonly _indexName: string;
 
-  constructor(indexName: string, tableName: string, keySchema: Schema, itemSchema?: Schema) {
+  constructor(
+    indexName: string,
+    tableName: string,
+    keySchema: Schema,
+    itemSchema?: Schema,
+  ) {
     super(tableName, keySchema, itemSchema);
 
     this._indexName = indexName;
@@ -23,15 +31,25 @@ export default class Gsi extends ReadOnlyTable {
     throw new Error("getItem is not allowed on a GSI");
   }
 
-  public query(key: any, exclusiveStartKey?: any, opts: IOpts = {}) {
-    opts.IndexName = this.indexName;
+  public query(key: IKey, opts?: IQueryInput): Promise<IQueryOutput> {
+    const params = super.queryParams(key, opts);
+    params.IndexName = this.indexName;
 
-    return super.query(key, exclusiveStartKey, opts);
+    if (params.ConsistentRead) {
+      throw new Error("consistentRead is not allowed on a GSI");
+    }
+
+    return super._query(params);
   }
 
-  public scan(exclusiveStartKey: any, opts: IOpts = {}) {
-    opts.IndexName = this.indexName;
+  public scan(opts?: IScanInput): Promise<IScanOutput> {
+    const params = super.scanParams(opts);
+    params.IndexName = this.indexName;
 
-    return super.scan(exclusiveStartKey, opts);
+    if (params.ConsistentRead) {
+      throw new Error("consistentRead is not allowed on a GSI");
+    }
+
+    return super._scan(params);
   }
 }

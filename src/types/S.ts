@@ -6,7 +6,7 @@ import IType from "./IType";
 @staticImplements<IType<string, dynamo.IS>>()
 export default class S {
   public static toDynamo(o: string): dynamo.IS {
-    return {S: o};
+    return { S: o };
   }
 
   public static fromDynamo(o: dynamo.IS): string {

@@ -22,13 +22,13 @@ describe("N", () => {
 
   describe("N.fromDynamo()", () => {
     it("should return a number", () => {
-      const n = N.fromDynamo({N: "1"});
+      const n = N.fromDynamo({ N: "1" });
 
       expect(n).to.be.a("number");
     });
 
     it("should return correct value", () => {
-      const n = N.fromDynamo({N: "1"});
+      const n = N.fromDynamo({ N: "1" });
 
       expect(n).to.equal(1);
     });

@@ -22,13 +22,13 @@ describe("Bool", () => {
 
   describe("Bool.fromDynamo()", () => {
     it("should return a boolean", () => {
-      const bool = Bool.fromDynamo({BOOL: true});
+      const bool = Bool.fromDynamo({ BOOL: true });
 
       expect(bool).to.be.a("boolean");
     });
 
     it("should return correct value", () => {
-      const bool = Bool.fromDynamo({BOOL: true});
+      const bool = Bool.fromDynamo({ BOOL: true });
 
       expect(bool).to.equal(true);
     });

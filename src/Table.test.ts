@@ -41,16 +41,18 @@ describe("Table", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N,
+        range: types.N
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: types.S
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
       expect(table.tableName).to.equal("tableName");
       expect(table.keySchema).to.equal(keySchema);
-      expect(table.itemSchema).to.deep.equal(new Schema(Object.assign({}, itemSchema.template, keySchema.template)));
+      expect(table.itemSchema).to.deep.equal(
+        new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+      );
     });
   });
 
@@ -58,15 +60,15 @@ describe("Table", () => {
     it("should return a Gsi", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N,
+        range: types.N
       });
       const itemSchema = new Schema({
         one: types.S,
-        two: types.S,
+        two: types.S
       });
       const gsiKeySchema = new Schema({
         one: types.S,
-        two: types.S,
+        two: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -78,15 +80,15 @@ describe("Table", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N,
+        range: types.N
       });
       const itemSchema = new Schema({
         one: types.S,
-        two: types.S,
+        two: types.S
       });
       const gsiKeySchema = new Schema({
         one: types.S,
-        two: types.S,
+        two: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -97,7 +99,11 @@ describe("Table", () => {
       expect(gsi.indexName).to.equal("indexName");
       expect(gsi.tableName).to.equal(table.tableName);
       expect(gsi.keySchema).to.equal(gsiKeySchema);
-      expect(gsi.itemSchema).to.deep.equal(new Schema(Object.assign({}, table.itemSchema.template, gsiKeySchema.template)));
+      expect(gsi.itemSchema).to.deep.equal(
+        new Schema(
+          Object.assign({}, table.itemSchema.template, gsiKeySchema.template)
+        )
+      );
     });
   });
 
@@ -113,7 +119,7 @@ describe("Table", () => {
     it("should call #dynamodb().putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
@@ -125,15 +131,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS,
+        ss: types.SS
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -144,80 +150,69 @@ describe("Table", () => {
         range: "range",
         b: Buffer.from("test"),
         bool: true,
-        bs: [
-          Buffer.from("one"),
-          Buffer.from("two"),
-        ],
-        json: {key: "value"},
+        bs: [Buffer.from("one"), Buffer.from("two")],
+        json: { key: "value" },
         n: 1,
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"],
+        ss: ["one", "two"]
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
+            S: "range"
           },
           b: {
-            B: "dGVzdA==",
+            B: "dGVzdA=="
           },
           bool: {
-            BOOL: true,
+            BOOL: true
           },
           bs: {
-            BS: [
-              "b25l",
-              "dHdv",
-            ],
+            BS: ["b25l", "dHdv"]
           },
           json: {
-            S: '{"key":"value"}',
+            S: '{"key":"value"}'
           },
           n: {
-            N: "1",
+            N: "1"
           },
           ns: {
-            NS: [
-              "1",
-              "2",
-            ],
+            NS: ["1", "2"]
           },
           null: {
-            NULL: true,
+            NULL: true
           },
           s: {
-            S: "test",
+            S: "test"
           },
           ss: {
-            SS: [
-              "one",
-              "two",
-            ],
-          },
+            SS: ["one", "two"]
+          }
         },
         TableName: "tableName",
-        ConditionExpression: "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
+        ConditionExpression:
+          "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range",
-        },
+          "#attr1": "range"
+        }
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -226,12 +221,12 @@ describe("Table", () => {
         putItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -240,15 +235,15 @@ describe("Table", () => {
       const res = await table.insertItem({
         hash: "hash",
         range: "range",
-        abc: "abc",
+        abc: "abc"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });
@@ -265,7 +260,7 @@ describe("Table", () => {
     it("should call #dynamodb().putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
@@ -277,15 +272,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS,
+        ss: types.SS
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -296,75 +291,63 @@ describe("Table", () => {
         range: "range",
         b: Buffer.from("test"),
         bool: true,
-        bs: [
-          Buffer.from("one"),
-          Buffer.from("two"),
-        ],
-        json: {key: "value"},
+        bs: [Buffer.from("one"), Buffer.from("two")],
+        json: { key: "value" },
         n: 1,
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"],
+        ss: ["one", "two"]
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
+            S: "range"
           },
           b: {
-            B: "dGVzdA==",
+            B: "dGVzdA=="
           },
           bool: {
-            BOOL: true,
+            BOOL: true
           },
           bs: {
-            BS: [
-              "b25l",
-              "dHdv",
-            ],
+            BS: ["b25l", "dHdv"]
           },
           json: {
-            S: '{"key":"value"}',
+            S: '{"key":"value"}'
           },
           n: {
-            N: "1",
+            N: "1"
           },
           ns: {
-            NS: [
-              "1",
-              "2",
-            ],
+            NS: ["1", "2"]
           },
           null: {
-            NULL: true,
+            NULL: true
           },
           s: {
-            S: "test",
+            S: "test"
           },
           ss: {
-            SS: [
-              "one",
-              "two",
-            ],
-          },
+            SS: ["one", "two"]
+          }
         },
-        TableName: "tableName",
+        TableName: "tableName"
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -373,12 +356,12 @@ describe("Table", () => {
         putItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -387,15 +370,15 @@ describe("Table", () => {
       const res = await table.putItem({
         hash: "hash",
         range: "range",
-        abc: "abc",
+        abc: "abc"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });
@@ -412,7 +395,7 @@ describe("Table", () => {
     it("should call #dynamodb().putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
@@ -424,15 +407,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS,
+        ss: types.SS
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -443,80 +426,69 @@ describe("Table", () => {
         range: "range",
         b: Buffer.from("test"),
         bool: true,
-        bs: [
-          Buffer.from("one"),
-          Buffer.from("two"),
-        ],
-        json: {key: "value"},
+        bs: [Buffer.from("one"), Buffer.from("two")],
+        json: { key: "value" },
         n: 1,
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"],
+        ss: ["one", "two"]
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
+            S: "range"
           },
           b: {
-            B: "dGVzdA==",
+            B: "dGVzdA=="
           },
           bool: {
-            BOOL: true,
+            BOOL: true
           },
           bs: {
-            BS: [
-              "b25l",
-              "dHdv",
-            ],
+            BS: ["b25l", "dHdv"]
           },
           json: {
-            S: '{"key":"value"}',
+            S: '{"key":"value"}'
           },
           n: {
-            N: "1",
+            N: "1"
           },
           ns: {
-            NS: [
-              "1",
-              "2",
-            ],
+            NS: ["1", "2"]
           },
           null: {
-            NULL: true,
+            NULL: true
           },
           s: {
-            S: "test",
+            S: "test"
           },
           ss: {
-            SS: [
-              "one",
-              "two",
-            ],
-          },
+            SS: ["one", "two"]
+          }
         },
         TableName: "tableName",
-        ConditionExpression: "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
+        ConditionExpression:
+          "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range",
-        },
+          "#attr1": "range"
+        }
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -525,12 +497,12 @@ describe("Table", () => {
         putItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -539,15 +511,15 @@ describe("Table", () => {
       const res = await table.replaceItem({
         hash: "hash",
         range: "range",
-        abc: "abc",
+        abc: "abc"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });
@@ -564,7 +536,7 @@ describe("Table", () => {
     it("should call #dynamodb().updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
@@ -576,15 +548,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS,
+        ss: types.SS
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -595,30 +567,29 @@ describe("Table", () => {
         range: "range",
         b: Buffer.from("test"),
         bool: true,
-        bs: [
-          Buffer.from("one"),
-          Buffer.from("two"),
-        ],
-        json: {key: "value"},
+        bs: [Buffer.from("one"), Buffer.from("two")],
+        json: { key: "value" },
         n: 1,
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"],
+        ss: ["one", "two"]
       });
 
       expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
-          },
+            S: "range"
+          }
         },
         TableName: "tableName",
-        UpdateExpression: "SET #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17, #attr18 = :val19",
-        ConditionExpression: "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
+        UpdateExpression:
+          "SET #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17, #attr18 = :val19",
+        ConditionExpression:
+          "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
           "#attr1": "range",
@@ -630,57 +601,48 @@ describe("Table", () => {
           "#attr12": "ns",
           "#attr14": "null",
           "#attr16": "s",
-          "#attr18": "ss",
+          "#attr18": "ss"
         },
         ExpressionAttributeValues: {
           ":val3": {
-            B: "dGVzdA==",
+            B: "dGVzdA=="
           },
           ":val5": {
-            BOOL: true,
+            BOOL: true
           },
           ":val7": {
-            BS: [
-              "b25l",
-              "dHdv",
-            ],
+            BS: ["b25l", "dHdv"]
           },
           ":val9": {
-            S: '{"key":"value"}',
+            S: '{"key":"value"}'
           },
           ":val11": {
-            N: "1",
+            N: "1"
           },
           ":val13": {
-            NS: [
-              "1",
-              "2",
-            ],
+            NS: ["1", "2"]
           },
           ":val15": {
-            NULL: true,
+            NULL: true
           },
           ":val17": {
-            S: "test",
+            S: "test"
           },
           ":val19": {
-            SS: [
-              "one",
-              "two",
-            ],
-          },
-        },
+            SS: ["one", "two"]
+          }
+        }
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -689,12 +651,12 @@ describe("Table", () => {
         updateItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -703,15 +665,15 @@ describe("Table", () => {
       const res = await table.updateItem({
         hash: "hash",
         range: "range",
-        abc: "abc",
+        abc: "abc"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });
@@ -728,7 +690,7 @@ describe("Table", () => {
     it("should call #dynamodb().updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
@@ -740,15 +702,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS,
+        ss: types.SS
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -759,29 +721,27 @@ describe("Table", () => {
         range: "range",
         b: Buffer.from("test"),
         bool: true,
-        bs: [
-          Buffer.from("one"),
-          Buffer.from("two"),
-        ],
-        json: {key: "value"},
+        bs: [Buffer.from("one"), Buffer.from("two")],
+        json: { key: "value" },
         n: 1,
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"],
+        ss: ["one", "two"]
       });
 
       expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
-          },
+            S: "range"
+          }
         },
         TableName: "tableName",
-        UpdateExpression: "SET #attr0 = :val1, #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17",
+        UpdateExpression:
+          "SET #attr0 = :val1, #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17",
         ExpressionAttributeNames: {
           "#attr0": "b",
           "#attr2": "bool",
@@ -791,57 +751,48 @@ describe("Table", () => {
           "#attr10": "ns",
           "#attr12": "null",
           "#attr14": "s",
-          "#attr16": "ss",
+          "#attr16": "ss"
         },
         ExpressionAttributeValues: {
           ":val1": {
-            B: "dGVzdA==",
+            B: "dGVzdA=="
           },
           ":val3": {
-            BOOL: true,
+            BOOL: true
           },
           ":val5": {
-            BS: [
-              "b25l",
-              "dHdv",
-            ],
+            BS: ["b25l", "dHdv"]
           },
           ":val7": {
-            S: '{"key":"value"}',
+            S: '{"key":"value"}'
           },
           ":val9": {
-            N: "1",
+            N: "1"
           },
           ":val11": {
-            NS: [
-              "1",
-              "2",
-            ],
+            NS: ["1", "2"]
           },
           ":val13": {
-            NULL: true,
+            NULL: true
           },
           ":val15": {
-            S: "test",
+            S: "test"
           },
           ":val17": {
-            SS: [
-              "one",
-              "two",
-            ],
-          },
-        },
+            SS: ["one", "two"]
+          }
+        }
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -850,12 +801,12 @@ describe("Table", () => {
         updateItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -864,15 +815,15 @@ describe("Table", () => {
       const res = await table.upsertItem({
         hash: "hash",
         range: "range",
-        abc: "abc",
+        abc: "abc"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });
@@ -889,15 +840,15 @@ describe("Table", () => {
     it("should call #dynamodb().deleteItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const table = new Table("tableName", keySchema);
 
       const client = {
         deleteItem: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -905,30 +856,30 @@ describe("Table", () => {
 
       await table.deleteItem({
         hash: "hash",
-        range: "range",
+        range: "range"
       });
 
       expect(client.deleteItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash",
+            S: "hash"
           },
           range: {
-            S: "range",
-          },
+            S: "range"
+          }
         },
-        TableName: "tableName",
+        TableName: "tableName"
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: types.S
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -937,12 +888,12 @@ describe("Table", () => {
         deleteItem: sinon.stub().returns({
           promise: sinon.stub().resolves({
             Attributes: {
-              hash: {S: "hash"},
-              range: {S: "range"},
-              abc: {S: "abc"},
-            },
-          }),
-        }),
+              hash: { S: "hash" },
+              range: { S: "range" },
+              abc: { S: "abc" }
+            }
+          })
+        })
       };
 
       // @ts-ignore
@@ -950,15 +901,15 @@ describe("Table", () => {
 
       const res = await table.deleteItem({
         hash: "hash",
-        range: "range",
+        range: "range"
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc",
-        },
+          abc: "abc"
+        }
       });
     });
   });

@@ -22,7 +22,7 @@ describe("Null", () => {
 
   describe("Null.fromDynamo()", () => {
     it("should return null", () => {
-      const n = Null.fromDynamo({NULL: true});
+      const n = Null.fromDynamo({ NULL: true });
 
       expect(n).to.equal(null);
     });

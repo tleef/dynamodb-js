@@ -16,7 +16,7 @@ export default class Schema {
   }
 
   public toDynamo(o: any): any {
-    return Object.keys(o).reduce((previous: {[key: string]: any}, key) => {
+    return Object.keys(o).reduce((previous: { [key: string]: any }, key) => {
       const type = this.template[key];
 
       if (type && type.validate(o[key])) {
@@ -28,7 +28,7 @@ export default class Schema {
   }
 
   public fromDynamo(o: any): any {
-    return Object.keys(o).reduce((previous: {[key: string]: any}, key) => {
+    return Object.keys(o).reduce((previous: { [key: string]: any }, key) => {
       const type = this.template[key];
 
       if (type) {

@@ -1,31 +1,31 @@
 export interface IS {
-    S: string;
+  S: string;
 }
 
 export interface ISS {
-    SS: string[];
+  SS: string[];
 }
 
 export interface IN {
-    N: string;
+  N: string;
 }
 
 export interface INS {
-    NS: string[];
+  NS: string[];
 }
 
 export interface IB {
-    B: string;
+  B: string;
 }
 
 export interface IBS {
-    BS: string[];
+  BS: string[];
 }
 
 export interface IBOOL {
-    BOOL: boolean;
+  BOOL: boolean;
 }
 
 export interface INULL {
-    NULL: boolean;
+  NULL: boolean;
 }

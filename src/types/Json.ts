@@ -6,7 +6,7 @@ import IType from "./IType";
 @staticImplements<IType<any, dynamo.IS>>()
 export default class Json {
   public static toDynamo(o: any): dynamo.IS {
-    return {S: JSON.stringify(o)};
+    return { S: JSON.stringify(o) };
   }
 
   public static fromDynamo(o: dynamo.IS): any {

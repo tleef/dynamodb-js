@@ -22,13 +22,13 @@ describe("B", () => {
 
   describe("B.fromDynamo()", () => {
     it("should return a Buffer", () => {
-      const b = B.fromDynamo({B: "dGVzdA=="});
+      const b = B.fromDynamo({ B: "dGVzdA==" });
 
       expect(b).to.be.an.instanceof(Buffer);
     });
 
     it("should decode the base64 value", () => {
-      const b = B.fromDynamo({B: "dGVzdA=="});
+      const b = B.fromDynamo({ B: "dGVzdA==" });
 
       expect(b).to.deep.equal(Buffer.from("test"));
     });

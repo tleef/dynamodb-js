@@ -5,7 +5,7 @@ import IType from "./IType";
 @staticImplements<IType<boolean, dynamo.IBOOL>>()
 export default class Bool {
   public static toDynamo(o: boolean): dynamo.IBOOL {
-    return {BOOL: o};
+    return { BOOL: o };
   }
 
   public static fromDynamo(o: dynamo.IBOOL): boolean {

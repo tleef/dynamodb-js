@@ -10,9 +10,4 @@ export default {
   types,
 };
 
-export {
-  ReadOnlyTable,
-  Schema,
-  Table,
-  types,
-};
+export { ReadOnlyTable, Schema, Table, types };

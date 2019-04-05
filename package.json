@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "tslint --fix --project .",
+    "format": "prettier \"src/**/*.ts\" --write",
     "test": "mocha \"src/**/*.test.ts\" --require ts-node/register --require source-map-support/register",
     "test:coverage": "nyc --extension .ts --exclude \"src/**/*.test.ts\" --reporter lcovonly --reporter text yarn test",
     "prepare": "yarn build"
@@ -19,22 +20,23 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
-    "@types/node": "^11.12.2",
+    "@types/node": "^11.13.0",
     "@types/sinon": "^7.0.11",
     "@types/sinon-chai": "^3.2.2",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
+    "prettier": "^1.16.4",
     "sinon": "^7.3.1",
     "sinon-chai": "^3.3.0",
     "ts-node": "^8.0.3",
-    "tslint": "^5.14.0",
-    "typescript": "^3.4.1"
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.2"
   },
   "dependencies": {
     "@aws/dynamodb-expressions": "^0.7.3",
-    "@tleef/type-js": "^1.4.2",
-    "aws-sdk": "^2.432.0"
+    "@tleef/type-js": "^1.5.0",
+    "aws-sdk": "^2.437.0"
   }
 }

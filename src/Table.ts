@@ -7,18 +7,71 @@ import {
   serializeConditionExpression,
   UpdateExpression,
 } from "@aws/dynamodb-expressions";
+import type from "@tleef/type-js";
+import * as AWS from "aws-sdk";
 
 import Gsi from "./Gsi";
-import ReadOnlyTable from "./ReadOnlyTable";
+import ReadOnlyTable, { IItem, IKey } from "./ReadOnlyTable";
 import Schema from "./Schema";
-import {and, condition} from "./util/DynamoDBExpression";
+import { and, condition } from "./util/DynamoDBExpression";
+
+export interface IInsertItemInput {
+  returnValues?: string;
+}
+
+export interface IInsertItemOutput {
+  item: IItem;
+}
+
+export interface IPutItemInput {
+  returnValues?: string;
+}
+
+export interface IPutItemOutput {
+  item: IItem;
+}
+
+export interface IReplaceItemInput {
+  returnValues?: string;
+}
+
+export interface IReplaceItemOutput {
+  item: IItem;
+}
+
+export interface IUpdateItemInput {
+  returnValues?: string;
+}
+
+export interface IUpdateItemOutput {
+  item: IItem;
+}
+
+export interface IUpsertItemInput {
+  returnValues?: string;
+}
+
+export interface IUpsertItemOutput {
+  item: IItem;
+}
+
+export interface IDeleteItemInput {
+  returnValues?: string;
+}
+
+export interface IDeleteItemOutput {
+  item: IItem;
+}
 
 export default class Table extends ReadOnlyTable {
   public makeGsi(indexName: string, keySchema: Schema) {
     return new Gsi(indexName, this.tableName, keySchema, this.itemSchema);
   }
 
-  public async insertItem(o: any, opts = {}) {
+  public insertItemParams(
+    o: IItem,
+    opts: IInsertItemInput = {},
+  ): AWS.DynamoDB.PutItemInput {
     const object = this.itemSchema.toDynamo(o);
 
     const attributes = new ExpressionAttributes();
@@ -37,46 +90,72 @@ export default class Table extends ReadOnlyTable {
       throw new Error("Malformed key");
     }
 
-    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+    const keyConditionExpression = serializeConditionExpression(
+      conditionExpression,
+      attributes,
+    );
 
-    const params = Object.assign({
+    const params: AWS.DynamoDB.PutItemInput = {
       ConditionExpression: keyConditionExpression,
       ExpressionAttributeNames: attributes.names,
       Item: object,
       TableName: this.tableName,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().putItem(params).promise();
-
-    let item = null;
-
-    if (data && data.Attributes) {
-      item = this.itemSchema.fromDynamo(data.Attributes);
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
+        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      }
+      params.ReturnValues = opts.returnValues;
     }
 
-    return {item};
+    return params;
   }
 
-  public async putItem(o: any, opts = {}) {
+  public insertItem(
+    o: IItem,
+    opts?: IInsertItemInput,
+  ): Promise<IInsertItemOutput> {
+    const params = this.insertItemParams(o, opts);
+    return this._putItem(params);
+  }
+
+  public putItemParams(
+    o: IItem,
+    opts: IPutItemInput = {},
+  ): AWS.DynamoDB.PutItemInput {
     const object = this.itemSchema.toDynamo(o);
 
-    const params = Object.assign({
+    const params: AWS.DynamoDB.PutItemInput = {
       Item: object,
       TableName: this.tableName,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().putItem(params).promise();
-
-    let item = null;
-
-    if (data && data.Attributes) {
-      item = this.itemSchema.fromDynamo(data.Attributes);
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
+        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      }
+      params.ReturnValues = opts.returnValues;
     }
 
-    return {item};
+    return params;
   }
 
-  public async replaceItem(o: any, opts = {}) {
+  public putItem(o: IItem, opts?: IPutItemInput) {
+    const params = this.putItemParams(o, opts);
+    return this._putItem(params);
+  }
+
+  public replaceItemParams(
+    o: IItem,
+    opts: IReplaceItemInput = {},
+  ): AWS.DynamoDB.PutItemInput {
     const object = this.itemSchema.toDynamo(o);
 
     const attributes = new ExpressionAttributes();
@@ -95,27 +174,43 @@ export default class Table extends ReadOnlyTable {
       throw new Error("Malformed key");
     }
 
-    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+    const keyConditionExpression = serializeConditionExpression(
+      conditionExpression,
+      attributes,
+    );
 
-    const params = Object.assign({
+    const params: AWS.DynamoDB.PutItemInput = {
       ConditionExpression: keyConditionExpression,
       ExpressionAttributeNames: attributes.names,
       Item: object,
       TableName: this.tableName,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().putItem(params).promise();
-
-    let item = null;
-
-    if (data && data.Attributes) {
-      item = this.itemSchema.fromDynamo(data.Attributes);
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
+        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      }
+      params.ReturnValues = opts.returnValues;
     }
 
-    return {item};
+    return params;
   }
 
-  public async updateItem(o: any, opts = {}) {
+  public replaceItem(
+    o: IItem,
+    opts?: IReplaceItemInput,
+  ): Promise<IReplaceItemOutput> {
+    const params = this.replaceItemParams(o, opts);
+    return this._putItem(params);
+  }
+
+  public updateItemParams(
+    o: IItem,
+    opts: IUpdateItemInput = {},
+  ): AWS.DynamoDB.UpdateItemInput {
     const object = this.itemSchema.toDynamo(o);
 
     const attributes = new ExpressionAttributes();
@@ -139,30 +234,52 @@ export default class Table extends ReadOnlyTable {
       throw new Error("Malformed key");
     }
 
-    const keyConditionExpression = serializeConditionExpression(conditionExpression, attributes);
+    const keyConditionExpression = serializeConditionExpression(
+      conditionExpression,
+      attributes,
+    );
     const itemUpdateExpression = updateExpression.serialize(attributes);
 
-    const params = Object.assign({
+    const params: AWS.DynamoDB.UpdateItemInput = {
       ConditionExpression: keyConditionExpression,
       ExpressionAttributeNames: attributes.names,
       ExpressionAttributeValues: attributes.values,
       Key: this.keySchema.toDynamo(o),
       TableName: this.tableName,
       UpdateExpression: itemUpdateExpression,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().updateItem(params).promise();
-
-    let item = null;
-
-    if (data && data.Attributes) {
-      item = this.itemSchema.fromDynamo(data.Attributes);
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (
+        !["NONE", "ALL_OLD", "UPDATED_OLD", "ALL_NEW", "UPDATED_NEW"].includes(
+          opts.returnValues as string,
+        )
+      ) {
+        throw new Error(
+          "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
+        );
+      }
+      params.ReturnValues = opts.returnValues;
     }
 
-    return {item};
+    return params;
   }
 
-  public async upsertItem(o: any, opts = {}) {
+  public updateItem(
+    o: IItem,
+    opts?: IUpdateItemInput,
+  ): Promise<IUpdateItemOutput> {
+    const params = this.updateItemParams(o, opts);
+    return this._updateItem(params);
+  }
+
+  public upsertItemParams(
+    o: IItem,
+    opts: IUpsertItemInput = {},
+  ): AWS.DynamoDB.UpdateItemInput {
     const object = this.itemSchema.toDynamo(o);
 
     const attributes = new ExpressionAttributes();
@@ -176,32 +293,71 @@ export default class Table extends ReadOnlyTable {
 
     const itemUpdateExpression = updateExpression.serialize(attributes);
 
-    const params = Object.assign({
+    const params: AWS.DynamoDB.UpdateItemInput = {
       ExpressionAttributeNames: attributes.names,
       ExpressionAttributeValues: attributes.values,
       Key: this.keySchema.toDynamo(o),
       TableName: this.tableName,
       UpdateExpression: itemUpdateExpression,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().updateItem(params).promise();
-
-    let item = null;
-
-    if (data && data.Attributes) {
-      item = this.itemSchema.fromDynamo(data.Attributes);
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (
+        !["NONE", "ALL_OLD", "UPDATED_OLD", "ALL_NEW", "UPDATED_NEW"].includes(
+          opts.returnValues as string,
+        )
+      ) {
+        throw new Error(
+          "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
+        );
+      }
+      params.ReturnValues = opts.returnValues;
     }
 
-    return {item};
+    return params;
   }
 
-  public async deleteItem(key: any, opts = {}) {
-    const params = Object.assign({
+  public upsertItem(
+    o: IItem,
+    opts?: IUpsertItemInput,
+  ): Promise<IUpsertItemOutput> {
+    const params = this.upsertItemParams(o, opts);
+    return this._updateItem(params);
+  }
+
+  public deleteItemParams(
+    key: IKey,
+    opts: IDeleteItemInput = {},
+  ): AWS.DynamoDB.DeleteItemInput {
+    const params: AWS.DynamoDB.DeleteItemInput = {
       Key: this.keySchema.toDynamo(key),
       TableName: this.tableName,
-    }, opts);
+    };
 
-    const data = await this.dynamodb().deleteItem(params).promise();
+    if (opts.hasOwnProperty("returnValues")) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
+        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      }
+      params.ReturnValues = opts.returnValues;
+    }
+
+    return params;
+  }
+
+  public async deleteItem(
+    key: IKey,
+    opts?: IDeleteItemInput,
+  ): Promise<IDeleteItemOutput> {
+    const params = this.deleteItemParams(key, opts);
+    const data = await this.dynamodb()
+      .deleteItem(params)
+      .promise();
 
     let item = null;
 
@@ -209,6 +365,38 @@ export default class Table extends ReadOnlyTable {
       item = this.itemSchema.fromDynamo(data.Attributes);
     }
 
-    return {item};
+    return { item };
+  }
+
+  protected async _putItem(
+    params: AWS.DynamoDB.PutItemInput,
+  ): Promise<IPutItemOutput> {
+    const data = await this.dynamodb()
+      .putItem(params)
+      .promise();
+
+    let item = null;
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes);
+    }
+
+    return { item };
+  }
+
+  protected async _updateItem(
+    params: AWS.DynamoDB.UpdateItemInput,
+  ): Promise<IUpdateItemOutput> {
+    const data = await this.dynamodb()
+      .updateItem(params)
+      .promise();
+
+    let item = null;
+
+    if (data && data.Attributes) {
+      item = this.itemSchema.fromDynamo(data.Attributes);
+    }
+
+    return { item };
   }
 }

@@ -41,17 +41,19 @@ describe("Gsi", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N,
+        range: types.N
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: types.S
       });
       const gsi = new Gsi("indexName", "tableName", keySchema, itemSchema);
 
       expect(gsi.indexName).to.equal("indexName");
       expect(gsi.tableName).to.equal("tableName");
       expect(gsi.keySchema).to.equal(keySchema);
-      expect(gsi.itemSchema).to.deep.equal(new Schema(Object.assign({}, itemSchema.template, keySchema.template)));
+      expect(gsi.itemSchema).to.deep.equal(
+        new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+      );
     });
   });
 
@@ -76,15 +78,15 @@ describe("Gsi", () => {
     it("should call #dynamodb().query() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S,
+        range: types.S
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);
 
       const client = {
         query: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       // @ts-ignore
@@ -92,7 +94,7 @@ describe("Gsi", () => {
 
       await gsi.query({
         hash: "hash",
-        range: "range",
+        range: "range"
       });
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
@@ -100,17 +102,17 @@ describe("Gsi", () => {
         KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr2": "range",
+          "#attr2": "range"
         },
         ExpressionAttributeValues: {
           ":val1": {
-            S: "hash",
+            S: "hash"
           },
           ":val3": {
-            S: "range",
-          },
+            S: "range"
+          }
         },
-        IndexName: "indexName",
+        IndexName: "indexName"
       });
     });
   });
@@ -130,8 +132,8 @@ describe("Gsi", () => {
 
       const client = {
         scan: sinon.stub().returns({
-          promise: sinon.stub().resolves(),
-        }),
+          promise: sinon.stub().resolves()
+        })
       };
 
       gsi.dynamodb.returns(client);
@@ -140,7 +142,7 @@ describe("Gsi", () => {
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
         TableName: "tableName",
-        IndexName: "indexName",
+        IndexName: "indexName"
       });
     });
   });
