@@ -8,10 +8,9 @@ import {
 import type from "@tleef/type-js";
 import * as AWS from "aws-sdk";
 
+import Client from "./Client";
 import Schema from "./Schema";
 import { and, condition } from "./util/DynamoDBExpression";
-
-const dynamodb = new AWS.DynamoDB();
 
 export interface IKey {
   [key: string]: any;
@@ -256,14 +255,10 @@ export default class ReadOnlyTable {
     return this._scan(params);
   }
 
-  public dynamodb() {
-    return dynamodb;
-  }
-
   protected async _getItem(
     params: AWS.DynamoDB.GetItemInput,
   ): Promise<IGetItemOutput> {
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .getItem(params)
       .promise();
 
@@ -279,7 +274,7 @@ export default class ReadOnlyTable {
   protected async _query(
     params: AWS.DynamoDB.QueryInput,
   ): Promise<IQueryOutput> {
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .query(params)
       .promise();
 
@@ -301,7 +296,7 @@ export default class ReadOnlyTable {
   }
 
   protected async _scan(params: AWS.DynamoDB.ScanInput): Promise<IScanOutput> {
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .scan(params)
       .promise();
 

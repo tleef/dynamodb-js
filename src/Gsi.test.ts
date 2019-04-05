@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
+import Client from "./Client";
 import ReadOnlyTable from "./ReadOnlyTable";
 import Schema from "./Schema";
 import types from "./types";
@@ -68,14 +69,14 @@ describe("Gsi", () => {
 
   describe("#query()", () => {
     beforeEach(() => {
-      sinon.stub(Gsi.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Gsi.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().query() with correct params", async () => {
+    it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -90,7 +91,7 @@ describe("Gsi", () => {
       };
 
       // @ts-ignore
-      gsi.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await gsi.query({
         hash: "hash",
@@ -119,14 +120,14 @@ describe("Gsi", () => {
 
   describe("#scan()", () => {
     beforeEach(() => {
-      sinon.stub(Gsi.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Gsi.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().scan() with correct params", async () => {
+    it("should call client.scan() with correct params", async () => {
       // @ts-ignore
       const gsi = new Gsi("indexName", "tableName");
 
@@ -136,7 +137,8 @@ describe("Gsi", () => {
         })
       };
 
-      gsi.dynamodb.returns(client);
+      // @ts-ignore
+      Client.get.returns(client);
 
       await gsi.scan();
 

@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
+import Client from "./Client";
 import ReadOnlyTable from "./ReadOnlyTable";
 import Schema from "./Schema";
 import Table from "./Table";
@@ -109,14 +110,14 @@ describe("Table", () => {
 
   describe("#insertItem()", () => {
     beforeEach(() => {
-      sinon.stub(Table.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Table.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().putItem() with correct params", async () => {
+    it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -143,7 +144,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.insertItem({
         hash: "hash",
@@ -230,7 +231,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.insertItem({
         hash: "hash",
@@ -250,14 +251,14 @@ describe("Table", () => {
 
   describe("#putItem()", () => {
     beforeEach(() => {
-      sinon.stub(Table.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Table.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().putItem() with correct params", async () => {
+    it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -284,7 +285,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.putItem({
         hash: "hash",
@@ -365,7 +366,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.putItem({
         hash: "hash",
@@ -385,14 +386,14 @@ describe("Table", () => {
 
   describe("#replaceItem()", () => {
     beforeEach(() => {
-      sinon.stub(Table.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Table.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().putItem() with correct params", async () => {
+    it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -419,7 +420,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.replaceItem({
         hash: "hash",
@@ -506,7 +507,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.replaceItem({
         hash: "hash",
@@ -526,14 +527,14 @@ describe("Table", () => {
 
   describe("#updateItem()", () => {
     beforeEach(() => {
-      sinon.stub(Table.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Table.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().updateItem() with correct params", async () => {
+    it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -560,7 +561,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.updateItem({
         hash: "hash",
@@ -660,7 +661,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.updateItem({
         hash: "hash",
@@ -680,14 +681,14 @@ describe("Table", () => {
 
   describe("#upsertItem()", () => {
     beforeEach(() => {
-      sinon.stub(Table.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      Table.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().updateItem() with correct params", async () => {
+    it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -714,7 +715,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.upsertItem({
         hash: "hash",
@@ -810,7 +811,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.upsertItem({
         hash: "hash",
@@ -830,14 +831,14 @@ describe("Table", () => {
 
   describe("#deleteItem()", () => {
     beforeEach(() => {
-      sinon.stub(ReadOnlyTable.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      ReadOnlyTable.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().deleteItem() with correct params", async () => {
+    it("should call client.deleteItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -852,7 +853,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await table.deleteItem({
         hash: "hash",
@@ -897,7 +898,7 @@ describe("Table", () => {
       };
 
       // @ts-ignore
-      table.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await table.deleteItem({
         hash: "hash",

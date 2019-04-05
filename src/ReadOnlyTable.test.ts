@@ -2,9 +2,8 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import * as AWS from "aws-sdk";
-
 import ReadOnlyTable from "./ReadOnlyTable";
+import Client from "./Client";
 import Schema from "./Schema";
 import types from "./types";
 
@@ -49,25 +48,16 @@ describe("ReadOnlyTable", () => {
     });
   });
 
-  describe("#dynamodb()", () => {
-    it("should return DynamoDB client", () => {
-      // @ts-ignore
-      const roTable = new ReadOnlyTable();
-
-      expect(roTable.dynamodb()).to.be.an.instanceof(AWS.DynamoDB);
-    });
-  });
-
   describe("#getItem()", () => {
     beforeEach(() => {
-      sinon.stub(ReadOnlyTable.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      ReadOnlyTable.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().getItem() with correct params", async () => {
+    it("should call client.getItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -82,7 +72,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await roTable.getItem({
         hash: "hash",
@@ -127,7 +117,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await roTable.getItem({
         hash: "hash",
@@ -146,14 +136,14 @@ describe("ReadOnlyTable", () => {
 
   describe("#query()", () => {
     beforeEach(() => {
-      sinon.stub(ReadOnlyTable.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      ReadOnlyTable.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().query() with correct params", async () => {
+    it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -168,7 +158,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await roTable.query(
         {
@@ -232,7 +222,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await roTable.query({
         hash: "hash"
@@ -279,7 +269,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await roTable.query({
         hash: "hash"
@@ -297,14 +287,14 @@ describe("ReadOnlyTable", () => {
 
   describe("#scan()", () => {
     beforeEach(() => {
-      sinon.stub(ReadOnlyTable.prototype, "dynamodb");
+      sinon.stub(Client, "get");
     });
     afterEach(() => {
       // @ts-ignore
-      ReadOnlyTable.prototype.dynamodb.restore();
+      Client.get.restore();
     });
 
-    it("should call #dynamodb().scan() with correct params", async () => {
+    it("should call client.scan() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
         range: types.S
@@ -319,7 +309,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       await roTable.scan({
         exclusiveStartKey: {
@@ -369,7 +359,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await roTable.scan();
 
@@ -414,7 +404,7 @@ describe("ReadOnlyTable", () => {
       };
 
       // @ts-ignore
-      roTable.dynamodb.returns(client);
+      Client.get.returns(client);
 
       const res = await roTable.scan();
 

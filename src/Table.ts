@@ -10,6 +10,7 @@ import {
 import type from "@tleef/type-js";
 import * as AWS from "aws-sdk";
 
+import Client from "./Client";
 import Gsi from "./Gsi";
 import ReadOnlyTable, { IItem, IKey } from "./ReadOnlyTable";
 import Schema from "./Schema";
@@ -355,7 +356,7 @@ export default class Table extends ReadOnlyTable {
     opts?: IDeleteItemInput,
   ): Promise<IDeleteItemOutput> {
     const params = this.deleteItemParams(key, opts);
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .deleteItem(params)
       .promise();
 
@@ -371,7 +372,7 @@ export default class Table extends ReadOnlyTable {
   protected async _putItem(
     params: AWS.DynamoDB.PutItemInput,
   ): Promise<IPutItemOutput> {
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .putItem(params)
       .promise();
 
@@ -387,7 +388,7 @@ export default class Table extends ReadOnlyTable {
   protected async _updateItem(
     params: AWS.DynamoDB.UpdateItemInput,
   ): Promise<IUpdateItemOutput> {
-    const data = await this.dynamodb()
+    const data = await Client.get()
       .updateItem(params)
       .promise();
 
