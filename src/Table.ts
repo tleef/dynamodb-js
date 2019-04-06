@@ -12,57 +12,26 @@ import * as AWS from "aws-sdk";
 
 import Client from "./Client";
 import Gsi from "./Gsi";
-import ReadOnlyTable, { IItem, IKey } from "./ReadOnlyTable";
+import ReadOnlyTable from "./ReadOnlyTable";
 import Schema from "./Schema";
 import { and, condition } from "./util/DynamoDBExpression";
 
-export interface IInsertItemInput {
-  returnValues?: string;
-}
-
-export interface IInsertItemOutput {
-  item: IItem;
-}
-
-export interface IPutItemInput {
-  returnValues?: string;
-}
-
-export interface IPutItemOutput {
-  item: IItem;
-}
-
-export interface IReplaceItemInput {
-  returnValues?: string;
-}
-
-export interface IReplaceItemOutput {
-  item: IItem;
-}
-
-export interface IUpdateItemInput {
-  returnValues?: string;
-}
-
-export interface IUpdateItemOutput {
-  item: IItem;
-}
-
-export interface IUpsertItemInput {
-  returnValues?: string;
-}
-
-export interface IUpsertItemOutput {
-  item: IItem;
-}
-
-export interface IDeleteItemInput {
-  returnValues?: string;
-}
-
-export interface IDeleteItemOutput {
-  item: IItem;
-}
+import {
+  IDeleteItemInput,
+  IDeleteItemOutput,
+  IInsertItemInput,
+  IInsertItemOutput,
+  IItem,
+  IKey,
+  IPutItemInput,
+  IPutItemOutput,
+  IReplaceItemInput,
+  IReplaceItemOutput,
+  IUpdateItemInput,
+  IUpdateItemOutput,
+  IUpsertItemInput,
+  IUpsertItemOutput,
+} from "./interfaces";
 
 export default class Table extends ReadOnlyTable {
   public makeGsi(indexName: string, keySchema: Schema) {

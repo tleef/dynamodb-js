@@ -23,6 +23,7 @@
     "@types/node": "^11.13.0",
     "@types/sinon": "^7.0.11",
     "@types/sinon-chai": "^3.2.2",
+    "@types/uuid": "^3.4.4",
     "chai": "^4.2.0",
     "coveralls": "^3.0.3",
     "mocha": "^6.0.2",
@@ -37,6 +38,7 @@
   "dependencies": {
     "@aws/dynamodb-expressions": "^0.7.3",
     "@tleef/type-js": "^1.5.0",
-    "aws-sdk": "^2.437.0"
+    "aws-sdk": "^2.437.0",
+    "uuid": "^3.3.2"
   }
 }

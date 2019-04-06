@@ -1,13 +1,14 @@
-import ReadOnlyTable, {
+import ReadOnlyTable from "./ReadOnlyTable";
+import Schema from "./Schema";
+
+import {
   IGetItemOutput,
   IKey,
   IQueryInput,
   IQueryOutput,
   IScanInput,
   IScanOutput,
-} from "./ReadOnlyTable";
-
-import Schema from "./Schema";
+} from "./interfaces";
 
 export default class Gsi extends ReadOnlyTable {
   private readonly _indexName: string;
