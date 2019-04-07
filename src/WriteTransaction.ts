@@ -18,6 +18,10 @@ export default class WriteTransaction {
   }
 
   public async exec() {
+    if (!this._transactItems || !this._transactItems.length) {
+      return;
+    }
+
     await Client.get()
       .transactWriteItems({
         ClientRequestToken: this._clientRequestToken,
