@@ -96,7 +96,7 @@ export default class WriteTransactionTable {
   }
 
   public deleteItem(key: IKey) {
-    const params = this._table.getItemParams(key);
+    const params = this._table.deleteItemParams(key);
     const transactionItem: AWS.DynamoDB.TransactWriteItem = {
       Delete: {
         Key: params.Key,

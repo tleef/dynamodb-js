@@ -116,6 +116,33 @@ describe("Gsi", () => {
         IndexName: "indexName"
       });
     });
+
+    it("should throw if called with consistentRead", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const gsi = new Gsi("indexName", "tableName", keySchema);
+
+      const client = {
+        query: sinon.stub()
+      };
+
+      // @ts-ignore
+      Client.get.returns(client);
+
+      expect(() =>
+        gsi.query(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          { consistentRead: true }
+        )
+      ).throw("consistentRead is not allowed on a GSI");
+      expect(client.query).to.have.callCount(0);
+    });
   });
 
   describe("#scan()", () => {
@@ -146,6 +173,23 @@ describe("Gsi", () => {
         TableName: "tableName",
         IndexName: "indexName"
       });
+    });
+
+    it("should throw if called with consistentRead", () => {
+      // @ts-ignore
+      const gsi = new Gsi("indexName", "tableName");
+
+      const client = {
+        scan: sinon.stub()
+      };
+
+      // @ts-ignore
+      Client.get.returns(client);
+
+      expect(() => gsi.scan({ consistentRead: true })).throw(
+        "consistentRead is not allowed on a GSI"
+      );
+      expect(client.scan).to.have.callCount(0);
     });
   });
 });
