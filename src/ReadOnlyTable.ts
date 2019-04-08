@@ -136,7 +136,7 @@ export default class ReadOnlyTable {
         throw new Error("limit must be an int");
       }
       if ((opts.limit as number) < 1) {
-        throw new Error("limit must be greater than 1");
+        throw new Error("limit must be greater than or equal to 1");
       }
       params.Limit = opts.limit;
     }
@@ -179,7 +179,7 @@ export default class ReadOnlyTable {
         throw new Error("limit must be an int");
       }
       if ((opts.limit as number) < 1) {
-        throw new Error("limit must be greater than 1");
+        throw new Error("limit must be greater than or equal to 1");
       }
       params.Limit = opts.limit;
     }
@@ -214,7 +214,7 @@ export default class ReadOnlyTable {
           "If you provide totalSegments, you must also provide segment",
         );
       }
-      params.Segment = opts.segment;
+      params.TotalSegments = opts.totalSegments;
     }
 
     return params;

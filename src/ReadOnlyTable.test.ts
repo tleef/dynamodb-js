@@ -48,6 +48,59 @@ describe("ReadOnlyTable", () => {
     });
   });
 
+  describe("getItemParams()", () => {
+    it("should set the options correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      const params = roTable.getItemParams(
+        {
+          hash: "hash",
+          range: "range"
+        },
+        // @ts-ignore
+        {
+          consistentRead: true
+        }
+      );
+
+      expect(params).to.deep.equal({
+        TableName: "tableName",
+        Key: {
+          hash: { S: "hash" },
+          range: { S: "range" }
+        },
+        ConsistentRead: true
+      });
+    });
+
+    it("should throw if consistentRead is not a boolean", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.getItemParams(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          // @ts-ignore
+          {
+            consistentRead: "yes"
+          }
+        )
+      ).to.throw("consistentRead must be a boolean");
+    });
+  });
+
   describe("#getItem()", () => {
     beforeEach(() => {
       sinon.stub(Client, "get");
@@ -131,6 +184,149 @@ describe("ReadOnlyTable", () => {
           abc: "abc"
         }
       });
+    });
+  });
+
+  describe("queryParams()", () => {
+    it("should set the options correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      const params = roTable.queryParams(
+        {
+          hash: "hash",
+          range: "range"
+        },
+        // @ts-ignore
+        {
+          consistentRead: true,
+          limit: 1,
+          scanIndexForward: true
+        }
+      );
+
+      expect(params).to.deep.equal({
+        TableName: "tableName",
+        ExpressionAttributeNames: {
+          "#attr0": "hash",
+          "#attr2": "range"
+        },
+        ExpressionAttributeValues: {
+          ":val1": { S: "hash" },
+          ":val3": { S: "range" }
+        },
+        KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
+        ConsistentRead: true,
+        Limit: 1,
+        ScanIndexForward: true
+      });
+    });
+
+    it("should throw if given a bad key", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.queryParams({
+          foo: "bar"
+        })
+      ).to.throw("Malformed key");
+    });
+
+    it("should throw if consistentRead is not a boolean", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.queryParams(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          // @ts-ignore
+          {
+            consistentRead: "yes"
+          }
+        )
+      ).to.throw("consistentRead must be a boolean");
+    });
+
+    it("should throw if limit is not an int", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.queryParams(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          // @ts-ignore
+          {
+            limit: 1.5
+          }
+        )
+      ).to.throw("limit must be an int");
+    });
+
+    it("should throw if limit is less than 1", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.queryParams(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          // @ts-ignore
+          {
+            limit: 0
+          }
+        )
+      ).to.throw("limit must be greater than or equal to 1");
+    });
+
+    it("should throw if scanIndexForward is not a boolean", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const roTable = new ReadOnlyTable("tableName", keySchema);
+
+      expect(() =>
+        roTable.queryParams(
+          {
+            hash: "hash",
+            range: "range"
+          },
+          // @ts-ignore
+          {
+            scanIndexForward: "no"
+          }
+        )
+      ).to.throw("scanIndexForward must be a boolean");
     });
   });
 
@@ -282,6 +478,173 @@ describe("ReadOnlyTable", () => {
           range: "range"
         }
       });
+    });
+  });
+
+  describe("scanParams()", () => {
+    it("should set the options correctly", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      const params = roTable.scanParams(
+        // @ts-ignore
+        {
+          consistentRead: true,
+          limit: 1,
+          segment: 0,
+          totalSegments: 1
+        }
+      );
+
+      expect(params).to.deep.equal({
+        TableName: "tableName",
+        ConsistentRead: true,
+        Limit: 1,
+        Segment: 0,
+        TotalSegments: 1
+      });
+    });
+
+    it("should throw if consistentRead is not a boolean", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            consistentRead: "yes"
+          }
+        )
+      ).to.throw("consistentRead must be a boolean");
+    });
+
+    it("should throw if limit is not an int", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            limit: 1.5
+          }
+        )
+      ).to.throw("limit must be an int");
+    });
+
+    it("should throw if limit is less than 1", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            limit: 0
+          }
+        )
+      ).to.throw("limit must be greater than or equal to 1");
+    });
+
+    it("should throw if segment is not an int", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            segment: 1.5
+          }
+        )
+      ).to.throw("segment must be an int");
+    });
+
+    it("should throw if segment is out of range", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            segment: -1
+          }
+        )
+      ).to.throw("segment must be between 0 and 999999");
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            segment: 1000000
+          }
+        )
+      ).to.throw("segment must be between 0 and 999999");
+    });
+
+    it("should throw if segment is supplied without totalSegments", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            segment: 1
+          }
+        )
+      ).to.throw("If you provide segment, you must also provide totalSegments");
+    });
+
+    it("should throw if totalSegments is not an int", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            totalSegments: 1.5
+          }
+        )
+      ).to.throw("totalSegments must be an int");
+    });
+
+    it("should throw if totalSegments is out of range", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            totalSegments: 0
+          }
+        )
+      ).to.throw("totalSegments must be between 1 and 1000000");
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            totalSegments: 1000001
+          }
+        )
+      ).to.throw("totalSegments must be between 1 and 1000000");
+    });
+
+    it("should throw if totalSegments is supplied without segment", () => {
+      // @ts-ignore
+      const roTable = new ReadOnlyTable("tableName");
+
+      expect(() =>
+        roTable.scanParams(
+          // @ts-ignore
+          {
+            totalSegments: 1
+          }
+        )
+      ).to.throw("If you provide totalSegments, you must also provide segment");
     });
   });
 
