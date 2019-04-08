@@ -108,6 +108,88 @@ describe("Table", () => {
     });
   });
 
+  describe("#insertItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      const params = table.insertItemParams(
+        { hash: "hash", range: "range", one: "one" },
+        { returnValues: "ALL_OLD" }
+      );
+
+      expect(params).to.deep.equal({
+        ConditionExpression:
+          "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
+        ExpressionAttributeNames: {
+          "#attr0": "hash",
+          "#attr1": "range"
+        },
+        Item: {
+          hash: { S: "hash" },
+          range: { S: "range" },
+          one: { S: "one" }
+        },
+        TableName: "tableName",
+        ReturnValues: "ALL_OLD"
+      });
+    });
+
+    it("should throw if key is malformed", () => {
+      const keySchema = new Schema({});
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() => table.insertItemParams({ one: "one" })).to.throw(
+        "Malformed key"
+      );
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.insertItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.insertItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+    });
+  });
+
   describe("#insertItem()", () => {
     beforeEach(() => {
       sinon.stub(Client, "get");
@@ -249,6 +331,70 @@ describe("Table", () => {
     });
   });
 
+  describe("#putItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      const params = table.putItemParams(
+        { hash: "hash", range: "range", one: "one" },
+        { returnValues: "ALL_OLD" }
+      );
+
+      expect(params).to.deep.equal({
+        Item: {
+          hash: { S: "hash" },
+          range: { S: "range" },
+          one: { S: "one" }
+        },
+        TableName: "tableName",
+        ReturnValues: "ALL_OLD"
+      });
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.putItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.putItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+    });
+  });
+
   describe("#putItem()", () => {
     beforeEach(() => {
       sinon.stub(Client, "get");
@@ -381,6 +527,88 @@ describe("Table", () => {
           abc: "abc"
         }
       });
+    });
+  });
+
+  describe("#replaceItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      const params = table.replaceItemParams(
+        { hash: "hash", range: "range", one: "one" },
+        { returnValues: "ALL_OLD" }
+      );
+
+      expect(params).to.deep.equal({
+        ConditionExpression:
+          "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
+        ExpressionAttributeNames: {
+          "#attr0": "hash",
+          "#attr1": "range"
+        },
+        Item: {
+          hash: { S: "hash" },
+          range: { S: "range" },
+          one: { S: "one" }
+        },
+        TableName: "tableName",
+        ReturnValues: "ALL_OLD"
+      });
+    });
+
+    it("should throw if key is malformed", () => {
+      const keySchema = new Schema({});
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() => table.replaceItemParams({ one: "one" })).to.throw(
+        "Malformed key"
+      );
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.replaceItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.replaceItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });
 
@@ -522,6 +750,94 @@ describe("Table", () => {
           abc: "abc"
         }
       });
+    });
+  });
+
+  describe("#updateItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      const params = table.updateItemParams(
+        { hash: "hash", range: "range", one: "one" },
+        { returnValues: "UPDATED_NEW" }
+      );
+
+      expect(params).to.deep.equal({
+        ConditionExpression:
+          "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
+        UpdateExpression: "SET #attr2 = :val3",
+        ExpressionAttributeNames: {
+          "#attr0": "hash",
+          "#attr1": "range",
+          "#attr2": "one"
+        },
+        ExpressionAttributeValues: {
+          ":val3": { S: "one" }
+        },
+        Key: {
+          hash: { S: "hash" },
+          range: { S: "range" }
+        },
+        TableName: "tableName",
+        ReturnValues: "UPDATED_NEW"
+      });
+    });
+
+    it("should throw if key is malformed", () => {
+      const keySchema = new Schema({});
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() => table.updateItemParams({ one: "one" })).to.throw(
+        "Malformed key"
+      );
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.updateItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.updateItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw(
+        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'"
+      );
     });
   });
 
@@ -679,6 +995,78 @@ describe("Table", () => {
     });
   });
 
+  describe("#upsertItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      const params = table.upsertItemParams(
+        { hash: "hash", range: "range", one: "one" },
+        { returnValues: "UPDATED_NEW" }
+      );
+
+      expect(params).to.deep.equal({
+        UpdateExpression: "SET #attr0 = :val1",
+        ExpressionAttributeNames: {
+          "#attr0": "one"
+        },
+        ExpressionAttributeValues: {
+          ":val1": { S: "one" }
+        },
+        Key: {
+          hash: { S: "hash" },
+          range: { S: "range" }
+        },
+        TableName: "tableName",
+        ReturnValues: "UPDATED_NEW"
+      });
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.upsertItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+      const itemSchema = new Schema({
+        one: types.S
+      });
+      const table = new Table("tableName", keySchema, itemSchema);
+
+      expect(() =>
+        table.upsertItemParams(
+          { hash: "hash", one: "one" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw(
+        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'"
+      );
+    });
+  });
+
   describe("#upsertItem()", () => {
     beforeEach(() => {
       sinon.stub(Client, "get");
@@ -826,6 +1214,63 @@ describe("Table", () => {
           abc: "abc"
         }
       });
+    });
+  });
+
+  describe("#deleteItemParams", () => {
+    it("should set the params correctly", () => {
+      const keySchema = new Schema({
+        hash: types.S,
+        range: types.S
+      });
+
+      const table = new Table("tableName", keySchema);
+
+      const params = table.deleteItemParams(
+        { hash: "hash", range: "range" },
+        { returnValues: "ALL_OLD" }
+      );
+
+      expect(params).to.deep.equal({
+        Key: {
+          hash: { S: "hash" },
+          range: { S: "range" }
+        },
+        TableName: "tableName",
+        ReturnValues: "ALL_OLD"
+      });
+    });
+
+    it("should throw if returnValues is not a string", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+
+      const table = new Table("tableName", keySchema);
+
+      expect(() =>
+        table.deleteItemParams(
+          { hash: "hash" },
+          // @ts-ignore
+          { returnValues: true }
+        )
+      ).to.throw("returnValues must be a string");
+    });
+
+    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+      const keySchema = new Schema({
+        hash: types.S
+      });
+
+      const table = new Table("tableName", keySchema);
+
+      expect(() =>
+        table.deleteItemParams(
+          { hash: "hash" },
+          // @ts-ignore
+          { returnValues: "yes" }
+        )
+      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });
 
