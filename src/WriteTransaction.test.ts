@@ -88,7 +88,7 @@ describe("WriteTransaction", () => {
       Client.get.restore();
     });
 
-    it("should not call client.transactWriteItems()", () => {
+    it("should not call client.transactWriteItems()", async () => {
       const client = {
         transactWriteItems: sinon.stub(),
       };
@@ -97,12 +97,12 @@ describe("WriteTransaction", () => {
       Client.get.returns(client);
 
       const transaction = new WriteTransaction();
-      transaction.exec();
+      await transaction.exec();
 
       expect(client.transactWriteItems).to.have.callCount(0);
     });
 
-    it("should call client.transactWriteItems() with correct params", () => {
+    it("should call client.transactWriteItems() with correct params", async () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
           promise: sinon.stub().resolves(),
@@ -124,7 +124,7 @@ describe("WriteTransaction", () => {
       const transaction = new WriteTransaction();
       transaction.addItem(transactionItem);
 
-      transaction.exec();
+      await transaction.exec();
 
       expect(client.transactWriteItems.getCall(0).args[0]).to.deep.equal({
         // @ts-ignore
@@ -133,7 +133,7 @@ describe("WriteTransaction", () => {
       });
     });
 
-    it("should call client.transactWriteItems() with different client token", () => {
+    it("should call client.transactWriteItems() with different client token", async () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
           promise: sinon.stub().resolves(),
@@ -157,8 +157,8 @@ describe("WriteTransaction", () => {
       const transaction2 = new WriteTransaction();
       transaction2.addItem(transactionItem);
 
-      transaction1.exec();
-      transaction2.exec();
+      await transaction1.exec();
+      await transaction2.exec();
 
       expect(client.transactWriteItems).to.have.callCount(2);
       expect(
@@ -177,7 +177,7 @@ describe("WriteTransaction", () => {
       );
     });
 
-    it("should call client.transactWriteItems() with same client token", () => {
+    it("should call client.transactWriteItems() with same client token", async () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
           promise: sinon.stub().resolves(),
@@ -199,8 +199,8 @@ describe("WriteTransaction", () => {
       const transaction = new WriteTransaction();
       transaction.addItem(transactionItem);
 
-      transaction.exec();
-      transaction.exec();
+      await transaction.exec();
+      await transaction.exec();
 
       expect(client.transactWriteItems).to.have.callCount(2);
       expect(
