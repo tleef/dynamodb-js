@@ -17,7 +17,7 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const item = schema.toDynamo({
@@ -29,21 +29,21 @@ describe("Schema", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(item).to.deep.equal({
         b: { B: "dGVzdA==" },
         bool: { BOOL: true },
         bs: {
-          BS: ["b25l", "dHdv"]
+          BS: ["b25l", "dHdv"],
         },
         json: { S: JSON.stringify({ key: "value" }) },
         n: { N: "1" },
         ns: { NS: ["1", "2"] },
         null: { NULL: true },
         s: { S: "test" },
-        ss: { SS: ["one", "two"] }
+        ss: { SS: ["one", "two"] },
       });
     });
 
@@ -57,7 +57,7 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const item = schema.toDynamo({
@@ -70,7 +70,7 @@ describe("Schema", () => {
         null: null,
         s: "test",
         ss: ["one", "two"],
-        unknown: "key"
+        unknown: "key",
       });
 
       expect(item.unknown).to.deep.equal(undefined);
@@ -88,21 +88,21 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const js = schema.fromDynamo({
         b: { B: "dGVzdA==" },
         bool: { BOOL: true },
         bs: {
-          BS: ["b25l", "dHdv"]
+          BS: ["b25l", "dHdv"],
         },
         json: { S: JSON.stringify({ key: "value" }) },
         n: { N: "1" },
         ns: { NS: ["1", "2"] },
         null: { NULL: true },
         s: { S: "test" },
-        ss: { SS: ["one", "two"] }
+        ss: { SS: ["one", "two"] },
       });
 
       expect(js).to.deep.equal({
@@ -114,7 +114,7 @@ describe("Schema", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
     });
 
@@ -128,14 +128,14 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const js = schema.fromDynamo({
         b: { B: "dGVzdA==" },
         bool: { BOOL: true },
         bs: {
-          BS: ["b25l", "dHdv"]
+          BS: ["b25l", "dHdv"],
         },
         json: { S: JSON.stringify({ key: "value" }) },
         n: { N: "1" },
@@ -143,7 +143,7 @@ describe("Schema", () => {
         null: { NULL: true },
         s: { S: "test" },
         ss: { SS: ["one", "two"] },
-        unknown: { S: "key" }
+        unknown: { S: "key" },
       });
 
       expect(js.unknown).to.deep.equal(undefined);
@@ -161,7 +161,7 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const res = schema.validate({
@@ -173,7 +173,7 @@ describe("Schema", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(res).to.equal(true);
@@ -189,11 +189,11 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const res = schema.validate({
-        s: "test"
+        s: "test",
       });
 
       expect(res).to.equal(true);
@@ -209,13 +209,13 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const bRes = schema.validate({ b: "test" });
       const boolRes = schema.validate({ bool: null });
       const bsRes = schema.validate({
-        bs: ["one", "two"]
+        bs: ["one", "two"],
       });
       const jsonRes = schema.validate({ json: "test" });
       const nRes = schema.validate({ n: "1" });
@@ -245,7 +245,7 @@ describe("Schema", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const res = schema.validate({
@@ -258,7 +258,7 @@ describe("Schema", () => {
         null: null,
         s: "test",
         ss: ["one", "two"],
-        unknown: "key"
+        unknown: "key",
       });
 
       expect(res).to.equal(false);

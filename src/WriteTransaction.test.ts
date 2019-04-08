@@ -90,7 +90,7 @@ describe("WriteTransaction", () => {
 
     it("should not call client.transactWriteItems()", () => {
       const client = {
-        transactWriteItems: sinon.stub()
+        transactWriteItems: sinon.stub(),
       };
 
       // @ts-ignore
@@ -105,8 +105,8 @@ describe("WriteTransaction", () => {
     it("should call client.transactWriteItems() with correct params", () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -115,10 +115,10 @@ describe("WriteTransaction", () => {
       const transactionItem = {
         Put: {
           Item: {
-            id: { S: "one" }
+            id: { S: "one" },
           },
-          TableName: "Test"
-        }
+          TableName: "Test",
+        },
       };
 
       const transaction = new WriteTransaction();
@@ -129,15 +129,15 @@ describe("WriteTransaction", () => {
       expect(client.transactWriteItems.getCall(0).args[0]).to.deep.equal({
         // @ts-ignore
         ClientRequestToken: transaction._clientRequestToken,
-        TransactItems: [transactionItem]
+        TransactItems: [transactionItem],
       });
     });
 
     it("should call client.transactWriteItems() with different client token", () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -146,10 +146,10 @@ describe("WriteTransaction", () => {
       const transactionItem = {
         Put: {
           Item: {
-            id: { S: "one" }
+            id: { S: "one" },
           },
-          TableName: "Test"
-        }
+          TableName: "Test",
+        },
       };
 
       const transaction1 = new WriteTransaction();
@@ -180,8 +180,8 @@ describe("WriteTransaction", () => {
     it("should call client.transactWriteItems() with same client token", () => {
       const client = {
         transactWriteItems: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -190,10 +190,10 @@ describe("WriteTransaction", () => {
       const transactionItem = {
         Put: {
           Item: {
-            id: { S: "one" }
+            id: { S: "one" },
           },
-          TableName: "Test"
-        }
+          TableName: "Test",
+        },
       };
 
       const transaction = new WriteTransaction();

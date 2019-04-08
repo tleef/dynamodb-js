@@ -26,7 +26,7 @@ describe("BS", () => {
   describe("BS.fromDynamo()", () => {
     it("should return an array of Buffers", () => {
       const bs = BS.fromDynamo({
-        BS: ["b25l", "dHdv"]
+        BS: ["b25l", "dHdv"],
       });
 
       expect(bs).to.be.an.instanceof(Array);
@@ -37,7 +37,7 @@ describe("BS", () => {
 
     it("should return correct value", () => {
       const bs = BS.fromDynamo({
-        BS: ["b25l", "dHdv"]
+        BS: ["b25l", "dHdv"],
       });
 
       expect(bs).to.deep.equal([Buffer.from("one"), Buffer.from("two")]);

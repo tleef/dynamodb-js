@@ -42,10 +42,10 @@ describe("Gsi", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N
+        range: types.N,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const gsi = new Gsi("indexName", "tableName", keySchema, itemSchema);
 
@@ -79,15 +79,15 @@ describe("Gsi", () => {
     it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);
 
       const client = {
         query: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -95,7 +95,7 @@ describe("Gsi", () => {
 
       await gsi.query({
         hash: "hash",
-        range: "range"
+        range: "range",
       });
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
@@ -103,30 +103,30 @@ describe("Gsi", () => {
         KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr2": "range"
+          "#attr2": "range",
         },
         ExpressionAttributeValues: {
           ":val1": {
-            S: "hash"
+            S: "hash",
           },
           ":val3": {
-            S: "range"
-          }
+            S: "range",
+          },
         },
-        IndexName: "indexName"
+        IndexName: "indexName",
       });
     });
 
     it("should throw if called with consistentRead", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);
 
       const client = {
-        query: sinon.stub()
+        query: sinon.stub(),
       };
 
       // @ts-ignore
@@ -136,7 +136,7 @@ describe("Gsi", () => {
         gsi.query(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           { consistentRead: true }
         )
@@ -160,8 +160,8 @@ describe("Gsi", () => {
 
       const client = {
         scan: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -171,7 +171,7 @@ describe("Gsi", () => {
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
         TableName: "tableName",
-        IndexName: "indexName"
+        IndexName: "indexName",
       });
     });
 
@@ -180,7 +180,7 @@ describe("Gsi", () => {
       const gsi = new Gsi("indexName", "tableName");
 
       const client = {
-        scan: sinon.stub()
+        scan: sinon.stub(),
       };
 
       // @ts-ignore

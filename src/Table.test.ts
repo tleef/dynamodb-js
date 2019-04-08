@@ -42,10 +42,10 @@ describe("Table", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N
+        range: types.N,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -61,15 +61,15 @@ describe("Table", () => {
     it("should return a Gsi", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N
+        range: types.N,
       });
       const itemSchema = new Schema({
         one: types.S,
-        two: types.S
+        two: types.S,
       });
       const gsiKeySchema = new Schema({
         one: types.S,
-        two: types.S
+        two: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -81,15 +81,15 @@ describe("Table", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N
+        range: types.N,
       });
       const itemSchema = new Schema({
         one: types.S,
-        two: types.S
+        two: types.S,
       });
       const gsiKeySchema = new Schema({
         one: types.S,
-        two: types.S
+        two: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -112,10 +112,10 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -129,22 +129,22 @@ describe("Table", () => {
           "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range"
+          "#attr1": "range",
         },
         Item: {
           hash: { S: "hash" },
           range: { S: "range" },
-          one: { S: "one" }
+          one: { S: "one" },
         },
         TableName: "tableName",
-        ReturnValues: "ALL_OLD"
+        ReturnValues: "ALL_OLD",
       });
     });
 
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -155,10 +155,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -173,10 +173,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -202,7 +202,7 @@ describe("Table", () => {
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
@@ -214,15 +214,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -239,63 +239,63 @@ describe("Table", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
+            S: "range",
           },
           b: {
-            B: "dGVzdA=="
+            B: "dGVzdA==",
           },
           bool: {
-            BOOL: true
+            BOOL: true,
           },
           bs: {
-            BS: ["b25l", "dHdv"]
+            BS: ["b25l", "dHdv"],
           },
           json: {
-            S: '{"key":"value"}'
+            S: '{"key":"value"}',
           },
           n: {
-            N: "1"
+            N: "1",
           },
           ns: {
-            NS: ["1", "2"]
+            NS: ["1", "2"],
           },
           null: {
-            NULL: true
+            NULL: true,
           },
           s: {
-            S: "test"
+            S: "test",
           },
           ss: {
-            SS: ["one", "two"]
-          }
+            SS: ["one", "two"],
+          },
         },
         TableName: "tableName",
         ConditionExpression:
           "(attribute_not_exists(#attr0)) AND (attribute_not_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range"
-        }
+          "#attr1": "range",
+        },
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -306,10 +306,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -318,15 +318,15 @@ describe("Table", () => {
       const res = await table.insertItem({
         hash: "hash",
         range: "range",
-        abc: "abc"
+        abc: "abc",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -335,10 +335,10 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -351,19 +351,19 @@ describe("Table", () => {
         Item: {
           hash: { S: "hash" },
           range: { S: "range" },
-          one: { S: "one" }
+          one: { S: "one" },
         },
         TableName: "tableName",
-        ReturnValues: "ALL_OLD"
+        ReturnValues: "ALL_OLD",
       });
     });
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -378,10 +378,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -407,7 +407,7 @@ describe("Table", () => {
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
@@ -419,15 +419,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -444,57 +444,57 @@ describe("Table", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
+            S: "range",
           },
           b: {
-            B: "dGVzdA=="
+            B: "dGVzdA==",
           },
           bool: {
-            BOOL: true
+            BOOL: true,
           },
           bs: {
-            BS: ["b25l", "dHdv"]
+            BS: ["b25l", "dHdv"],
           },
           json: {
-            S: '{"key":"value"}'
+            S: '{"key":"value"}',
           },
           n: {
-            N: "1"
+            N: "1",
           },
           ns: {
-            NS: ["1", "2"]
+            NS: ["1", "2"],
           },
           null: {
-            NULL: true
+            NULL: true,
           },
           s: {
-            S: "test"
+            S: "test",
           },
           ss: {
-            SS: ["one", "two"]
-          }
+            SS: ["one", "two"],
+          },
         },
-        TableName: "tableName"
+        TableName: "tableName",
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -505,10 +505,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -517,15 +517,15 @@ describe("Table", () => {
       const res = await table.putItem({
         hash: "hash",
         range: "range",
-        abc: "abc"
+        abc: "abc",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -534,10 +534,10 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -551,22 +551,22 @@ describe("Table", () => {
           "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range"
+          "#attr1": "range",
         },
         Item: {
           hash: { S: "hash" },
           range: { S: "range" },
-          one: { S: "one" }
+          one: { S: "one" },
         },
         TableName: "tableName",
-        ReturnValues: "ALL_OLD"
+        ReturnValues: "ALL_OLD",
       });
     });
 
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -577,10 +577,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -595,10 +595,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -624,7 +624,7 @@ describe("Table", () => {
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
@@ -636,15 +636,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         putItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -661,63 +661,63 @@ describe("Table", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(client.putItem.getCall(0).args[0]).to.deep.equal({
         Item: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
+            S: "range",
           },
           b: {
-            B: "dGVzdA=="
+            B: "dGVzdA==",
           },
           bool: {
-            BOOL: true
+            BOOL: true,
           },
           bs: {
-            BS: ["b25l", "dHdv"]
+            BS: ["b25l", "dHdv"],
           },
           json: {
-            S: '{"key":"value"}'
+            S: '{"key":"value"}',
           },
           n: {
-            N: "1"
+            N: "1",
           },
           ns: {
-            NS: ["1", "2"]
+            NS: ["1", "2"],
           },
           null: {
-            NULL: true
+            NULL: true,
           },
           s: {
-            S: "test"
+            S: "test",
           },
           ss: {
-            SS: ["one", "two"]
-          }
+            SS: ["one", "two"],
+          },
         },
         TableName: "tableName",
         ConditionExpression:
           "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr1": "range"
-        }
+          "#attr1": "range",
+        },
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -728,10 +728,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -740,15 +740,15 @@ describe("Table", () => {
       const res = await table.replaceItem({
         hash: "hash",
         range: "range",
-        abc: "abc"
+        abc: "abc",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -757,10 +757,10 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -776,24 +776,24 @@ describe("Table", () => {
         ExpressionAttributeNames: {
           "#attr0": "hash",
           "#attr1": "range",
-          "#attr2": "one"
+          "#attr2": "one",
         },
         ExpressionAttributeValues: {
-          ":val3": { S: "one" }
+          ":val3": { S: "one" },
         },
         Key: {
           hash: { S: "hash" },
-          range: { S: "range" }
+          range: { S: "range" },
         },
         TableName: "tableName",
-        ReturnValues: "UPDATED_NEW"
+        ReturnValues: "UPDATED_NEW",
       });
     });
 
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -804,10 +804,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -822,10 +822,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -853,7 +853,7 @@ describe("Table", () => {
     it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
@@ -865,15 +865,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -890,17 +890,17 @@ describe("Table", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
-          }
+            S: "range",
+          },
         },
         TableName: "tableName",
         UpdateExpression:
@@ -918,48 +918,48 @@ describe("Table", () => {
           "#attr12": "ns",
           "#attr14": "null",
           "#attr16": "s",
-          "#attr18": "ss"
+          "#attr18": "ss",
         },
         ExpressionAttributeValues: {
           ":val3": {
-            B: "dGVzdA=="
+            B: "dGVzdA==",
           },
           ":val5": {
-            BOOL: true
+            BOOL: true,
           },
           ":val7": {
-            BS: ["b25l", "dHdv"]
+            BS: ["b25l", "dHdv"],
           },
           ":val9": {
-            S: '{"key":"value"}'
+            S: '{"key":"value"}',
           },
           ":val11": {
-            N: "1"
+            N: "1",
           },
           ":val13": {
-            NS: ["1", "2"]
+            NS: ["1", "2"],
           },
           ":val15": {
-            NULL: true
+            NULL: true,
           },
           ":val17": {
-            S: "test"
+            S: "test",
           },
           ":val19": {
-            SS: ["one", "two"]
-          }
-        }
+            SS: ["one", "two"],
+          },
+        },
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -970,10 +970,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -982,15 +982,15 @@ describe("Table", () => {
       const res = await table.updateItem({
         hash: "hash",
         range: "range",
-        abc: "abc"
+        abc: "abc",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -999,10 +999,10 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1014,26 +1014,26 @@ describe("Table", () => {
       expect(params).to.deep.equal({
         UpdateExpression: "SET #attr0 = :val1",
         ExpressionAttributeNames: {
-          "#attr0": "one"
+          "#attr0": "one",
         },
         ExpressionAttributeValues: {
-          ":val1": { S: "one" }
+          ":val1": { S: "one" },
         },
         Key: {
           hash: { S: "hash" },
-          range: { S: "range" }
+          range: { S: "range" },
         },
         TableName: "tableName",
-        ReturnValues: "UPDATED_NEW"
+        ReturnValues: "UPDATED_NEW",
       });
     });
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1048,10 +1048,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1079,7 +1079,7 @@ describe("Table", () => {
     it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
@@ -1091,15 +1091,15 @@ describe("Table", () => {
         ns: types.NS,
         null: types.Null,
         s: types.S,
-        ss: types.SS
+        ss: types.SS,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
 
       const client = {
         updateItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -1116,17 +1116,17 @@ describe("Table", () => {
         ns: [1, 2],
         null: null,
         s: "test",
-        ss: ["one", "two"]
+        ss: ["one", "two"],
       });
 
       expect(client.updateItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
-          }
+            S: "range",
+          },
         },
         TableName: "tableName",
         UpdateExpression:
@@ -1140,48 +1140,48 @@ describe("Table", () => {
           "#attr10": "ns",
           "#attr12": "null",
           "#attr14": "s",
-          "#attr16": "ss"
+          "#attr16": "ss",
         },
         ExpressionAttributeValues: {
           ":val1": {
-            B: "dGVzdA=="
+            B: "dGVzdA==",
           },
           ":val3": {
-            BOOL: true
+            BOOL: true,
           },
           ":val5": {
-            BS: ["b25l", "dHdv"]
+            BS: ["b25l", "dHdv"],
           },
           ":val7": {
-            S: '{"key":"value"}'
+            S: '{"key":"value"}',
           },
           ":val9": {
-            N: "1"
+            N: "1",
           },
           ":val11": {
-            NS: ["1", "2"]
+            NS: ["1", "2"],
           },
           ":val13": {
-            NULL: true
+            NULL: true,
           },
           ":val15": {
-            S: "test"
+            S: "test",
           },
           ":val17": {
-            SS: ["one", "two"]
-          }
-        }
+            SS: ["one", "two"],
+          },
+        },
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -1192,10 +1192,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -1204,15 +1204,15 @@ describe("Table", () => {
       const res = await table.upsertItem({
         hash: "hash",
         range: "range",
-        abc: "abc"
+        abc: "abc",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -1221,7 +1221,7 @@ describe("Table", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const table = new Table("tableName", keySchema);
@@ -1234,16 +1234,16 @@ describe("Table", () => {
       expect(params).to.deep.equal({
         Key: {
           hash: { S: "hash" },
-          range: { S: "range" }
+          range: { S: "range" },
         },
         TableName: "tableName",
-        ReturnValues: "ALL_OLD"
+        ReturnValues: "ALL_OLD",
       });
     });
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
 
       const table = new Table("tableName", keySchema);
@@ -1259,7 +1259,7 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S
+        hash: types.S,
       });
 
       const table = new Table("tableName", keySchema);
@@ -1286,15 +1286,15 @@ describe("Table", () => {
     it("should call client.deleteItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const table = new Table("tableName", keySchema);
 
       const client = {
         deleteItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -1302,30 +1302,30 @@ describe("Table", () => {
 
       await table.deleteItem({
         hash: "hash",
-        range: "range"
+        range: "range",
       });
 
       expect(client.deleteItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
-          }
+            S: "range",
+          },
         },
-        TableName: "tableName"
+        TableName: "tableName",
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -1336,10 +1336,10 @@ describe("Table", () => {
             Attributes: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -1347,15 +1347,15 @@ describe("Table", () => {
 
       const res = await table.deleteItem({
         hash: "hash",
-        range: "range"
+        range: "range",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });

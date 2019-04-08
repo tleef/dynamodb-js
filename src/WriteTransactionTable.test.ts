@@ -35,7 +35,7 @@ describe("WriteTransactionTable", () => {
         ExpressionAttributeNames: "ExpressionAttributeNames",
         Item: "Item",
         TableName: "TableName",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -50,8 +50,8 @@ describe("WriteTransactionTable", () => {
           ConditionExpression: "ConditionExpression",
           ExpressionAttributeNames: "ExpressionAttributeNames",
           Item: "Item",
-          TableName: "TableName"
-        }
+          TableName: "TableName",
+        },
       });
     });
   });
@@ -65,7 +65,7 @@ describe("WriteTransactionTable", () => {
       table.putItemParams.returns({
         Item: "Item",
         TableName: "TableName",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -78,8 +78,8 @@ describe("WriteTransactionTable", () => {
       expect(transaction.addItem.getCall(0).args[0]).to.deep.equal({
         Put: {
           Item: "Item",
-          TableName: "TableName"
-        }
+          TableName: "TableName",
+        },
       });
     });
   });
@@ -95,7 +95,7 @@ describe("WriteTransactionTable", () => {
         ExpressionAttributeNames: "ExpressionAttributeNames",
         Item: "Item",
         TableName: "TableName",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -110,8 +110,8 @@ describe("WriteTransactionTable", () => {
           ConditionExpression: "ConditionExpression",
           ExpressionAttributeNames: "ExpressionAttributeNames",
           Item: "Item",
-          TableName: "TableName"
-        }
+          TableName: "TableName",
+        },
       });
     });
   });
@@ -129,7 +129,7 @@ describe("WriteTransactionTable", () => {
         Key: "Key",
         TableName: "TableName",
         UpdateExpression: "UpdateExpression",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -146,8 +146,8 @@ describe("WriteTransactionTable", () => {
           ExpressionAttributeValues: "ExpressionAttributeValues",
           Key: "Key",
           TableName: "TableName",
-          UpdateExpression: "UpdateExpression"
-        }
+          UpdateExpression: "UpdateExpression",
+        },
       });
     });
   });
@@ -164,7 +164,7 @@ describe("WriteTransactionTable", () => {
         Key: "Key",
         TableName: "TableName",
         UpdateExpression: "UpdateExpression",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -180,8 +180,8 @@ describe("WriteTransactionTable", () => {
           ExpressionAttributeValues: "ExpressionAttributeValues",
           Key: "Key",
           TableName: "TableName",
-          UpdateExpression: "UpdateExpression"
-        }
+          UpdateExpression: "UpdateExpression",
+        },
       });
     });
   });
@@ -195,7 +195,7 @@ describe("WriteTransactionTable", () => {
       table.deleteItemParams.returns({
         Key: "Key",
         TableName: "TableName",
-        Other: "Other"
+        Other: "Other",
       });
 
       // @ts-ignore
@@ -208,8 +208,8 @@ describe("WriteTransactionTable", () => {
       expect(transaction.addItem.getCall(0).args[0]).to.deep.equal({
         Delete: {
           Key: "Key",
-          TableName: "TableName"
-        }
+          TableName: "TableName",
+        },
       });
     });
   });

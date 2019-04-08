@@ -33,10 +33,10 @@ describe("ReadOnlyTable", () => {
     it("should correctly assign values", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.N
+        range: types.N,
       });
       const itemSchema = new Schema({
-        one: types.S
+        one: types.S,
       });
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
 
@@ -52,7 +52,7 @@ describe("ReadOnlyTable", () => {
     it("should set the options correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -60,11 +60,11 @@ describe("ReadOnlyTable", () => {
       const params = roTable.getItemParams(
         {
           hash: "hash",
-          range: "range"
+          range: "range",
         },
         // @ts-ignore
         {
-          consistentRead: true
+          consistentRead: true,
         }
       );
 
@@ -72,16 +72,16 @@ describe("ReadOnlyTable", () => {
         TableName: "tableName",
         Key: {
           hash: { S: "hash" },
-          range: { S: "range" }
+          range: { S: "range" },
         },
-        ConsistentRead: true
+        ConsistentRead: true,
       });
     });
 
     it("should throw if consistentRead is not a boolean", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -90,11 +90,11 @@ describe("ReadOnlyTable", () => {
         roTable.getItemParams(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           // @ts-ignore
           {
-            consistentRead: "yes"
+            consistentRead: "yes",
           }
         )
       ).to.throw("consistentRead must be a boolean");
@@ -113,15 +113,15 @@ describe("ReadOnlyTable", () => {
     it("should call client.getItem() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
 
       const client = {
         getItem: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -129,30 +129,30 @@ describe("ReadOnlyTable", () => {
 
       await roTable.getItem({
         hash: "hash",
-        range: "range"
+        range: "range",
       });
 
       expect(client.getItem.getCall(0).args[0]).to.deep.equal({
         Key: {
           hash: {
-            S: "hash"
+            S: "hash",
           },
           range: {
-            S: "range"
-          }
+            S: "range",
+          },
         },
-        TableName: "tableName"
+        TableName: "tableName",
       });
     });
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -163,10 +163,10 @@ describe("ReadOnlyTable", () => {
             Item: {
               hash: { S: "hash" },
               range: { S: "range" },
-              abc: { S: "abc" }
-            }
-          })
-        })
+              abc: { S: "abc" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -174,15 +174,15 @@ describe("ReadOnlyTable", () => {
 
       const res = await roTable.getItem({
         hash: "hash",
-        range: "range"
+        range: "range",
       });
 
       expect(res).to.deep.equal({
         item: {
           hash: "hash",
           range: "range",
-          abc: "abc"
-        }
+          abc: "abc",
+        },
       });
     });
   });
@@ -191,7 +191,7 @@ describe("ReadOnlyTable", () => {
     it("should set the options correctly", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -199,13 +199,13 @@ describe("ReadOnlyTable", () => {
       const params = roTable.queryParams(
         {
           hash: "hash",
-          range: "range"
+          range: "range",
         },
         // @ts-ignore
         {
           consistentRead: true,
           limit: 1,
-          scanIndexForward: true
+          scanIndexForward: true,
         }
       );
 
@@ -213,30 +213,30 @@ describe("ReadOnlyTable", () => {
         TableName: "tableName",
         ExpressionAttributeNames: {
           "#attr0": "hash",
-          "#attr2": "range"
+          "#attr2": "range",
         },
         ExpressionAttributeValues: {
           ":val1": { S: "hash" },
-          ":val3": { S: "range" }
+          ":val3": { S: "range" },
         },
         KeyConditionExpression: "(#attr0 = :val1) AND (#attr2 = :val3)",
         ConsistentRead: true,
         Limit: 1,
-        ScanIndexForward: true
+        ScanIndexForward: true,
       });
     });
 
     it("should throw if given a bad key", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
 
       expect(() =>
         roTable.queryParams({
-          foo: "bar"
+          foo: "bar",
         })
       ).to.throw("Malformed key");
     });
@@ -244,7 +244,7 @@ describe("ReadOnlyTable", () => {
     it("should throw if consistentRead is not a boolean", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -253,11 +253,11 @@ describe("ReadOnlyTable", () => {
         roTable.queryParams(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           // @ts-ignore
           {
-            consistentRead: "yes"
+            consistentRead: "yes",
           }
         )
       ).to.throw("consistentRead must be a boolean");
@@ -266,7 +266,7 @@ describe("ReadOnlyTable", () => {
     it("should throw if limit is not an int", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -275,11 +275,11 @@ describe("ReadOnlyTable", () => {
         roTable.queryParams(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           // @ts-ignore
           {
-            limit: 1.5
+            limit: 1.5,
           }
         )
       ).to.throw("limit must be an int");
@@ -288,7 +288,7 @@ describe("ReadOnlyTable", () => {
     it("should throw if limit is less than 1", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -297,11 +297,11 @@ describe("ReadOnlyTable", () => {
         roTable.queryParams(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           // @ts-ignore
           {
-            limit: 0
+            limit: 0,
           }
         )
       ).to.throw("limit must be greater than or equal to 1");
@@ -310,7 +310,7 @@ describe("ReadOnlyTable", () => {
     it("should throw if scanIndexForward is not a boolean", () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -319,11 +319,11 @@ describe("ReadOnlyTable", () => {
         roTable.queryParams(
           {
             hash: "hash",
-            range: "range"
+            range: "range",
           },
           // @ts-ignore
           {
-            scanIndexForward: "no"
+            scanIndexForward: "no",
           }
         )
       ).to.throw("scanIndexForward must be a boolean");
@@ -342,15 +342,15 @@ describe("ReadOnlyTable", () => {
     it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
 
       const client = {
         query: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -358,13 +358,13 @@ describe("ReadOnlyTable", () => {
 
       await roTable.query(
         {
-          hash: "hash"
+          hash: "hash",
         },
         {
           exclusiveStartKey: {
             hash: "x-hash",
-            range: "x-range"
-          }
+            range: "x-range",
+          },
         }
       );
 
@@ -372,28 +372,28 @@ describe("ReadOnlyTable", () => {
         TableName: "tableName",
         KeyConditionExpression: "#attr0 = :val1",
         ExpressionAttributeNames: {
-          "#attr0": "hash"
+          "#attr0": "hash",
         },
         ExpressionAttributeValues: {
           ":val1": {
-            S: "hash"
-          }
+            S: "hash",
+          },
         },
         ExclusiveStartKey: {
           hash: { S: "x-hash" },
-          range: { S: "x-range" }
-        }
+          range: { S: "x-range" },
+        },
       });
     });
 
     it("should unmarshall returned items", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -405,23 +405,23 @@ describe("ReadOnlyTable", () => {
               {
                 hash: { S: "one" },
                 range: { S: "one" },
-                abc: { S: "one" }
+                abc: { S: "one" },
               },
               {
                 hash: { S: "two" },
                 range: { S: "two" },
-                abc: { S: "two" }
-              }
-            ]
-          })
-        })
+                abc: { S: "two" },
+              },
+            ],
+          }),
+        }),
       };
 
       // @ts-ignore
       Client.get.returns(client);
 
       const res = await roTable.query({
-        hash: "hash"
+        hash: "hash",
       });
 
       expect(res).to.deep.equal({
@@ -429,25 +429,25 @@ describe("ReadOnlyTable", () => {
           {
             hash: "one",
             range: "one",
-            abc: "one"
+            abc: "one",
           },
           {
             hash: "two",
             range: "two",
-            abc: "two"
-          }
-        ]
+            abc: "two",
+          },
+        ],
       });
     });
 
     it("should unmarshall returned start key", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -458,25 +458,25 @@ describe("ReadOnlyTable", () => {
             Items: [],
             LastEvaluatedKey: {
               hash: { S: "hash" },
-              range: { S: "range" }
-            }
-          })
-        })
+              range: { S: "range" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
       Client.get.returns(client);
 
       const res = await roTable.query({
-        hash: "hash"
+        hash: "hash",
       });
 
       expect(res).to.deep.equal({
         items: [],
         lastEvaluatedKey: {
           hash: "hash",
-          range: "range"
-        }
+          range: "range",
+        },
       });
     });
   });
@@ -492,7 +492,7 @@ describe("ReadOnlyTable", () => {
           consistentRead: true,
           limit: 1,
           segment: 0,
-          totalSegments: 1
+          totalSegments: 1,
         }
       );
 
@@ -501,7 +501,7 @@ describe("ReadOnlyTable", () => {
         ConsistentRead: true,
         Limit: 1,
         Segment: 0,
-        TotalSegments: 1
+        TotalSegments: 1,
       });
     });
 
@@ -513,7 +513,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            consistentRead: "yes"
+            consistentRead: "yes",
           }
         )
       ).to.throw("consistentRead must be a boolean");
@@ -527,7 +527,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            limit: 1.5
+            limit: 1.5,
           }
         )
       ).to.throw("limit must be an int");
@@ -541,7 +541,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            limit: 0
+            limit: 0,
           }
         )
       ).to.throw("limit must be greater than or equal to 1");
@@ -555,7 +555,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            segment: 1.5
+            segment: 1.5,
           }
         )
       ).to.throw("segment must be an int");
@@ -569,7 +569,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            segment: -1
+            segment: -1,
           }
         )
       ).to.throw("segment must be between 0 and 999999");
@@ -577,7 +577,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            segment: 1000000
+            segment: 1000000,
           }
         )
       ).to.throw("segment must be between 0 and 999999");
@@ -591,7 +591,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            segment: 1
+            segment: 1,
           }
         )
       ).to.throw("If you provide segment, you must also provide totalSegments");
@@ -605,7 +605,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            totalSegments: 1.5
+            totalSegments: 1.5,
           }
         )
       ).to.throw("totalSegments must be an int");
@@ -619,7 +619,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            totalSegments: 0
+            totalSegments: 0,
           }
         )
       ).to.throw("totalSegments must be between 1 and 1000000");
@@ -627,7 +627,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            totalSegments: 1000001
+            totalSegments: 1000001,
           }
         )
       ).to.throw("totalSegments must be between 1 and 1000000");
@@ -641,7 +641,7 @@ describe("ReadOnlyTable", () => {
         roTable.scanParams(
           // @ts-ignore
           {
-            totalSegments: 1
+            totalSegments: 1,
           }
         )
       ).to.throw("If you provide totalSegments, you must also provide segment");
@@ -660,15 +660,15 @@ describe("ReadOnlyTable", () => {
     it("should call client.scan() with correct params", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
 
       const client = {
         scan: sinon.stub().returns({
-          promise: sinon.stub().resolves()
-        })
+          promise: sinon.stub().resolves(),
+        }),
       };
 
       // @ts-ignore
@@ -677,27 +677,27 @@ describe("ReadOnlyTable", () => {
       await roTable.scan({
         exclusiveStartKey: {
           hash: "x-hash",
-          range: "x-range"
-        }
+          range: "x-range",
+        },
       });
 
       expect(client.scan.getCall(0).args[0]).to.deep.equal({
         TableName: "tableName",
         ExclusiveStartKey: {
           hash: { S: "x-hash" },
-          range: { S: "x-range" }
-        }
+          range: { S: "x-range" },
+        },
       });
     });
 
     it("should unmarshall returned items", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -709,16 +709,16 @@ describe("ReadOnlyTable", () => {
               {
                 hash: { S: "one" },
                 range: { S: "one" },
-                abc: { S: "one" }
+                abc: { S: "one" },
               },
               {
                 hash: { S: "two" },
                 range: { S: "two" },
-                abc: { S: "two" }
-              }
-            ]
-          })
-        })
+                abc: { S: "two" },
+              },
+            ],
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -731,25 +731,25 @@ describe("ReadOnlyTable", () => {
           {
             hash: "one",
             range: "one",
-            abc: "one"
+            abc: "one",
           },
           {
             hash: "two",
             range: "two",
-            abc: "two"
-          }
-        ]
+            abc: "two",
+          },
+        ],
       });
     });
 
     it("should unmarshall returned start key", async () => {
       const keySchema = new Schema({
         hash: types.S,
-        range: types.S
+        range: types.S,
       });
 
       const itemSchema = new Schema({
-        abc: types.S
+        abc: types.S,
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -760,10 +760,10 @@ describe("ReadOnlyTable", () => {
             Items: [],
             LastEvaluatedKey: {
               hash: { S: "hash" },
-              range: { S: "range" }
-            }
-          })
-        })
+              range: { S: "range" },
+            },
+          }),
+        }),
       };
 
       // @ts-ignore
@@ -775,8 +775,8 @@ describe("ReadOnlyTable", () => {
         items: [],
         lastEvaluatedKey: {
           hash: "hash",
-          range: "range"
-        }
+          range: "range",
+        },
       });
     });
   });
