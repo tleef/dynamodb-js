@@ -11,7 +11,7 @@ describe("BS", () => {
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.BS).to.be.an.instanceof(Array);
-      av.BS.forEach(b => {
+      av.BS.forEach((b) => {
         expect(b).to.be.a("string");
       });
     });
@@ -30,7 +30,7 @@ describe("BS", () => {
       });
 
       expect(bs).to.be.an.instanceof(Array);
-      bs.forEach(b => {
+      bs.forEach((b) => {
         expect(b).to.be.an.instanceof(Buffer);
       });
     });

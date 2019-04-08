@@ -44,7 +44,7 @@ describe("WriteTransaction", () => {
       const table = new Table();
 
       expect(transaction.withTable(table)).to.be.an.instanceof(
-        WriteTransactionTable
+        WriteTransactionTable,
       );
     });
 
@@ -162,18 +162,18 @@ describe("WriteTransaction", () => {
 
       expect(client.transactWriteItems).to.have.callCount(2);
       expect(
-        client.transactWriteItems.getCall(0).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(0).args[0].ClientRequestToken,
         // @ts-ignore
       ).to.equal(transaction1._clientRequestToken);
       // @ts-ignore
       expect(
-        client.transactWriteItems.getCall(1).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(1).args[0].ClientRequestToken,
         // @ts-ignore
       ).to.equal(transaction2._clientRequestToken);
       expect(
-        client.transactWriteItems.getCall(0).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(0).args[0].ClientRequestToken,
       ).to.not.equal(
-        client.transactWriteItems.getCall(1).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(1).args[0].ClientRequestToken,
       );
     });
 
@@ -204,17 +204,17 @@ describe("WriteTransaction", () => {
 
       expect(client.transactWriteItems).to.have.callCount(2);
       expect(
-        client.transactWriteItems.getCall(0).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(0).args[0].ClientRequestToken,
         // @ts-ignore
       ).to.equal(transaction._clientRequestToken);
       expect(
-        client.transactWriteItems.getCall(1).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(1).args[0].ClientRequestToken,
         // @ts-ignore
       ).to.equal(transaction._clientRequestToken);
       expect(
-        client.transactWriteItems.getCall(0).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(0).args[0].ClientRequestToken,
       ).to.equal(
-        client.transactWriteItems.getCall(1).args[0].ClientRequestToken
+        client.transactWriteItems.getCall(1).args[0].ClientRequestToken,
       );
     });
   });

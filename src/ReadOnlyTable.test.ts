@@ -43,7 +43,7 @@ describe("ReadOnlyTable", () => {
       expect(roTable.tableName).to.equal("tableName");
       expect(roTable.keySchema).to.equal(keySchema);
       expect(roTable.itemSchema).to.deep.equal(
-        new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+        new Schema(Object.assign({}, itemSchema.template, keySchema.template)),
       );
     });
   });
@@ -65,7 +65,7 @@ describe("ReadOnlyTable", () => {
         // @ts-ignore
         {
           consistentRead: true,
-        }
+        },
       );
 
       expect(params).to.deep.equal({
@@ -95,8 +95,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             consistentRead: "yes",
-          }
-        )
+          },
+        ),
       ).to.throw("consistentRead must be a boolean");
     });
   });
@@ -206,7 +206,7 @@ describe("ReadOnlyTable", () => {
           consistentRead: true,
           limit: 1,
           scanIndexForward: true,
-        }
+        },
       );
 
       expect(params).to.deep.equal({
@@ -237,7 +237,7 @@ describe("ReadOnlyTable", () => {
       expect(() =>
         roTable.queryParams({
           foo: "bar",
-        })
+        }),
       ).to.throw("Malformed key");
     });
 
@@ -258,8 +258,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             consistentRead: "yes",
-          }
-        )
+          },
+        ),
       ).to.throw("consistentRead must be a boolean");
     });
 
@@ -280,8 +280,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             limit: 1.5,
-          }
-        )
+          },
+        ),
       ).to.throw("limit must be an int");
     });
 
@@ -302,8 +302,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             limit: 0,
-          }
-        )
+          },
+        ),
       ).to.throw("limit must be greater than or equal to 1");
     });
 
@@ -324,8 +324,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             scanIndexForward: "no",
-          }
-        )
+          },
+        ),
       ).to.throw("scanIndexForward must be a boolean");
     });
   });
@@ -365,7 +365,7 @@ describe("ReadOnlyTable", () => {
             hash: "x-hash",
             range: "x-range",
           },
-        }
+        },
       );
 
       expect(client.query.getCall(0).args[0]).to.deep.equal({
@@ -493,7 +493,7 @@ describe("ReadOnlyTable", () => {
           limit: 1,
           segment: 0,
           totalSegments: 1,
-        }
+        },
       );
 
       expect(params).to.deep.equal({
@@ -514,8 +514,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             consistentRead: "yes",
-          }
-        )
+          },
+        ),
       ).to.throw("consistentRead must be a boolean");
     });
 
@@ -528,8 +528,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             limit: 1.5,
-          }
-        )
+          },
+        ),
       ).to.throw("limit must be an int");
     });
 
@@ -542,8 +542,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             limit: 0,
-          }
-        )
+          },
+        ),
       ).to.throw("limit must be greater than or equal to 1");
     });
 
@@ -556,8 +556,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             segment: 1.5,
-          }
-        )
+          },
+        ),
       ).to.throw("segment must be an int");
     });
 
@@ -570,16 +570,16 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             segment: -1,
-          }
-        )
+          },
+        ),
       ).to.throw("segment must be between 0 and 999999");
       expect(() =>
         roTable.scanParams(
           // @ts-ignore
           {
             segment: 1000000,
-          }
-        )
+          },
+        ),
       ).to.throw("segment must be between 0 and 999999");
     });
 
@@ -592,8 +592,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             segment: 1,
-          }
-        )
+          },
+        ),
       ).to.throw("If you provide segment, you must also provide totalSegments");
     });
 
@@ -606,8 +606,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             totalSegments: 1.5,
-          }
-        )
+          },
+        ),
       ).to.throw("totalSegments must be an int");
     });
 
@@ -620,16 +620,16 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             totalSegments: 0,
-          }
-        )
+          },
+        ),
       ).to.throw("totalSegments must be between 1 and 1000000");
       expect(() =>
         roTable.scanParams(
           // @ts-ignore
           {
             totalSegments: 1000001,
-          }
-        )
+          },
+        ),
       ).to.throw("totalSegments must be between 1 and 1000000");
     });
 
@@ -642,8 +642,8 @@ describe("ReadOnlyTable", () => {
           // @ts-ignore
           {
             totalSegments: 1,
-          }
-        )
+          },
+        ),
       ).to.throw("If you provide totalSegments, you must also provide segment");
     });
   });

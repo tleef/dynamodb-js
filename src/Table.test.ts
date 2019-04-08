@@ -52,7 +52,7 @@ describe("Table", () => {
       expect(table.tableName).to.equal("tableName");
       expect(table.keySchema).to.equal(keySchema);
       expect(table.itemSchema).to.deep.equal(
-        new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+        new Schema(Object.assign({}, itemSchema.template, keySchema.template)),
       );
     });
   });
@@ -102,8 +102,8 @@ describe("Table", () => {
       expect(gsi.keySchema).to.equal(gsiKeySchema);
       expect(gsi.itemSchema).to.deep.equal(
         new Schema(
-          Object.assign({}, table.itemSchema.template, gsiKeySchema.template)
-        )
+          Object.assign({}, table.itemSchema.template, gsiKeySchema.template),
+        ),
       );
     });
   });
@@ -121,7 +121,7 @@ describe("Table", () => {
 
       const params = table.insertItemParams(
         { hash: "hash", range: "range", one: "one" },
-        { returnValues: "ALL_OLD" }
+        { returnValues: "ALL_OLD" },
       );
 
       expect(params).to.deep.equal({
@@ -149,7 +149,7 @@ describe("Table", () => {
       const table = new Table("tableName", keySchema, itemSchema);
 
       expect(() => table.insertItemParams({ one: "one" })).to.throw(
-        "Malformed key"
+        "Malformed key",
       );
     });
 
@@ -166,8 +166,8 @@ describe("Table", () => {
         table.insertItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -184,8 +184,8 @@ describe("Table", () => {
         table.insertItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });
@@ -344,7 +344,7 @@ describe("Table", () => {
 
       const params = table.putItemParams(
         { hash: "hash", range: "range", one: "one" },
-        { returnValues: "ALL_OLD" }
+        { returnValues: "ALL_OLD" },
       );
 
       expect(params).to.deep.equal({
@@ -371,8 +371,8 @@ describe("Table", () => {
         table.putItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -389,8 +389,8 @@ describe("Table", () => {
         table.putItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });
@@ -543,7 +543,7 @@ describe("Table", () => {
 
       const params = table.replaceItemParams(
         { hash: "hash", range: "range", one: "one" },
-        { returnValues: "ALL_OLD" }
+        { returnValues: "ALL_OLD" },
       );
 
       expect(params).to.deep.equal({
@@ -571,7 +571,7 @@ describe("Table", () => {
       const table = new Table("tableName", keySchema, itemSchema);
 
       expect(() => table.replaceItemParams({ one: "one" })).to.throw(
-        "Malformed key"
+        "Malformed key",
       );
     });
 
@@ -588,8 +588,8 @@ describe("Table", () => {
         table.replaceItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -606,8 +606,8 @@ describe("Table", () => {
         table.replaceItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });
@@ -766,7 +766,7 @@ describe("Table", () => {
 
       const params = table.updateItemParams(
         { hash: "hash", range: "range", one: "one" },
-        { returnValues: "UPDATED_NEW" }
+        { returnValues: "UPDATED_NEW" },
       );
 
       expect(params).to.deep.equal({
@@ -798,7 +798,7 @@ describe("Table", () => {
       const table = new Table("tableName", keySchema, itemSchema);
 
       expect(() => table.updateItemParams({ one: "one" })).to.throw(
-        "Malformed key"
+        "Malformed key",
       );
     });
 
@@ -815,8 +815,8 @@ describe("Table", () => {
         table.updateItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -833,10 +833,10 @@ describe("Table", () => {
         table.updateItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw(
-        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'"
+        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
       );
     });
   });
@@ -1008,7 +1008,7 @@ describe("Table", () => {
 
       const params = table.upsertItemParams(
         { hash: "hash", range: "range", one: "one" },
-        { returnValues: "UPDATED_NEW" }
+        { returnValues: "UPDATED_NEW" },
       );
 
       expect(params).to.deep.equal({
@@ -1041,8 +1041,8 @@ describe("Table", () => {
         table.upsertItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -1059,10 +1059,10 @@ describe("Table", () => {
         table.upsertItemParams(
           { hash: "hash", one: "one" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw(
-        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'"
+        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
       );
     });
   });
@@ -1228,7 +1228,7 @@ describe("Table", () => {
 
       const params = table.deleteItemParams(
         { hash: "hash", range: "range" },
-        { returnValues: "ALL_OLD" }
+        { returnValues: "ALL_OLD" },
       );
 
       expect(params).to.deep.equal({
@@ -1252,8 +1252,8 @@ describe("Table", () => {
         table.deleteItemParams(
           { hash: "hash" },
           // @ts-ignore
-          { returnValues: true }
-        )
+          { returnValues: true },
+        ),
       ).to.throw("returnValues must be a string");
     });
 
@@ -1268,8 +1268,8 @@ describe("Table", () => {
         table.deleteItemParams(
           { hash: "hash" },
           // @ts-ignore
-          { returnValues: "yes" }
-        )
+          { returnValues: "yes" },
+        ),
       ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
     });
   });

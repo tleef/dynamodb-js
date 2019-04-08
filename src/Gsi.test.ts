@@ -53,7 +53,7 @@ describe("Gsi", () => {
       expect(gsi.tableName).to.equal("tableName");
       expect(gsi.keySchema).to.equal(keySchema);
       expect(gsi.itemSchema).to.deep.equal(
-        new Schema(Object.assign({}, itemSchema.template, keySchema.template))
+        new Schema(Object.assign({}, itemSchema.template, keySchema.template)),
       );
     });
   });
@@ -138,8 +138,8 @@ describe("Gsi", () => {
             hash: "hash",
             range: "range",
           },
-          { consistentRead: true }
-        )
+          { consistentRead: true },
+        ),
       ).throw("consistentRead is not allowed on a GSI");
       expect(client.query).to.have.callCount(0);
     });
@@ -187,7 +187,7 @@ describe("Gsi", () => {
       Client.get.returns(client);
 
       expect(() => gsi.scan({ consistentRead: true })).throw(
-        "consistentRead is not allowed on a GSI"
+        "consistentRead is not allowed on a GSI",
       );
       expect(client.scan).to.have.callCount(0);
     });

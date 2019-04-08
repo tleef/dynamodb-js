@@ -11,7 +11,7 @@ describe("SS", () => {
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.SS).to.be.an.instanceof(Array);
-      av.SS.forEach(s => {
+      av.SS.forEach((s) => {
         expect(s).to.be.a("string");
       });
     });
@@ -28,7 +28,7 @@ describe("SS", () => {
       const ss = SS.fromDynamo({ SS: ["one", "two"] });
 
       expect(ss).to.be.an.instanceof(Array);
-      ss.forEach(s => {
+      ss.forEach((s) => {
         expect(s).to.be.a("string");
       });
     });
