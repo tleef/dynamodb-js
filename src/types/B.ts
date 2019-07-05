@@ -1,18 +1,19 @@
-import staticImplements from "../util/staticImplements";
-import * as dynamo from "./dynamo";
-import IType from "./IType";
+import Joi from "@hapi/joi";
+import Type from "./Type";
+import { IB, ITypeOptions } from "./typings";
 
-@staticImplements<IType<Buffer, dynamo.IB>>()
-export default class B {
-  public static toDynamo(o: Buffer): dynamo.IB {
+export default class B extends Type<Buffer, IB> {
+  constructor(options?: ITypeOptions) {
+    const validator = Joi.binary().encoding("base64");
+
+    super(validator, options);
+  }
+
+  public toDynamo(o: Buffer): IB {
     return { B: o.toString("base64") };
   }
 
-  public static fromDynamo(o: dynamo.IB): Buffer {
+  public fromDynamo(o: IB): Buffer {
     return Buffer.from(o.B, "base64");
-  }
-
-  public static validate(o: any): boolean {
-    return Buffer.isBuffer(o);
   }
 }

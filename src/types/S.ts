@@ -1,19 +1,19 @@
-import type from "@tleef/type-js";
-import staticImplements from "../util/staticImplements";
-import * as dynamo from "./dynamo";
-import IType from "./IType";
+import Joi from "@hapi/joi";
+import Type from "./Type";
+import { IS, ITypeOptions } from "./typings";
 
-@staticImplements<IType<string, dynamo.IS>>()
-export default class S {
-  public static toDynamo(o: string): dynamo.IS {
+export default class S extends Type<string, IS> {
+  constructor(options?: ITypeOptions) {
+    const validator = Joi.string();
+
+    super(validator, options);
+  }
+
+  public toDynamo(o: string): IS {
     return { S: o };
   }
 
-  public static fromDynamo(o: dynamo.IS): string {
+  public fromDynamo(o: IS): string {
     return o.S;
-  }
-
-  public static validate(o: any): boolean {
-    return type.isString(o);
   }
 }

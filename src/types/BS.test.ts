@@ -1,4 +1,4 @@
-import * as chai from "chai";
+import chai from "chai";
 
 import BS from "./BS";
 
@@ -7,7 +7,7 @@ const expect = chai.expect;
 describe("BS", () => {
   describe("BS.toDynamo()", () => {
     it("should return a BS AttributeValue", () => {
-      const av = BS.toDynamo([Buffer.from("one"), Buffer.from("two")]);
+      const av = new BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.BS).to.be.an.instanceof(Array);
@@ -17,7 +17,7 @@ describe("BS", () => {
     });
 
     it("should correctly set BS", () => {
-      const av = BS.toDynamo([Buffer.from("one"), Buffer.from("two")]);
+      const av = new BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
 
       expect(av.BS).to.deep.equal(["b25l", "dHdv"]);
     });
@@ -25,7 +25,7 @@ describe("BS", () => {
 
   describe("BS.fromDynamo()", () => {
     it("should return an array of Buffers", () => {
-      const bs = BS.fromDynamo({
+      const bs = new BS().fromDynamo({
         BS: ["b25l", "dHdv"],
       });
 
@@ -36,7 +36,7 @@ describe("BS", () => {
     });
 
     it("should return correct value", () => {
-      const bs = BS.fromDynamo({
+      const bs = new BS().fromDynamo({
         BS: ["b25l", "dHdv"],
       });
 
@@ -46,15 +46,18 @@ describe("BS", () => {
 
   describe("BS.validate()", () => {
     it("should accept an array of Buffers", () => {
-      const bool = BS.validate([Buffer.from("one"), Buffer.from("two")]);
+      const buffs = [Buffer.from("one"), Buffer.from("two")];
+      const res = new BS().validate(buffs);
 
-      expect(bool).to.equal(true);
+      expect(res.error).to.equal(null);
+      expect(res.value).to.deep.equal(buffs);
     });
 
     it("should reject an array of strings", () => {
-      const bool = BS.validate(["one", "two"]);
+      const res = new BS().validate([123, 234]);
 
-      expect(bool).to.equal(false);
+      expect(res.error).to.be.instanceof(Error);
+      expect(res.value).to.equal(null);
     });
   });
 });

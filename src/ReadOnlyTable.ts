@@ -6,7 +6,7 @@ import {
   serializeConditionExpression,
 } from "@aws/dynamodb-expressions";
 import type from "@tleef/type-js";
-import * as AWS from "aws-sdk";
+import AWS from "aws-sdk";
 
 import Client from "./Client";
 import Schema from "./Schema";

@@ -1,19 +1,31 @@
-import type from "@tleef/type-js";
-import staticImplements from "../util/staticImplements";
-import * as dynamo from "./dynamo";
-import IType from "./IType";
+import Joi from "@hapi/joi";
+import Type from "./Type";
+import { INOptions, INS } from "./typings";
 
-@staticImplements<IType<number[], dynamo.INS>>()
-export default class NS {
-  public static toDynamo(o: number[]): dynamo.INS {
+export default class NS extends Type<number[], INS, INOptions> {
+  constructor(options?: INOptions) {
+    const itemValidator = Joi.number();
+
+    if (options && options.integer) {
+      itemValidator.integer();
+    }
+
+    itemValidator.required();
+
+    const validator = Joi.array().items(itemValidator);
+
+    super(validator, options);
+  }
+
+  public toDynamo(o: number[]): INS {
     return { NS: o.map(String) };
   }
 
-  public static fromDynamo(o: dynamo.INS): number[] {
-    return o.NS.map(parseFloat);
-  }
+  public fromDynamo(o: INS): number[] {
+    if (this._options && this._options.integer) {
+      return o.NS.map(parseInt);
+    }
 
-  public static validate(o: any): boolean {
-    return Array.isArray(o) && o.every(type.isNumber);
+    return o.NS.map(parseFloat);
   }
 }

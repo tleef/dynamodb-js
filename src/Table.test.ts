@@ -1,6 +1,6 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import chai from "chai";
+import sinon from "sinon";
+import sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
 import Client from "./Client";
@@ -41,11 +41,11 @@ describe("Table", () => {
 
     it("should correctly assign values", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.N,
+        hash: new types.S(),
+        range: new types.N(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -60,16 +60,16 @@ describe("Table", () => {
   describe("makeGsi()", () => {
     it("should return a Gsi", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.N,
+        hash: new types.S(),
+        range: new types.N(),
       });
       const itemSchema = new Schema({
-        one: types.S,
-        two: types.S,
+        one: new types.S(),
+        two: new types.S(),
       });
       const gsiKeySchema = new Schema({
-        one: types.S,
-        two: types.S,
+        one: new types.S(),
+        two: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -80,16 +80,16 @@ describe("Table", () => {
 
     it("should correctly assign values", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.N,
+        hash: new types.S(),
+        range: new types.N(),
       });
       const itemSchema = new Schema({
-        one: types.S,
-        two: types.S,
+        one: new types.S(),
+        two: new types.S(),
       });
       const gsiKeySchema = new Schema({
-        one: types.S,
-        two: types.S,
+        one: new types.S(),
+        two: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -111,11 +111,11 @@ describe("Table", () => {
   describe("#insertItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -144,7 +144,7 @@ describe("Table", () => {
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -155,10 +155,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -173,10 +173,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -201,20 +201,18 @@ describe("Table", () => {
 
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        b: types.B,
-        bool: types.Bool,
-        bs: types.BS,
-        json: types.Json,
-        n: types.N,
-        ns: types.NS,
-        null: types.Null,
-        s: types.S,
-        ss: types.SS,
+        b: new types.B(),
+        bool: new types.Bool(),
+        bs: new types.BS(),
+        n: new types.N(),
+        ns: new types.NS(),
+        s: new types.S(),
+        ss: new types.SS(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -234,10 +232,8 @@ describe("Table", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
-        json: { key: "value" },
         n: 1,
         ns: [1, 2],
-        null: null,
         s: "test",
         ss: ["one", "two"],
       });
@@ -259,17 +255,11 @@ describe("Table", () => {
           bs: {
             BS: ["b25l", "dHdv"],
           },
-          json: {
-            S: '{"key":"value"}',
-          },
           n: {
             N: "1",
           },
           ns: {
             NS: ["1", "2"],
-          },
-          null: {
-            NULL: true,
           },
           s: {
             S: "test",
@@ -290,12 +280,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -334,11 +324,11 @@ describe("Table", () => {
   describe("#putItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -360,10 +350,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -378,10 +368,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -406,20 +396,18 @@ describe("Table", () => {
 
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        b: types.B,
-        bool: types.Bool,
-        bs: types.BS,
-        json: types.Json,
-        n: types.N,
-        ns: types.NS,
-        null: types.Null,
-        s: types.S,
-        ss: types.SS,
+        b: new types.B(),
+        bool: new types.Bool(),
+        bs: new types.BS(),
+        n: new types.N(),
+        ns: new types.NS(),
+        s: new types.S(),
+        ss: new types.SS(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -439,10 +427,8 @@ describe("Table", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
-        json: { key: "value" },
         n: 1,
         ns: [1, 2],
-        null: null,
         s: "test",
         ss: ["one", "two"],
       });
@@ -464,17 +450,11 @@ describe("Table", () => {
           bs: {
             BS: ["b25l", "dHdv"],
           },
-          json: {
-            S: '{"key":"value"}',
-          },
           n: {
             N: "1",
           },
           ns: {
             NS: ["1", "2"],
-          },
-          null: {
-            NULL: true,
           },
           s: {
             S: "test",
@@ -489,12 +469,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -533,11 +513,11 @@ describe("Table", () => {
   describe("#replaceItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -566,7 +546,7 @@ describe("Table", () => {
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -577,10 +557,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -595,10 +575,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -623,20 +603,18 @@ describe("Table", () => {
 
     it("should call client.putItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        b: types.B,
-        bool: types.Bool,
-        bs: types.BS,
-        json: types.Json,
-        n: types.N,
-        ns: types.NS,
-        null: types.Null,
-        s: types.S,
-        ss: types.SS,
+        b: new types.B(),
+        bool: new types.Bool(),
+        bs: new types.BS(),
+        n: new types.N(),
+        ns: new types.NS(),
+        s: new types.S(),
+        ss: new types.SS(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -656,10 +634,8 @@ describe("Table", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
-        json: { key: "value" },
         n: 1,
         ns: [1, 2],
-        null: null,
         s: "test",
         ss: ["one", "two"],
       });
@@ -681,17 +657,11 @@ describe("Table", () => {
           bs: {
             BS: ["b25l", "dHdv"],
           },
-          json: {
-            S: '{"key":"value"}',
-          },
           n: {
             N: "1",
           },
           ns: {
             NS: ["1", "2"],
-          },
-          null: {
-            NULL: true,
           },
           s: {
             S: "test",
@@ -712,12 +682,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -756,11 +726,11 @@ describe("Table", () => {
   describe("#updateItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -793,7 +763,7 @@ describe("Table", () => {
     it("should throw if key is malformed", () => {
       const keySchema = new Schema({});
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -804,10 +774,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -822,10 +792,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -852,20 +822,18 @@ describe("Table", () => {
 
     it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        b: types.B,
-        bool: types.Bool,
-        bs: types.BS,
-        json: types.Json,
-        n: types.N,
-        ns: types.NS,
-        null: types.Null,
-        s: types.S,
-        ss: types.SS,
+        b: new types.B(),
+        bool: new types.Bool(),
+        bs: new types.BS(),
+        n: new types.N(),
+        ns: new types.NS(),
+        s: new types.S(),
+        ss: new types.SS(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -885,10 +853,8 @@ describe("Table", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
-        json: { key: "value" },
         n: 1,
         ns: [1, 2],
-        null: null,
         s: "test",
         ss: ["one", "two"],
       });
@@ -904,7 +870,7 @@ describe("Table", () => {
         },
         TableName: "tableName",
         UpdateExpression:
-          "SET #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17, #attr18 = :val19",
+          "SET #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15",
         ConditionExpression:
           "(attribute_exists(#attr0)) AND (attribute_exists(#attr1))",
         ExpressionAttributeNames: {
@@ -913,12 +879,10 @@ describe("Table", () => {
           "#attr2": "b",
           "#attr4": "bool",
           "#attr6": "bs",
-          "#attr8": "json",
-          "#attr10": "n",
-          "#attr12": "ns",
-          "#attr14": "null",
-          "#attr16": "s",
-          "#attr18": "ss",
+          "#attr8": "n",
+          "#attr10": "ns",
+          "#attr12": "s",
+          "#attr14": "ss",
         },
         ExpressionAttributeValues: {
           ":val3": {
@@ -931,21 +895,15 @@ describe("Table", () => {
             BS: ["b25l", "dHdv"],
           },
           ":val9": {
-            S: '{"key":"value"}',
-          },
-          ":val11": {
             N: "1",
           },
-          ":val13": {
+          ":val11": {
             NS: ["1", "2"],
           },
-          ":val15": {
-            NULL: true,
-          },
-          ":val17": {
+          ":val13": {
             S: "test",
           },
-          ":val19": {
+          ":val15": {
             SS: ["one", "two"],
           },
         },
@@ -954,12 +912,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -998,11 +956,11 @@ describe("Table", () => {
   describe("#upsertItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1030,10 +988,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1048,10 +1006,10 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const table = new Table("tableName", keySchema, itemSchema);
 
@@ -1078,20 +1036,18 @@ describe("Table", () => {
 
     it("should call client.updateItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        b: types.B,
-        bool: types.Bool,
-        bs: types.BS,
-        json: types.Json,
-        n: types.N,
-        ns: types.NS,
-        null: types.Null,
-        s: types.S,
-        ss: types.SS,
+        b: new types.B(),
+        bool: new types.Bool(),
+        bs: new types.BS(),
+        n: new types.N(),
+        ns: new types.NS(),
+        s: new types.S(),
+        ss: new types.SS(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -1111,10 +1067,8 @@ describe("Table", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
-        json: { key: "value" },
         n: 1,
         ns: [1, 2],
-        null: null,
         s: "test",
         ss: ["one", "two"],
       });
@@ -1130,17 +1084,15 @@ describe("Table", () => {
         },
         TableName: "tableName",
         UpdateExpression:
-          "SET #attr0 = :val1, #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13, #attr14 = :val15, #attr16 = :val17",
+          "SET #attr0 = :val1, #attr2 = :val3, #attr4 = :val5, #attr6 = :val7, #attr8 = :val9, #attr10 = :val11, #attr12 = :val13",
         ExpressionAttributeNames: {
           "#attr0": "b",
           "#attr2": "bool",
           "#attr4": "bs",
-          "#attr6": "json",
-          "#attr8": "n",
-          "#attr10": "ns",
-          "#attr12": "null",
-          "#attr14": "s",
-          "#attr16": "ss",
+          "#attr6": "n",
+          "#attr8": "ns",
+          "#attr10": "s",
+          "#attr12": "ss",
         },
         ExpressionAttributeValues: {
           ":val1": {
@@ -1153,21 +1105,15 @@ describe("Table", () => {
             BS: ["b25l", "dHdv"],
           },
           ":val7": {
-            S: '{"key":"value"}',
-          },
-          ":val9": {
             N: "1",
           },
-          ":val11": {
+          ":val9": {
             NS: ["1", "2"],
           },
-          ":val13": {
-            NULL: true,
-          },
-          ":val15": {
+          ":val11": {
             S: "test",
           },
-          ":val17": {
+          ":val13": {
             SS: ["one", "two"],
           },
         },
@@ -1176,12 +1122,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);
@@ -1220,8 +1166,8 @@ describe("Table", () => {
   describe("#deleteItemParams", () => {
     it("should set the params correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const table = new Table("tableName", keySchema);
@@ -1243,7 +1189,7 @@ describe("Table", () => {
 
     it("should throw if returnValues is not a string", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
 
       const table = new Table("tableName", keySchema);
@@ -1259,7 +1205,7 @@ describe("Table", () => {
 
     it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
       const keySchema = new Schema({
-        hash: types.S,
+        hash: new types.S(),
       });
 
       const table = new Table("tableName", keySchema);
@@ -1285,8 +1231,8 @@ describe("Table", () => {
 
     it("should call client.deleteItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const table = new Table("tableName", keySchema);
@@ -1320,12 +1266,12 @@ describe("Table", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const table = new Table("tableName", keySchema, itemSchema);

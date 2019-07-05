@@ -1,6 +1,6 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import chai from "chai";
+import sinon from "sinon";
+import sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
 import Client from "./Client";
@@ -41,11 +41,11 @@ describe("Gsi", () => {
 
     it("should correctly assign values", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.N,
+        hash: new types.S(),
+        range: new types.N(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const gsi = new Gsi("indexName", "tableName", keySchema, itemSchema);
 
@@ -78,8 +78,8 @@ describe("Gsi", () => {
 
     it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);
@@ -119,8 +119,8 @@ describe("Gsi", () => {
 
     it("should throw if called with consistentRead", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);

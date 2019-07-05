@@ -1,4 +1,4 @@
-import * as AWS from "aws-sdk";
+import AWS from "aws-sdk";
 
 import Client from "./Client";
 import ReadOnlyTable from "./ReadOnlyTable";

@@ -1,4 +1,5 @@
-import IType from "./types/IType";
+import { IType, IValidationOptions, IValidationResult } from "./types/typings";
+import MultiError from "./util/MultiError";
 
 interface ITemplate {
   [key: string]: IType<any, any>;
@@ -15,11 +16,19 @@ export default class Schema {
     return this._template;
   }
 
-  public toDynamo(o: any): any {
-    return Object.keys(o).reduce((previous: { [key: string]: any }, key) => {
+  public toDynamo(o: any, opts?: IValidationOptions): any {
+    const validation = this.validate(o, opts);
+
+    if (validation.error) {
+      throw validation.error;
+    }
+
+    o = validation.value;
+
+    return Object.keys(o).reduce((previous: any, key) => {
       const type = this.template[key];
 
-      if (type && type.validate(o[key])) {
+      if (type) {
         previous[key] = type.toDynamo(o[key]);
       }
 
@@ -28,7 +37,7 @@ export default class Schema {
   }
 
   public fromDynamo(o: any): any {
-    return Object.keys(o).reduce((previous: { [key: string]: any }, key) => {
+    return Object.keys(o).reduce((previous: any, key) => {
       const type = this.template[key];
 
       if (type) {
@@ -39,15 +48,39 @@ export default class Schema {
     }, {});
   }
 
-  public validate(o: any): boolean {
-    return Object.keys(o).every((key) => {
+  public validate(o: any, opts?: IValidationOptions): IValidationResult<any> {
+    const errors: Error[] = [];
+    const out: any = {};
+
+    Object.keys(this.template).forEach((key) => {
       const type = this.template[key];
+      const value = o[key];
+      const res = type.validate(value, opts);
 
-      if (!type) {
-        return false;
+      if (res.error) {
+        errors.push(res.error);
+      } else if (res.value !== undefined) {
+        out[key] = res.value;
       }
-
-      return type.validate(o[key]);
     });
+
+    if (errors.length) {
+      if (errors.length === 1) {
+        return {
+          error: errors[0],
+          value: null,
+        };
+      } else {
+        return {
+          error: new MultiError(errors),
+          value: null,
+        };
+      }
+    }
+
+    return {
+      error: null,
+      value: out,
+    };
   }
 }

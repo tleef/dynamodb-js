@@ -1,5 +1,5 @@
-import * as AWS from "aws-sdk";
-import * as uuid from "uuid";
+import AWS from "aws-sdk";
+import uuid from "uuid";
 
 import Client from "./Client";
 import Table from "./Table";

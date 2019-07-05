@@ -1,18 +1,19 @@
-import staticImplements from "../util/staticImplements";
-import * as dynamo from "./dynamo";
-import IType from "./IType";
+import Joi from "@hapi/joi";
+import Type from "./Type";
+import { IBOOL, ITypeOptions } from "./typings";
 
-@staticImplements<IType<boolean, dynamo.IBOOL>>()
-export default class Bool {
-  public static toDynamo(o: boolean): dynamo.IBOOL {
+export default class Bool extends Type<boolean, IBOOL> {
+  constructor(options?: ITypeOptions) {
+    const validator = Joi.boolean();
+
+    super(validator, options);
+  }
+
+  public toDynamo(o: boolean): IBOOL {
     return { BOOL: o };
   }
 
-  public static fromDynamo(o: dynamo.IBOOL): boolean {
+  public fromDynamo(o: IBOOL): boolean {
     return o.BOOL;
-  }
-
-  public static validate(o: any): boolean {
-    return o === true || o === false;
   }
 }

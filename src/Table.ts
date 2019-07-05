@@ -8,7 +8,7 @@ import {
   UpdateExpression,
 } from "@aws/dynamodb-expressions";
 import type from "@tleef/type-js";
-import * as AWS from "aws-sdk";
+import AWS from "aws-sdk";
 
 import Client from "./Client";
 import Gsi from "./Gsi";
@@ -181,7 +181,7 @@ export default class Table extends ReadOnlyTable {
     o: IItem,
     opts: IUpdateItemInput = {},
   ): AWS.DynamoDB.UpdateItemInput {
-    const object = this.itemSchema.toDynamo(o);
+    const object = this.itemSchema.toDynamo(o, { ignoreRequired: true });
 
     const attributes = new ExpressionAttributes();
     const conditions: ConditionExpression[] = [];

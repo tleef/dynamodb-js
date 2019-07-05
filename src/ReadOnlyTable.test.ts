@@ -1,6 +1,6 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import chai from "chai";
+import sinon from "sinon";
+import sinonChai from "sinon-chai";
 
 import ReadOnlyTable from "./ReadOnlyTable";
 import Client from "./Client";
@@ -32,11 +32,11 @@ describe("ReadOnlyTable", () => {
 
     it("should correctly assign values", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.N,
+        hash: new types.S(),
+        range: new types.N(),
       });
       const itemSchema = new Schema({
-        one: types.S,
+        one: new types.S(),
       });
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
 
@@ -51,8 +51,8 @@ describe("ReadOnlyTable", () => {
   describe("getItemParams()", () => {
     it("should set the options correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -80,8 +80,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if consistentRead is not a boolean", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -112,8 +112,8 @@ describe("ReadOnlyTable", () => {
 
     it("should call client.getItem() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -147,12 +147,12 @@ describe("ReadOnlyTable", () => {
 
     it("should unmarshall returned item", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -190,8 +190,8 @@ describe("ReadOnlyTable", () => {
   describe("queryParams()", () => {
     it("should set the options correctly", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -228,8 +228,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if given a bad key", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -243,8 +243,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if consistentRead is not a boolean", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -265,8 +265,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if limit is not an int", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -287,8 +287,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if limit is less than 1", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -309,8 +309,8 @@ describe("ReadOnlyTable", () => {
 
     it("should throw if scanIndexForward is not a boolean", () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -341,8 +341,8 @@ describe("ReadOnlyTable", () => {
 
     it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -388,12 +388,12 @@ describe("ReadOnlyTable", () => {
 
     it("should unmarshall returned items", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -442,12 +442,12 @@ describe("ReadOnlyTable", () => {
 
     it("should unmarshall returned start key", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -659,8 +659,8 @@ describe("ReadOnlyTable", () => {
 
     it("should call client.scan() with correct params", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema);
@@ -692,12 +692,12 @@ describe("ReadOnlyTable", () => {
 
     it("should unmarshall returned items", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);
@@ -744,12 +744,12 @@ describe("ReadOnlyTable", () => {
 
     it("should unmarshall returned start key", async () => {
       const keySchema = new Schema({
-        hash: types.S,
-        range: types.S,
+        hash: new types.S(),
+        range: new types.S(),
       });
 
       const itemSchema = new Schema({
-        abc: types.S,
+        abc: new types.S(),
       });
 
       const roTable = new ReadOnlyTable("tableName", keySchema, itemSchema);

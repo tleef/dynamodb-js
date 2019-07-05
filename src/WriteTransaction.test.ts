@@ -1,8 +1,8 @@
-import * as chai from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import chai from "chai";
+import sinon from "sinon";
+import sinonChai from "sinon-chai";
 
-import * as uuid from "uuid";
+import uuid from "uuid";
 import Table from "./Table";
 import WriteTransaction from "./WriteTransaction";
 import WriteTransactionTable from "./WriteTransactionTable";
