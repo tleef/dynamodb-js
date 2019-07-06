@@ -1,6 +1,6 @@
 {
   "name": "@tleef/dynamodb-js",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "main": "lib/dynamodb.js",
   "scripts": {
     "build": "tsc",
