@@ -1,16 +1,14 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { IN, INOptions } from "./typings";
+import { IN } from "./typings";
 
-export default class N extends Type<number, IN, INOptions> {
-  constructor(options?: INOptions) {
-    const validator = Joi.number();
+export class NType extends Type<number, IN, Joi.NumberSchema> {
+  private _integer: boolean = false;
 
-    if (options && options.integer) {
-      validator.integer();
-    }
-
-    super(validator, options);
+  public integer() {
+    this._integer = true;
+    this._validator = this._newValidator();
+    return this;
   }
 
   public toDynamo(o: number): IN {
@@ -18,10 +16,26 @@ export default class N extends Type<number, IN, INOptions> {
   }
 
   public fromDynamo(o: IN): number {
-    if (this._options && this._options.integer) {
+    if (this._integer) {
       return parseInt(o.N, 10);
     }
 
     return parseFloat(o.N);
   }
+
+  protected _newValidator() {
+    return this._configureValidator(Joi.number());
+  }
+
+  protected _configureValidator(validator: Joi.NumberSchema) {
+    if (this._integer) {
+      validator = validator.integer();
+    }
+
+    return super._configureValidator(validator);
+  }
 }
+
+export default () => {
+  return new NType();
+};

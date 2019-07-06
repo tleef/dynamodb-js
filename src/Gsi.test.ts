@@ -41,11 +41,11 @@ describe("Gsi", () => {
 
     it("should correctly assign values", () => {
       const keySchema = new Schema({
-        hash: new types.S(),
-        range: new types.N(),
+        hash: types.S(),
+        range: types.N(),
       });
       const itemSchema = new Schema({
-        one: new types.S(),
+        one: types.S(),
       });
       const gsi = new Gsi("indexName", "tableName", keySchema, itemSchema);
 
@@ -78,8 +78,8 @@ describe("Gsi", () => {
 
     it("should call client.query() with correct params", async () => {
       const keySchema = new Schema({
-        hash: new types.S(),
-        range: new types.S(),
+        hash: types.S(),
+        range: types.S(),
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);
@@ -119,8 +119,8 @@ describe("Gsi", () => {
 
     it("should throw if called with consistentRead", () => {
       const keySchema = new Schema({
-        hash: new types.S(),
-        range: new types.S(),
+        hash: types.S(),
+        range: types.S(),
       });
 
       const gsi = new Gsi("indexName", "tableName", keySchema);

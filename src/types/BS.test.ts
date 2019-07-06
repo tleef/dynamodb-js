@@ -7,7 +7,7 @@ const expect = chai.expect;
 describe("BS", () => {
   describe("BS.toDynamo()", () => {
     it("should return a BS AttributeValue", () => {
-      const av = new BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
+      const av = BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.BS).to.be.an.instanceof(Array);
@@ -17,7 +17,7 @@ describe("BS", () => {
     });
 
     it("should correctly set BS", () => {
-      const av = new BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
+      const av = BS().toDynamo([Buffer.from("one"), Buffer.from("two")]);
 
       expect(av.BS).to.deep.equal(["b25l", "dHdv"]);
     });
@@ -25,7 +25,7 @@ describe("BS", () => {
 
   describe("BS.fromDynamo()", () => {
     it("should return an array of Buffers", () => {
-      const bs = new BS().fromDynamo({
+      const bs = BS().fromDynamo({
         BS: ["b25l", "dHdv"],
       });
 
@@ -36,7 +36,7 @@ describe("BS", () => {
     });
 
     it("should return correct value", () => {
-      const bs = new BS().fromDynamo({
+      const bs = BS().fromDynamo({
         BS: ["b25l", "dHdv"],
       });
 
@@ -47,14 +47,14 @@ describe("BS", () => {
   describe("BS.validate()", () => {
     it("should accept an array of Buffers", () => {
       const buffs = [Buffer.from("one"), Buffer.from("two")];
-      const res = new BS().validate(buffs);
+      const res = BS().validate(buffs);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.deep.equal(buffs);
     });
 
     it("should reject an array of strings", () => {
-      const res = new BS().validate([123, 234]);
+      const res = BS().validate([123, 234]);
 
       expect(res.error).to.be.instanceof(Error);
       expect(res.value).to.equal(null);

@@ -1,36 +1,41 @@
-import { Schema } from "@hapi/joi";
-import {
-  IType,
-  ITypeOptions,
-  IValidationOptions,
-  IValidationResult,
-} from "./typings";
+import Joi from "@hapi/joi";
+import { IType, IValidationOptions, IValidationResult } from "./typings";
 
 export default abstract class Type<
   In,
   Out,
-  Options extends ITypeOptions = ITypeOptions
+  S extends Joi.AnySchema = Joi.AnySchema
 > implements IType<In, Out> {
-  protected readonly _validator: Schema;
-  protected readonly _options: Options | undefined;
+  protected _validator: S;
+  protected _required: boolean = false;
+  protected _nullable: boolean = false;
 
-  protected constructor(validator: Schema, options?: Options) {
-    this._validator = validator;
-    this._options = options;
+  constructor() {
+    this._validator = this._newValidator();
   }
 
   public abstract toDynamo(o: In): Out;
 
   public abstract fromDynamo(o: Out): In;
 
-  public validate(o: any, opts?: IValidationOptions): IValidationResult<In> {
+  public required() {
+    this._required = true;
+    return this;
+  }
+
+  public nullable() {
+    this._nullable = true;
+    this._validator = this._newValidator();
+    return this;
+  }
+
+  public validate(
+    o: any,
+    opts: Partial<IValidationOptions> = {},
+  ): IValidationResult<In> {
     let validator = this._validator;
 
-    if (
-      this._options &&
-      this._options.required &&
-      !(opts && opts.ignoreRequired)
-    ) {
+    if (this._required && !opts.ignoreRequired) {
       validator = validator.required();
     }
 
@@ -41,5 +46,15 @@ export default abstract class Type<
     }
 
     return res;
+  }
+
+  protected abstract _newValidator(): S;
+
+  protected _configureValidator(validator: S): S {
+    if (this._nullable) {
+      validator = validator.allow(null);
+    }
+
+    return validator;
   }
 }

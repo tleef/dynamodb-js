@@ -7,7 +7,7 @@ const expect = chai.expect;
 describe("SS", () => {
   describe("SS.toDynamo()", () => {
     it("should return a SS AttributeValue", () => {
-      const av = new SS().toDynamo(["one", "two"]);
+      const av = SS().toDynamo(["one", "two"]);
 
       expect(av).to.be.an.instanceof(Object);
       expect(av.SS).to.be.an.instanceof(Array);
@@ -17,7 +17,7 @@ describe("SS", () => {
     });
 
     it("should correctly set SS", () => {
-      const av = new SS().toDynamo(["one", "two"]);
+      const av = SS().toDynamo(["one", "two"]);
 
       expect(av.SS).to.deep.equal(["one", "two"]);
     });
@@ -25,7 +25,7 @@ describe("SS", () => {
 
   describe("SS.fromDynamo()", () => {
     it("should return an array of strings", () => {
-      const ss = new SS().fromDynamo({ SS: ["one", "two"] });
+      const ss = SS().fromDynamo({ SS: ["one", "two"] });
 
       expect(ss).to.be.an.instanceof(Array);
       ss.forEach((s) => {
@@ -34,7 +34,7 @@ describe("SS", () => {
     });
 
     it("should return correct value", () => {
-      const ss = new SS().fromDynamo({ SS: ["one", "two"] });
+      const ss = SS().fromDynamo({ SS: ["one", "two"] });
 
       expect(ss).to.deep.equal(["one", "two"]);
     });
@@ -42,14 +42,14 @@ describe("SS", () => {
 
   describe("SS.validate()", () => {
     it("should accept an array of strings", () => {
-      const res = new SS().validate(["one", "two"]);
+      const res = SS().validate(["one", "two"]);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.deep.equal(["one", "two"]);
     });
 
     it("should reject null", () => {
-      const res = new SS().validate(null);
+      const res = SS().validate(null);
 
       expect(res.error).to.be.instanceof(Error);
       expect(res.value).to.equal(null);

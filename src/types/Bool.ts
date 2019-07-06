@@ -1,13 +1,8 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { IBOOL, ITypeOptions } from "./typings";
+import { IBOOL } from "./typings";
 
-export default class Bool extends Type<boolean, IBOOL> {
-  constructor(options?: ITypeOptions) {
-    const validator = Joi.boolean();
-
-    super(validator, options);
-  }
+export class BoolType extends Type<boolean, IBOOL> {
 
   public toDynamo(o: boolean): IBOOL {
     return { BOOL: o };
@@ -16,4 +11,11 @@ export default class Bool extends Type<boolean, IBOOL> {
   public fromDynamo(o: IBOOL): boolean {
     return o.BOOL;
   }
+  protected _newValidator() {
+    return this._configureValidator(Joi.boolean());
+  }
 }
+
+export default () => {
+  return new BoolType();
+};

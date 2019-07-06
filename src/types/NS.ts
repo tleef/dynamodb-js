@@ -1,20 +1,14 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { INOptions, INS } from "./typings";
+import { INS } from "./typings";
 
-export default class NS extends Type<number[], INS, INOptions> {
-  constructor(options?: INOptions) {
-    const itemValidator = Joi.number();
+export class NSType extends Type<number[], INS> {
+  private _integers: boolean = false;
 
-    if (options && options.integer) {
-      itemValidator.integer();
-    }
-
-    itemValidator.required();
-
-    const validator = Joi.array().items(itemValidator);
-
-    super(validator, options);
+  public integers() {
+    this._integers = true;
+    this._validator = this._newValidator();
+    return this;
   }
 
   public toDynamo(o: number[]): INS {
@@ -22,10 +16,24 @@ export default class NS extends Type<number[], INS, INOptions> {
   }
 
   public fromDynamo(o: INS): number[] {
-    if (this._options && this._options.integer) {
+    if (this._integers) {
       return o.NS.map(parseInt);
     }
 
     return o.NS.map(parseFloat);
   }
+
+  protected _newValidator() {
+    let itemValidator = Joi.number();
+
+    if (this._integers) {
+      itemValidator = itemValidator.integer();
+    }
+
+    return this._configureValidator(Joi.array().items(itemValidator));
+  }
 }
+
+export default () => {
+  return new NSType();
+};

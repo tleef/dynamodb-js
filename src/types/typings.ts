@@ -1,11 +1,9 @@
+export interface O { [key: string]: any }
+
 export interface IType<In, Out> {
   toDynamo(o: In): Out;
   fromDynamo(o: Out): In;
   validate(o: any, opts?: IValidationOptions): IValidationResult<In>;
-}
-
-export interface ITypeOptions {
-  required?: boolean;
 }
 
 export interface IS {
@@ -18,10 +16,6 @@ export interface ISS {
 
 export interface IN {
   N: string;
-}
-
-export interface INOptions extends ITypeOptions {
-  integer?: boolean;
 }
 
 export interface INS {
@@ -38,6 +32,10 @@ export interface IBS {
 
 export interface IBOOL {
   BOOL: boolean;
+}
+
+export interface IM {
+  M: any;
 }
 
 export interface IValidationResult<T> {

@@ -1,13 +1,8 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { ISS, ITypeOptions } from "./typings";
+import { ISS } from "./typings";
 
-export default class SS extends Type<string[], ISS> {
-  constructor(options?: ITypeOptions) {
-    const validator = Joi.array().items(Joi.string().required());
-
-    super(validator, options);
-  }
+export class SSType extends Type<string[], ISS> {
 
   public toDynamo(o: string[]): ISS {
     return { SS: o };
@@ -16,4 +11,11 @@ export default class SS extends Type<string[], ISS> {
   public fromDynamo(o: ISS): string[] {
     return o.SS;
   }
+  protected _newValidator() {
+    return this._configureValidator(Joi.array().items(Joi.string()));
+  }
 }
+
+export default () => {
+  return new SSType();
+};
