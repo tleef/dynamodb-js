@@ -3,10 +3,10 @@ import { INS, IValidationOptions } from "../typings";
 import Type from "./Type";
 
 export class NSType extends Type<number[], INS> {
-  private _integers: boolean = false;
+  private _nInteger: boolean = false;
 
-  public integers() {
-    this._integers = true;
+  public nInteger() {
+    this._nInteger = true;
     return this;
   }
 
@@ -15,8 +15,8 @@ export class NSType extends Type<number[], INS> {
   }
 
   public fromDynamo(o: INS): number[] {
-    if (this._integers) {
-      return o.NS.map(parseInt);
+    if (this._nInteger) {
+      return o.NS.map((n) => parseInt(n, 10));
     }
 
     return o.NS.map(parseFloat);
@@ -25,7 +25,7 @@ export class NSType extends Type<number[], INS> {
   public validator(options: IValidationOptions = {}) {
     let itemValidator = Joi.number();
 
-    if (this._integers) {
+    if (this._nInteger) {
       itemValidator = itemValidator.integer();
     }
 

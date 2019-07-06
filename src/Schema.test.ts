@@ -12,6 +12,12 @@ describe("Schema", () => {
         b: types.B(),
         bool: types.Bool(),
         bs: types.BS(),
+        m: types.M().keys({
+          one: types.S(),
+          two: types.M().keys({
+            a: types.S(),
+          }),
+        }),
         n: types.N(),
         ns: types.NS(),
         s: types.S(),
@@ -23,6 +29,12 @@ describe("Schema", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
+        m: {
+          one: "one",
+          two: {
+            a: "a",
+          },
+        },
         n: 1,
         ns: [1, 2],
         s: "test",
@@ -35,6 +47,16 @@ describe("Schema", () => {
         bool: { BOOL: true },
         bs: {
           BS: ["b25l", "dHdv"],
+        },
+        m: {
+          M: {
+            one: { S: "one" },
+            two: {
+              M: {
+                a: { S: "a" },
+              },
+            },
+          },
         },
         n: { N: "1" },
         ns: { NS: ["1", "2"] },
@@ -65,7 +87,38 @@ describe("Schema", () => {
         unknown: "key",
       });
 
-      expect(item.unknown).to.deep.equal(undefined);
+      expect(item.unknown).to.equal(undefined);
+    });
+
+    it("should throw is given invalid object", () => {
+      const schema = new Schema({
+        b: types.B(),
+        bool: types.Bool(),
+        bs: types.BS(),
+        m: types.M().keys({
+          one: types.S(),
+          two: types.M().keys({
+            a: types.S(),
+          }),
+        }),
+        n: types.N(),
+        ns: types.NS(),
+        s: types.S(),
+        ss: types.SS(),
+      });
+
+      expect(() => {
+        schema.toDynamo({
+          b: null,
+          bool: null,
+          bs: null,
+          m: null,
+          n: null,
+          ns: null,
+          s: null,
+          ss: null,
+        });
+      }).to.throw();
     });
   });
 
@@ -75,6 +128,12 @@ describe("Schema", () => {
         b: types.B(),
         bool: types.Bool(),
         bs: types.BS(),
+        m: types.M().keys({
+          one: types.S(),
+          two: types.M().keys({
+            a: types.S(),
+          }),
+        }),
         n: types.N(),
         ns: types.NS(),
         s: types.S(),
@@ -87,6 +146,16 @@ describe("Schema", () => {
         bs: {
           BS: ["b25l", "dHdv"],
         },
+        m: {
+          M: {
+            one: { S: "one" },
+            two: {
+              M: {
+                a: { S: "a" },
+              },
+            },
+          },
+        },
         n: { N: "1" },
         ns: { NS: ["1", "2"] },
         s: { S: "test" },
@@ -97,6 +166,12 @@ describe("Schema", () => {
         b: Buffer.from("test"),
         bool: true,
         bs: [Buffer.from("one"), Buffer.from("two")],
+        m: {
+          one: "one",
+          two: {
+            a: "a",
+          },
+        },
         n: 1,
         ns: [1, 2],
         s: "test",

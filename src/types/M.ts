@@ -2,7 +2,7 @@ import Joi from "@hapi/joi";
 import { IKeys, IM, IObject, IValidationOptions } from "../typings";
 import Type from "./Type";
 
-export default class M extends Type<IObject, IM> {
+export class MType extends Type<IObject, IM> {
   private _keys: IKeys = {};
 
   public keys(keys: IKeys) {
@@ -11,23 +11,26 @@ export default class M extends Type<IObject, IM> {
   }
 
   public toDynamo(o: IObject): IM {
-    return Object.keys(o).reduce((previous: any, key) => {
-      const type = this._keys[key];
+    return Object.keys(o).reduce(
+      (previous: any, key) => {
+        const type = this._keys[key];
 
-      if (type) {
-        previous[key] = type.toDynamo(o[key]);
-      }
+        if (type) {
+          previous.M[key] = type.toDynamo(o[key]);
+        }
 
-      return previous;
-    }, {});
+        return previous;
+      },
+      { M: {} },
+    );
   }
 
   public fromDynamo(o: IM): IObject {
-    return Object.keys(o).reduce((previous: any, key) => {
+    return Object.keys(o.M).reduce((previous: any, key) => {
       const type = this._keys[key];
 
       if (type) {
-        previous[key] = type.fromDynamo(o[key]);
+        previous[key] = type.fromDynamo(o.M[key]);
       }
 
       return previous;
@@ -38,16 +41,19 @@ export default class M extends Type<IObject, IM> {
     const keysValidator: IObject = {};
     Object.keys(this._keys).forEach((key) => {
       const type = this._keys[key];
-      keysValidator[key] = type.validator(
-        // ignoreRequired and deleteNull don't apply to map keys
-        // they are only meant for schema keys
-        Object.assign({}, options, {
-          deleteNull: false,
-          ignoreRequired: false,
-        }),
-      );
+      // Currently, there are no validation options that apply to map keys
+      // [X] ignoreRequired
+      // [X] stripUnknown
+      // [X] convert
+      // [X] deleteNull
+      // [X] deleteUndefined
+      keysValidator[key] = type.validator();
     });
 
     return this._configureValidator(Joi.object().keys(keysValidator), options);
   }
 }
+
+export default () => {
+  return new MType();
+};

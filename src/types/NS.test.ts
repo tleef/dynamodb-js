@@ -58,4 +58,33 @@ describe("NS", () => {
       expect(res.error).to.be.instanceof(Error);
     });
   });
+
+  describe("NS.nInteger()", () => {
+    it("should accept an integer set", () => {
+      const res = NS()
+        .nInteger()
+        .validator()
+        .validate([1, 2]);
+
+      expect(res.error).to.equal(null);
+      expect(res.value).to.deep.equal([1, 2]);
+    });
+
+    it("should reject a float set", () => {
+      const res = NS()
+        .nInteger()
+        .validator()
+        .validate([1.1, 2.2]);
+
+      expect(res.error).to.be.instanceof(Error);
+    });
+
+    it("should parseInt", () => {
+      const ns = NS()
+        .nInteger()
+        .fromDynamo({ NS: ["1.1", "2.2"] });
+
+      expect(ns).to.deep.equal([1, 2]);
+    });
+  });
 });

@@ -52,4 +52,33 @@ describe("N", () => {
       expect(res.error).to.be.instanceof(Error);
     });
   });
+
+  describe("N.integer()", () => {
+    it("should accept an integer", () => {
+      const res = N()
+        .integer()
+        .validator()
+        .validate(1);
+
+      expect(res.error).to.equal(null);
+      expect(res.value).to.equal(1);
+    });
+
+    it("should reject float", () => {
+      const res = N()
+        .integer()
+        .validator()
+        .validate(1.1);
+
+      expect(res.error).to.be.instanceof(Error);
+    });
+
+    it("should parseInt", () => {
+      const n = N()
+        .integer()
+        .fromDynamo({ N: "1.1" });
+
+      expect(n).to.equal(1);
+    });
+  });
 });
