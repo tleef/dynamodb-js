@@ -21,7 +21,7 @@ import {
   IQueryOutput,
   IScanInput,
   IScanOutput,
-} from "./interfaces";
+} from "./typings";
 
 export default class ReadOnlyTable {
   get tableName() {
@@ -49,9 +49,7 @@ export default class ReadOnlyTable {
       itemSchema = keySchema;
     }
 
-    itemSchema = new Schema(
-      Object.assign({}, itemSchema.template, keySchema.template),
-    );
+    itemSchema = new Schema(Object.assign({}, itemSchema.keys, keySchema.keys));
 
     this._tableName = tableName;
     this._keySchema = keySchema;

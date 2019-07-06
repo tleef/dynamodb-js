@@ -1,37 +1,49 @@
-import { IType, IValidationOptions, IValidationResult } from "./types/typings";
-import MultiError from "./util/MultiError";
-
-interface ITemplate {
-  [key: string]: IType<any, any>;
-}
+import Joi from "@hapi/joi";
+import {
+  IKeys,
+  IObject,
+  ISchemaOptions,
+  IValidationOptions,
+  IValidationResult,
+} from "./typings";
+import removeUndefined from "./util/removeUndefined";
 
 /**
  * RULES
- * - Strip unknown keys, keys not found in the template
+ * - Strip unknown keys, keys not found in the schema
+ * -- Unless the `stripUnknown` schema option is set to false, defaults to true
  * - Strip undefined keys, keys with value of `undefined`
- * -- Unless the `deleteUndefined` schema option is set to true
+ * -- Unless the `deleteUndefined` schema option is set to true, defaults to false
  * - Accept values that can reasonably be coerced into expected type, e.g. N will accept "1" (string)
- * -- Unless the `strict` schema option is set to true
+ * -- Unless the `convert` schema option is set to false, defaults to true
  * - Reject `null` values
  * -- Unless the `nullable` type option is set to true
- * -- Unless the `deleteNull` schema option is set to true
+ * -- Unless the `deleteNull` schema option is set to true, defaults to false
  * -- Note: If the `nullable` type option and the `deleteNull` schema option are both set,
  *    the `deleteNull` schema option takes precedence
  */
 
+const DEFAULT_OPTIONS: ISchemaOptions = {
+  convert: true,
+  deleteNull: false,
+  deleteUndefined: false,
+  stripUnknown: true,
+};
+
 export default class Schema {
-  private readonly _template: ITemplate;
+  get keys() {
+    return this._keys;
+  }
+  private readonly _keys: IKeys;
+  private readonly _options: ISchemaOptions;
 
-  constructor(template: ITemplate) {
-    this._template = template;
+  constructor(keys: IKeys, options: ISchemaOptions = {}) {
+    this._keys = keys;
+    this._options = Object.assign({}, DEFAULT_OPTIONS, options);
   }
 
-  get template() {
-    return this._template;
-  }
-
-  public toDynamo(o: any, opts?: IValidationOptions): any {
-    const validation = this.validate(o, opts);
+  public toDynamo(o: any, options?: IValidationOptions): any {
+    const validation = this.validate(o, options);
 
     if (validation.error) {
       throw validation.error;
@@ -40,7 +52,7 @@ export default class Schema {
     o = validation.value;
 
     return Object.keys(o).reduce((previous: any, key) => {
-      const type = this.template[key];
+      const type = this.keys[key];
 
       if (type) {
         previous[key] = type.toDynamo(o[key]);
@@ -52,7 +64,7 @@ export default class Schema {
 
   public fromDynamo(o: any): any {
     return Object.keys(o).reduce((previous: any, key) => {
-      const type = this.template[key];
+      const type = this.keys[key];
 
       if (type) {
         previous[key] = type.fromDynamo(o[key]);
@@ -62,39 +74,40 @@ export default class Schema {
     }, {});
   }
 
-  public validate(o: any, opts?: IValidationOptions): IValidationResult<any> {
-    const errors: Error[] = [];
-    const out: any = {};
+  public validate(
+    o: any,
+    options: IValidationOptions = {},
+  ): IValidationResult<any> {
+    options = Object.assign({}, this._options, options);
 
-    Object.keys(this.template).forEach((key) => {
-      const type = this.template[key];
-      const value = o[key];
-      const res = type.validate(value, opts);
+    const validator = this.validator(options);
 
-      if (res.error) {
-        errors.push(res.error);
-      } else if (res.value !== undefined) {
-        out[key] = res.value;
-      }
+    const { stripUnknown, convert } = options;
+
+    const res = validator.validate(o, {
+      convert,
+      stripUnknown,
     });
 
-    if (errors.length) {
-      if (errors.length === 1) {
-        return {
-          error: errors[0],
-          value: null,
-        };
-      } else {
-        return {
-          error: new MultiError(errors),
-          value: null,
-        };
-      }
+    if (res.error) {
+      res.value = null;
+    } else if (!options.deleteUndefined) {
+      res.value = removeUndefined(res.value);
     }
 
-    return {
-      error: null,
-      value: out,
-    };
+    return res;
+  }
+
+  private validator(options: IValidationOptions) {
+    const keysValidator: IObject = {};
+
+    Object.keys(this._keys).forEach((key) => {
+      const type = this._keys[key];
+      keysValidator[key] = type.validator(options);
+    });
+
+    return Joi.object()
+      .keys(keysValidator)
+      .required();
   }
 }

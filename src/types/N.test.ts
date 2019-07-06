@@ -34,19 +34,22 @@ describe("N", () => {
     });
   });
 
-  describe("N.validate()", () => {
+  describe("N.validator()", () => {
     it("should accept a number", () => {
-      const res = N().validate(1);
+      const res = N()
+        .validator()
+        .validate(1);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.equal(1);
     });
 
     it("should reject string", () => {
-      const res = N().validate("one");
+      const res = N()
+        .validator()
+        .validate("one");
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

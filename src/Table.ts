@@ -31,7 +31,7 @@ import {
   IUpdateItemOutput,
   IUpsertItemInput,
   IUpsertItemOutput,
-} from "./interfaces";
+} from "./typings";
 
 export default class Table extends ReadOnlyTable {
   public makeGsi(indexName: string, keySchema: Schema) {
@@ -48,7 +48,7 @@ export default class Table extends ReadOnlyTable {
     const conditions: ConditionExpression[] = [];
     let conditionExpression: ConditionExpression;
 
-    Object.keys(this.keySchema.template).forEach((name) => {
+    Object.keys(this.keySchema.keys).forEach((name) => {
       conditions.push(condition(name, attributeNotExists));
     });
 
@@ -132,7 +132,7 @@ export default class Table extends ReadOnlyTable {
     const conditions: ConditionExpression[] = [];
     let conditionExpression: ConditionExpression;
 
-    Object.keys(this.keySchema.template).forEach((name) => {
+    Object.keys(this.keySchema.keys).forEach((name) => {
       conditions.push(condition(name, attributeExists));
     });
 
@@ -189,7 +189,7 @@ export default class Table extends ReadOnlyTable {
     const updateExpression = new UpdateExpression();
 
     Object.keys(object).forEach((name) => {
-      if (this.keySchema.template.hasOwnProperty(name)) {
+      if (this.keySchema.keys.hasOwnProperty(name)) {
         conditions.push(condition(name, attributeExists));
       } else {
         updateExpression.set(name, new AttributeValue(object[name]));
@@ -256,7 +256,7 @@ export default class Table extends ReadOnlyTable {
     const updateExpression = new UpdateExpression();
 
     Object.keys(object).forEach((name) => {
-      if (!this.keySchema.template.hasOwnProperty(name)) {
+      if (!this.keySchema.keys.hasOwnProperty(name)) {
         updateExpression.set(name, new AttributeValue(object[name]));
       }
     });

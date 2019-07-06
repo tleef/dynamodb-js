@@ -3,7 +3,7 @@ import AWS from "aws-sdk";
 import Table from "./Table";
 import WriteTransaction from "./WriteTransaction";
 
-import { IItem, IKey } from "./interfaces";
+import { IItem, IKey } from "./typings";
 
 export default class WriteTransactionTable {
   private readonly _transaction: WriteTransaction;

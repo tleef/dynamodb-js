@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
+import { IN, IValidationOptions } from "../typings";
 import Type from "./Type";
-import { IN, IValidationOptions } from "./typings";
 
 export class NType extends Type<number, IN, Joi.NumberSchema> {
   private _integer: boolean = false;
@@ -22,13 +22,13 @@ export class NType extends Type<number, IN, Joi.NumberSchema> {
     return parseFloat(o.N);
   }
 
-  protected _newValidator(options: Partial<IValidationOptions>) {
+  public validator(options: IValidationOptions = {}) {
     return this._configureValidator(Joi.number(), options);
   }
 
   protected _configureValidator(
     validator: Joi.NumberSchema,
-    options: Partial<IValidationOptions>,
+    options: IValidationOptions,
   ) {
     if (this._integer) {
       validator = validator.integer();

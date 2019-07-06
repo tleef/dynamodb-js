@@ -40,19 +40,22 @@ describe("SS", () => {
     });
   });
 
-  describe("SS.validate()", () => {
+  describe("SS.validator()", () => {
     it("should accept an array of strings", () => {
-      const res = SS().validate(["one", "two"]);
+      const res = SS()
+        .validator()
+        .validate(["one", "two"]);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.deep.equal(["one", "two"]);
     });
 
     it("should reject null", () => {
-      const res = SS().validate(null);
+      const res = SS()
+        .validator()
+        .validate(null);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

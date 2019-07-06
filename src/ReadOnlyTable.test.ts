@@ -26,7 +26,7 @@ describe("ReadOnlyTable", () => {
 
       expect(roTable.tableName).to.equal(undefined);
       expect(roTable.keySchema).to.be.an.instanceof(Schema);
-      expect(roTable.keySchema.template).to.deep.equal({});
+      expect(roTable.keySchema.keys).to.deep.equal({});
       expect(roTable.itemSchema).to.deep.equal(roTable.keySchema);
     });
 
@@ -43,7 +43,7 @@ describe("ReadOnlyTable", () => {
       expect(roTable.tableName).to.equal("tableName");
       expect(roTable.keySchema).to.equal(keySchema);
       expect(roTable.itemSchema).to.deep.equal(
-        new Schema(Object.assign({}, itemSchema.template, keySchema.template)),
+        new Schema(Object.assign({}, itemSchema.keys, keySchema.keys)),
       );
     });
   });

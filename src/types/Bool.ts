@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
+import { IBOOL, IValidationOptions } from "../typings";
 import Type from "./Type";
-import { IBOOL, IValidationOptions } from "./typings";
 
 export class BoolType extends Type<boolean, IBOOL> {
   public toDynamo(o: boolean): IBOOL {
@@ -11,7 +11,7 @@ export class BoolType extends Type<boolean, IBOOL> {
     return o.BOOL;
   }
 
-  protected _newValidator(options: Partial<IValidationOptions>) {
+  public validator(options: IValidationOptions = {}) {
     return this._configureValidator(Joi.boolean(), options);
   }
 }

@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
+import { IBS, IValidationOptions } from "../typings";
 import Type from "./Type";
-import { IBS, IValidationOptions } from "./typings";
 
 export class BSType extends Type<Buffer[], IBS> {
   public toDynamo(o: Buffer[]): IBS {
@@ -17,7 +17,7 @@ export class BSType extends Type<Buffer[], IBS> {
     });
   }
 
-  protected _newValidator(options: Partial<IValidationOptions>) {
+  public validator(options: IValidationOptions = {}) {
     return this._configureValidator(Joi.array().items(Joi.binary()), options);
   }
 }

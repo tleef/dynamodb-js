@@ -44,20 +44,23 @@ describe("BS", () => {
     });
   });
 
-  describe("BS.validate()", () => {
+  describe("BS.validator()", () => {
     it("should accept an array of Buffers", () => {
       const buffs = [Buffer.from("one"), Buffer.from("two")];
-      const res = BS().validate(buffs);
+      const res = BS()
+        .validator()
+        .validate(buffs);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.deep.equal(buffs);
     });
 
     it("should reject an array of strings", () => {
-      const res = BS().validate([123, 234]);
+      const res = BS()
+        .validator()
+        .validate([123, 234]);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

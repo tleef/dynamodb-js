@@ -34,19 +34,22 @@ describe("S", () => {
     });
   });
 
-  describe("S.validate()", () => {
+  describe("S.validator()", () => {
     it("should accept a string", () => {
-      const res = S().validate("test");
+      const res = S()
+        .validator()
+        .validate("test");
 
       expect(res.error).to.equal(null);
       expect(res.value).to.equal("test");
     });
 
     it("should reject null", () => {
-      const res = S().validate(null);
+      const res = S()
+        .validator()
+        .validate(null);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

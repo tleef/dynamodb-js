@@ -8,7 +8,7 @@ import {
   IQueryOutput,
   IScanInput,
   IScanOutput,
-} from "./interfaces";
+} from "./typings";
 
 export default class Gsi extends ReadOnlyTable {
   private readonly _indexName: string;

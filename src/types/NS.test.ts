@@ -40,19 +40,22 @@ describe("NS", () => {
     });
   });
 
-  describe("NS.validate()", () => {
+  describe("NS.validator()", () => {
     it("should accept an array of numbers", () => {
-      const res = NS().validate([1, 2]);
+      const res = NS()
+        .validator()
+        .validate([1, 2]);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.deep.equal([1, 2]);
     });
 
     it("should reject string", () => {
-      const res = NS().validate(["one", "two"]);
+      const res = NS()
+        .validator()
+        .validate(["one", "two"]);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

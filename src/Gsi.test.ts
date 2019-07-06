@@ -35,7 +35,7 @@ describe("Gsi", () => {
       expect(gsi.indexName).to.equal(undefined);
       expect(gsi.tableName).to.equal(undefined);
       expect(gsi.keySchema).to.be.an.instanceof(Schema);
-      expect(gsi.keySchema.template).to.deep.equal({});
+      expect(gsi.keySchema.keys).to.deep.equal({});
       expect(gsi.itemSchema).to.deep.equal(gsi.keySchema);
     });
 
@@ -53,7 +53,7 @@ describe("Gsi", () => {
       expect(gsi.tableName).to.equal("tableName");
       expect(gsi.keySchema).to.equal(keySchema);
       expect(gsi.itemSchema).to.deep.equal(
-        new Schema(Object.assign({}, itemSchema.template, keySchema.template)),
+        new Schema(Object.assign({}, itemSchema.keys, keySchema.keys)),
       );
     });
   });

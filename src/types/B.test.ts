@@ -34,20 +34,23 @@ describe("B", () => {
     });
   });
 
-  describe("B.validate()", () => {
+  describe("B.validator()", () => {
     it("should accept a Buffer", () => {
       const buff = Buffer.from("test");
-      const res = B().validate(buff);
+      const res = B()
+        .validator()
+        .validate(buff);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.equal(buff);
     });
 
     it("should reject a string", () => {
-      const res = B().validate(123);
+      const res = B()
+        .validator()
+        .validate(123);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });

@@ -3,7 +3,7 @@ import AWS from "aws-sdk";
 import ReadOnlyTable from "./ReadOnlyTable";
 import ReadTransaction from "./ReadTransaction";
 
-import { IKey } from "./interfaces";
+import { IKey } from "./typings";
 
 export default class ReadTransactionTable {
   private readonly _transaction: ReadTransaction;

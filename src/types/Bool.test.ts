@@ -34,19 +34,22 @@ describe("Bool", () => {
     });
   });
 
-  describe("Bool.validate()", () => {
+  describe("Bool.validator()", () => {
     it("should accept a boolean", () => {
-      const res = Bool().validate(true);
+      const res = Bool()
+        .validator()
+        .validate(true);
 
       expect(res.error).to.equal(null);
       expect(res.value).to.equal(true);
     });
 
     it("should reject null", () => {
-      const res = Bool().validate(null);
+      const res = Bool()
+        .validator()
+        .validate(null);
 
       expect(res.error).to.be.instanceof(Error);
-      expect(res.value).to.equal(null);
     });
   });
 });
