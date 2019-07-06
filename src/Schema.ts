@@ -15,7 +15,8 @@ interface ITemplate {
  * - Reject `null` values
  * -- Unless the `nullable` type option is set to true
  * -- Unless the `deleteNull` schema option is set to true
- * -- Note: If the `nullable` type option and the `deleteNull` schema option are both set, the `deleteNull` schema option takes precedence
+ * -- Note: If the `nullable` type option and the `deleteNull` schema option are both set,
+ *    the `deleteNull` schema option takes precedence
  */
 
 export default class Schema {

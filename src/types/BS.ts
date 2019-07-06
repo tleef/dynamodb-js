@@ -1,9 +1,8 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { IBS } from "./typings";
+import { IBS, IValidationOptions } from "./typings";
 
 export class BSType extends Type<Buffer[], IBS> {
-
   public toDynamo(o: Buffer[]): IBS {
     return {
       BS: o.map((b) => {
@@ -17,8 +16,9 @@ export class BSType extends Type<Buffer[], IBS> {
       return Buffer.from(b, "base64");
     });
   }
-  protected _newValidator() {
-    return this._configureValidator(Joi.array().items(Joi.binary()));
+
+  protected _newValidator(options: Partial<IValidationOptions>) {
+    return this._configureValidator(Joi.array().items(Joi.binary()), options);
   }
 }
 

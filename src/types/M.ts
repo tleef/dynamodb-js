@@ -1,17 +1,17 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { IM, O } from "./typings";
+import { IM, IMap, IValidationOptions } from "./typings";
 
-export default class M extends Type<O, IM> {
-
-  public toDynamo(o: O): IM {
+export default class M extends Type<IMap, IM> {
+  public toDynamo(o: IMap): IM {
     return { M: o };
   }
 
-  public fromDynamo(o: IM): O {
+  public fromDynamo(o: IM): IMap {
     return o.M;
   }
-  protected _newValidator() {
-    return this._configureValidator(Joi.object());
+
+  protected _newValidator(options: Partial<IValidationOptions>) {
+    return this._configureValidator(Joi.object(), options);
   }
 }

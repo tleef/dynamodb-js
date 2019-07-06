@@ -1,9 +1,8 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { ISS } from "./typings";
+import { ISS, IValidationOptions } from "./typings";
 
 export class SSType extends Type<string[], ISS> {
-
   public toDynamo(o: string[]): ISS {
     return { SS: o };
   }
@@ -11,8 +10,9 @@ export class SSType extends Type<string[], ISS> {
   public fromDynamo(o: ISS): string[] {
     return o.SS;
   }
-  protected _newValidator() {
-    return this._configureValidator(Joi.array().items(Joi.string()));
+
+  protected _newValidator(options: Partial<IValidationOptions>) {
+    return this._configureValidator(Joi.array().items(Joi.string()), options);
   }
 }
 

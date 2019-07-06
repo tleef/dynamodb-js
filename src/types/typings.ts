@@ -1,4 +1,6 @@
-export interface O { [key: string]: any }
+export interface IMap {
+  [key: string]: any;
+}
 
 export interface IType<In, Out> {
   toDynamo(o: In): Out;
@@ -44,5 +46,6 @@ export interface IValidationResult<T> {
 }
 
 export interface IValidationOptions {
-  ignoreRequired: boolean;
+  ignoreRequired?: boolean;
+  deleteNull?: boolean;
 }

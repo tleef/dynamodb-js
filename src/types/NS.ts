@@ -1,13 +1,12 @@
 import Joi from "@hapi/joi";
 import Type from "./Type";
-import { INS } from "./typings";
+import { INS, IValidationOptions } from "./typings";
 
 export class NSType extends Type<number[], INS> {
   private _integers: boolean = false;
 
   public integers() {
     this._integers = true;
-    this._validator = this._newValidator();
     return this;
   }
 
@@ -23,14 +22,14 @@ export class NSType extends Type<number[], INS> {
     return o.NS.map(parseFloat);
   }
 
-  protected _newValidator() {
+  protected _newValidator(options: Partial<IValidationOptions>) {
     let itemValidator = Joi.number();
 
     if (this._integers) {
       itemValidator = itemValidator.integer();
     }
 
-    return this._configureValidator(Joi.array().items(itemValidator));
+    return this._configureValidator(Joi.array().items(itemValidator), options);
   }
 }
 
