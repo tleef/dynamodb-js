@@ -40,7 +40,7 @@
     "@aws/dynamodb-expressions": "^0.7.3",
     "@hapi/joi": "^15.1.0",
     "@tleef/type-js": "^1.5.0",
-    "aws-sdk": "^2.497.0",
+    "aws-sdk": "^2.503.0",
     "uuid": "^3.3.2"
   }
 }
