@@ -46,6 +46,10 @@ export interface IM {
   M: any;
 }
 
+export interface IL {
+  L: any[];
+}
+
 export interface IValidationResult<T> {
   error: Error | null;
   value: T | null;
