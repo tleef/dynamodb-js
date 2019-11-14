@@ -51,7 +51,7 @@ describe("BS", () => {
         .validator()
         .validate(buffs);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal(buffs);
     });
 

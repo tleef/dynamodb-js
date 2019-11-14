@@ -46,7 +46,7 @@ describe("NS", () => {
         .validator()
         .validate([1, 2]);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal([1, 2]);
     });
 
@@ -66,7 +66,7 @@ describe("NS", () => {
         .validator()
         .validate([1, 2]);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal([1, 2]);
     });
 

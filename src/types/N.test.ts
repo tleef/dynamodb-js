@@ -40,7 +40,7 @@ describe("N", () => {
         .validator()
         .validate(1);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.equal(1);
     });
 
@@ -60,7 +60,7 @@ describe("N", () => {
         .validator()
         .validate(1);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.equal(1);
     });
 

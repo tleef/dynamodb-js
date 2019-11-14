@@ -46,7 +46,7 @@ describe("SS", () => {
         .validator()
         .validate(["one", "two"]);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal(["one", "two"]);
     });
 

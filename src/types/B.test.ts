@@ -41,7 +41,7 @@ describe("B", () => {
         .validator()
         .validate(buff);
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.equal(buff);
     });
 

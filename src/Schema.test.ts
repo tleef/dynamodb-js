@@ -229,7 +229,7 @@ describe("Schema", () => {
         ss: ["one", "two"],
       });
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal({
         b: Buffer.from("test"),
         bool: true,
@@ -256,7 +256,7 @@ describe("Schema", () => {
         s: "test",
       });
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal({
         s: "test",
       });
@@ -327,7 +327,7 @@ describe("Schema", () => {
         unknown: "key",
       });
 
-      expect(res.error).to.equal(null);
+      expect(res.error).to.equal(undefined);
       expect(res.value).deep.equal({
         b: Buffer.from("test"),
         bool: true,
