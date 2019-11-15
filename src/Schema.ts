@@ -1,5 +1,7 @@
 import Joi from "@hapi/joi";
+import AWS from "aws-sdk";
 import {
+  IItem,
   IKeys,
   IObject,
   ISchemaOptions,
@@ -42,7 +44,10 @@ export default class Schema {
     this._options = Object.assign({}, DEFAULT_OPTIONS, options);
   }
 
-  public toDynamo(o: any, options?: IValidationOptions): any {
+  public toDynamo(
+    o: IItem,
+    options?: IValidationOptions,
+  ): AWS.DynamoDB.AttributeMap {
     const validation = this.validate(o, options);
 
     if (validation.error) {
@@ -51,7 +56,7 @@ export default class Schema {
 
     o = validation.value;
 
-    return Object.keys(o).reduce((previous: any, key) => {
+    return Object.keys(o).reduce((previous: AWS.DynamoDB.AttributeMap, key) => {
       const type = this.keys[key];
 
       if (type) {
@@ -62,8 +67,8 @@ export default class Schema {
     }, {});
   }
 
-  public fromDynamo(o: any): any {
-    return Object.keys(o).reduce((previous: any, key) => {
+  public fromDynamo(o: AWS.DynamoDB.AttributeMap): IItem {
+    return Object.keys(o).reduce((previous: IItem, key) => {
       const type = this.keys[key];
 
       if (type) {
@@ -90,7 +95,7 @@ export default class Schema {
     });
 
     if (res.error) {
-      res.value = null;
+      delete res.value;
     } else if (!options.deleteUndefined) {
       res.value = removeUndefined(res.value);
     }

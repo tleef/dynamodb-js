@@ -1,5 +1,6 @@
-import chai from "chai";
-import sinon from "sinon";
+import * as chai from "chai";
+import * as sinon from "sinon";
+// @ts-ignore
 import sinonChai from "sinon-chai";
 
 import ReadOnlyTable from "./ReadOnlyTable";
@@ -93,9 +94,7 @@ describe("ReadOnlyTable", () => {
             range: "range",
           },
           // @ts-ignore
-          {
-            consistentRead: "yes",
-          },
+          { consistentRead: "yes" },
         ),
       ).to.throw("consistentRead must be a boolean");
     });
@@ -256,9 +255,7 @@ describe("ReadOnlyTable", () => {
             range: "range",
           },
           // @ts-ignore
-          {
-            consistentRead: "yes",
-          },
+          { consistentRead: "yes" },
         ),
       ).to.throw("consistentRead must be a boolean");
     });
@@ -322,9 +319,7 @@ describe("ReadOnlyTable", () => {
             range: "range",
           },
           // @ts-ignore
-          {
-            scanIndexForward: "no",
-          },
+          { scanIndexForward: "no" },
         ),
       ).to.throw("scanIndexForward must be a boolean");
     });
@@ -472,7 +467,7 @@ describe("ReadOnlyTable", () => {
       });
 
       expect(res).to.deep.equal({
-        items: [],
+        items: undefined,
         lastEvaluatedKey: {
           hash: "hash",
           range: "range",
@@ -772,7 +767,7 @@ describe("ReadOnlyTable", () => {
       const res = await roTable.scan();
 
       expect(res).to.deep.equal({
-        items: [],
+        items: undefined,
         lastEvaluatedKey: {
           hash: "hash",
           range: "range",

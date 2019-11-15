@@ -1,4 +1,4 @@
-import chai from "chai";
+import * as chai from "chai";
 
 import Schema from "./Schema";
 import types from "./types";
@@ -284,25 +284,25 @@ describe("Schema", () => {
       const ssRes = schema.validate({ ss: null });
 
       expect(bRes.error).to.be.instanceof(Error);
-      expect(bRes.value).to.equal(null);
+      expect(bRes.value).to.equal(undefined);
 
       expect(boolRes.error).to.be.instanceof(Error);
-      expect(boolRes.value).to.equal(null);
+      expect(boolRes.value).to.equal(undefined);
 
       expect(bsRes.error).to.be.instanceof(Error);
-      expect(bsRes.value).to.equal(null);
+      expect(bsRes.value).to.equal(undefined);
 
       expect(nRes.error).to.be.instanceof(Error);
-      expect(nRes.value).to.equal(null);
+      expect(nRes.value).to.equal(undefined);
 
       expect(nsRes.error).to.be.instanceof(Error);
-      expect(nsRes.value).to.equal(null);
+      expect(nsRes.value).to.equal(undefined);
 
       expect(sRes.error).to.be.instanceof(Error);
-      expect(sRes.value).to.equal(null);
+      expect(sRes.value).to.equal(undefined);
 
       expect(ssRes.error).to.be.instanceof(Error);
-      expect(ssRes.value).to.equal(null);
+      expect(ssRes.value).to.equal(undefined);
     });
 
     it("should strip unknown keys", () => {

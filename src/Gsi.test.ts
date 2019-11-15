@@ -1,5 +1,6 @@
-import chai from "chai";
-import sinon from "sinon";
+import * as chai from "chai";
+import * as sinon from "sinon";
+// @ts-ignore
 import sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";

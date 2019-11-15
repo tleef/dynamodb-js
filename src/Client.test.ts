@@ -1,7 +1,7 @@
-import chai from "chai";
+import * as chai from "chai";
 
 import Client from "./Client";
-import AWS from "aws-sdk";
+import * as AWS from "aws-sdk";
 
 const expect = chai.expect;
 

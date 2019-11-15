@@ -31,6 +31,7 @@ import {
   IUpdateItemOutput,
   IUpsertItemInput,
   IUpsertItemOutput,
+  IValuesReturnable,
 } from "./typings";
 
 export default class Table extends ReadOnlyTable {
@@ -72,15 +73,7 @@ export default class Table extends ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
-        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, ["NONE", "ALL_OLD"]);
 
     return params;
   }
@@ -104,15 +97,7 @@ export default class Table extends ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
-        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, ["NONE", "ALL_OLD"]);
 
     return params;
   }
@@ -156,15 +141,7 @@ export default class Table extends ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
-        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, ["NONE", "ALL_OLD"]);
 
     return params;
   }
@@ -219,21 +196,13 @@ export default class Table extends ReadOnlyTable {
       UpdateExpression: itemUpdateExpression,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (
-        !["NONE", "ALL_OLD", "UPDATED_OLD", "ALL_NEW", "UPDATED_NEW"].includes(
-          opts.returnValues as string,
-        )
-      ) {
-        throw new Error(
-          "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
-        );
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, [
+      "NONE",
+      "ALL_OLD",
+      "UPDATED_OLD",
+      "ALL_NEW",
+      "UPDATED_NEW",
+    ]);
 
     return params;
   }
@@ -271,21 +240,13 @@ export default class Table extends ReadOnlyTable {
       UpdateExpression: itemUpdateExpression,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (
-        !["NONE", "ALL_OLD", "UPDATED_OLD", "ALL_NEW", "UPDATED_NEW"].includes(
-          opts.returnValues as string,
-        )
-      ) {
-        throw new Error(
-          "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
-        );
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, [
+      "NONE",
+      "ALL_OLD",
+      "UPDATED_OLD",
+      "ALL_NEW",
+      "UPDATED_NEW",
+    ]);
 
     return params;
   }
@@ -307,15 +268,7 @@ export default class Table extends ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("returnValues")) {
-      if (!type.isString(opts.returnValues)) {
-        throw new Error("returnValues must be a string");
-      }
-      if (!["NONE", "ALL_OLD"].includes(opts.returnValues as string)) {
-        throw new Error("returnValues must be one of 'NONE' or 'ALL_OLD'");
-      }
-      params.ReturnValues = opts.returnValues;
-    }
+    this._assignReturnValues(opts, params, ["NONE", "ALL_OLD"]);
 
     return params;
   }
@@ -329,7 +282,7 @@ export default class Table extends ReadOnlyTable {
       .deleteItem(params)
       .promise();
 
-    let item = null;
+    let item: IItem | undefined = undefined;
 
     if (data && data.Attributes) {
       item = this.itemSchema.fromDynamo(data.Attributes);
@@ -345,7 +298,7 @@ export default class Table extends ReadOnlyTable {
       .putItem(params)
       .promise();
 
-    let item = null;
+    let item: IItem | undefined = undefined;
 
     if (data && data.Attributes) {
       item = this.itemSchema.fromDynamo(data.Attributes);
@@ -361,12 +314,28 @@ export default class Table extends ReadOnlyTable {
       .updateItem(params)
       .promise();
 
-    let item = null;
+    let item: IItem | undefined = undefined;
 
     if (data && data.Attributes) {
       item = this.itemSchema.fromDynamo(data.Attributes);
     }
 
     return { item };
+  }
+
+  private _assignReturnValues(
+    opts: IValuesReturnable,
+    params: any,
+    values: string[],
+  ) {
+    if (opts.returnValues !== undefined) {
+      if (!type.isString(opts.returnValues)) {
+        throw new Error("returnValues must be a string");
+      }
+      if (!values.includes(opts.returnValues)) {
+        throw new Error(`returnValues must be one of ${values.join(", ")}`);
+      }
+      params.ReturnValues = opts.returnValues;
+    }
   }
 }

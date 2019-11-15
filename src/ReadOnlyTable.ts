@@ -13,10 +13,13 @@ import Schema from "./Schema";
 import { and, condition } from "./util/DynamoDBExpression";
 
 import {
+  IConsistentReadable,
+  IExclusiveStartable,
   IGetItemInput,
   IGetItemOutput,
   IItem,
   IKey,
+  ILimitable,
   IQueryInput,
   IQueryOutput,
   IScanInput,
@@ -65,12 +68,7 @@ export default class ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("consistentRead")) {
-      if (!type.isBoolean(opts.consistentRead)) {
-        throw new Error("consistentRead must be a boolean");
-      }
-      params.ConsistentRead = opts.consistentRead;
-    }
+    this._assignConsistentRead(opts, params);
 
     return params;
   }
@@ -116,35 +114,10 @@ export default class ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("consistentRead")) {
-      if (!type.isBoolean(opts.consistentRead)) {
-        throw new Error("consistentRead must be a boolean");
-      }
-      params.ConsistentRead = opts.consistentRead;
-    }
-
-    if (opts.hasOwnProperty("exclusiveStartKey")) {
-      params.ExclusiveStartKey = this.keySchema.toDynamo(
-        opts.exclusiveStartKey,
-      );
-    }
-
-    if (opts.hasOwnProperty("limit")) {
-      if (!type.isInteger(opts.limit)) {
-        throw new Error("limit must be an int");
-      }
-      if ((opts.limit as number) < 1) {
-        throw new Error("limit must be greater than or equal to 1");
-      }
-      params.Limit = opts.limit;
-    }
-
-    if (opts.hasOwnProperty("scanIndexForward")) {
-      if (!type.isBoolean(opts.scanIndexForward)) {
-        throw new Error("scanIndexForward must be a boolean");
-      }
-      params.ScanIndexForward = opts.scanIndexForward;
-    }
+    this._assignConsistentRead(opts, params);
+    this._assignExclusiveStartKey(opts, params);
+    this._assignLimit(opts, params);
+    this._assignScanIndexForward(opts, params);
 
     return params;
   }
@@ -159,61 +132,11 @@ export default class ReadOnlyTable {
       TableName: this.tableName,
     };
 
-    if (opts.hasOwnProperty("consistentRead")) {
-      if (!type.isBoolean(opts.consistentRead)) {
-        throw new Error("consistentRead must be a boolean");
-      }
-      params.ConsistentRead = opts.consistentRead;
-    }
-
-    if (opts.hasOwnProperty("exclusiveStartKey")) {
-      params.ExclusiveStartKey = this.keySchema.toDynamo(
-        opts.exclusiveStartKey,
-      );
-    }
-
-    if (opts.hasOwnProperty("limit")) {
-      if (!type.isInteger(opts.limit)) {
-        throw new Error("limit must be an int");
-      }
-      if ((opts.limit as number) < 1) {
-        throw new Error("limit must be greater than or equal to 1");
-      }
-      params.Limit = opts.limit;
-    }
-
-    if (opts.hasOwnProperty("segment")) {
-      if (!type.isInteger(opts.segment)) {
-        throw new Error("segment must be an int");
-      }
-      if ((opts.segment as number) < 0 || 999999 < (opts.segment as number)) {
-        throw new Error("segment must be between 0 and 999999");
-      }
-      if (!opts.hasOwnProperty("totalSegments")) {
-        throw new Error(
-          "If you provide segment, you must also provide totalSegments",
-        );
-      }
-      params.Segment = opts.segment;
-    }
-
-    if (opts.hasOwnProperty("totalSegments")) {
-      if (!type.isInteger(opts.totalSegments)) {
-        throw new Error("totalSegments must be an int");
-      }
-      if (
-        (opts.totalSegments as number) < 1 ||
-        1000000 < (opts.totalSegments as number)
-      ) {
-        throw new Error("totalSegments must be between 1 and 1000000");
-      }
-      if (!opts.hasOwnProperty("segment")) {
-        throw new Error(
-          "If you provide totalSegments, you must also provide segment",
-        );
-      }
-      params.TotalSegments = opts.totalSegments;
-    }
+    this._assignConsistentRead(opts, params);
+    this._assignExclusiveStartKey(opts, params);
+    this._assignLimit(opts, params);
+    this._assignSegment(opts, params);
+    this._assignTotalSegments(opts, params);
 
     return params;
   }
@@ -230,7 +153,7 @@ export default class ReadOnlyTable {
       .getItem(params)
       .promise();
 
-    let item = null;
+    let item: IItem | undefined = undefined;
 
     if (data && data.Item) {
       item = this.itemSchema.fromDynamo(data.Item);
@@ -246,7 +169,7 @@ export default class ReadOnlyTable {
       .query(params)
       .promise();
 
-    let items: IItem[] = [];
+    let items: IItem[] | undefined = undefined;
 
     if (data && data.Items && data.Items.length) {
       items = data.Items.map((item) => {
@@ -268,7 +191,7 @@ export default class ReadOnlyTable {
       .scan(params)
       .promise();
 
-    let items = [];
+    let items: IItem[] | undefined = undefined;
 
     if (data && data.Items && data.Items.length) {
       items = data.Items.map((item) => {
@@ -283,5 +206,77 @@ export default class ReadOnlyTable {
     }
 
     return ret;
+  }
+
+  private _assignConsistentRead(opts: IConsistentReadable, params: any) {
+    if (opts.consistentRead !== undefined) {
+      if (!type.isBoolean(opts.consistentRead)) {
+        throw new Error("consistentRead must be a boolean");
+      }
+      params.ConsistentRead = opts.consistentRead;
+    }
+  }
+
+  private _assignExclusiveStartKey(opts: IExclusiveStartable, params: any) {
+    if (opts.exclusiveStartKey !== undefined) {
+      params.ExclusiveStartKey = this.keySchema.toDynamo(
+        opts.exclusiveStartKey,
+      );
+    }
+  }
+
+  private _assignLimit(opts: ILimitable, params: any) {
+    if (opts.limit !== undefined) {
+      if (!type.isInteger(opts.limit)) {
+        throw new Error("limit must be an int");
+      }
+      if (opts.limit < 1) {
+        throw new Error("limit must be greater than or equal to 1");
+      }
+      params.Limit = opts.limit;
+    }
+  }
+
+  private _assignScanIndexForward(opts: IQueryInput, params: any) {
+    if (opts.scanIndexForward !== undefined) {
+      if (!type.isBoolean(opts.scanIndexForward)) {
+        throw new Error("scanIndexForward must be a boolean");
+      }
+      params.ScanIndexForward = opts.scanIndexForward;
+    }
+  }
+
+  private _assignSegment(opts: IScanInput, params: any) {
+    if (opts.segment !== undefined) {
+      if (!type.isInteger(opts.segment)) {
+        throw new Error("segment must be an int");
+      }
+      if (opts.segment < 0 || 999999 < opts.segment) {
+        throw new Error("segment must be between 0 and 999999");
+      }
+      if (opts.totalSegments === undefined) {
+        throw new Error(
+          "If you provide segment, you must also provide totalSegments",
+        );
+      }
+      params.Segment = opts.segment;
+    }
+  }
+
+  private _assignTotalSegments(opts: IScanInput, params: any) {
+    if (opts.totalSegments !== undefined) {
+      if (!type.isInteger(opts.totalSegments)) {
+        throw new Error("totalSegments must be an int");
+      }
+      if (opts.totalSegments < 1 || 1000000 < opts.totalSegments) {
+        throw new Error("totalSegments must be between 1 and 1000000");
+      }
+      if (opts.segment === undefined) {
+        throw new Error(
+          "If you provide totalSegments, you must also provide segment",
+        );
+      }
+      params.TotalSegments = opts.totalSegments;
+    }
   }
 }

@@ -1,7 +1,8 @@
-import chai from "chai";
-import sinon from "sinon";
+import * as chai from "chai";
+import * as sinon from "sinon";
+// @ts-ignore
 import sinonChai from "sinon-chai";
-
+// @ts-ignore
 import uuid from "uuid";
 import Table from "./Table";
 import ReadTransaction from "./ReadTransaction";

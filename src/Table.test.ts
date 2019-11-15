@@ -1,5 +1,6 @@
-import chai from "chai";
-import sinon from "sinon";
+import * as chai from "chai";
+import * as sinon from "sinon";
+// @ts-ignore
 import sinonChai from "sinon-chai";
 
 import Gsi from "./Gsi";
@@ -169,7 +170,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -184,7 +185,7 @@ describe("Table", () => {
           // @ts-ignore
           { returnValues: "yes" },
         ),
-      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      ).to.throw("returnValues must be one of NONE, ALL_OLD");
     });
   });
 
@@ -364,7 +365,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -379,7 +380,7 @@ describe("Table", () => {
           // @ts-ignore
           { returnValues: "yes" },
         ),
-      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      ).to.throw("returnValues must be one of NONE, ALL_OLD");
     });
   });
 
@@ -571,7 +572,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -586,7 +587,7 @@ describe("Table", () => {
           // @ts-ignore
           { returnValues: "yes" },
         ),
-      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      ).to.throw("returnValues must be one of NONE, ALL_OLD");
     });
   });
 
@@ -788,7 +789,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD, UPDATED_OLD, ALL_NEW, UPDATED_NEW", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -804,7 +805,7 @@ describe("Table", () => {
           { returnValues: "yes" },
         ),
       ).to.throw(
-        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
+        "returnValues must be one of NONE, ALL_OLD, UPDATED_OLD, ALL_NEW, UPDATED_NEW",
       );
     });
   });
@@ -1002,7 +1003,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD, UPDATED_OLD, ALL_NEW, UPDATED_NEW", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -1018,7 +1019,7 @@ describe("Table", () => {
           { returnValues: "yes" },
         ),
       ).to.throw(
-        "returnValues must be one of 'NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW'",
+        "returnValues must be one of NONE, ALL_OLD, UPDATED_OLD, ALL_NEW, UPDATED_NEW",
       );
     });
   });
@@ -1201,7 +1202,7 @@ describe("Table", () => {
       ).to.throw("returnValues must be a string");
     });
 
-    it("should throw if returnValues is not one of 'NONE' or 'ALL_OLD'", () => {
+    it("should throw if returnValues is not one of NONE, ALL_OLD", () => {
       const keySchema = new Schema({
         hash: types.S(),
       });
@@ -1214,7 +1215,7 @@ describe("Table", () => {
           // @ts-ignore
           { returnValues: "yes" },
         ),
-      ).to.throw("returnValues must be one of 'NONE' or 'ALL_OLD'");
+      ).to.throw("returnValues must be one of NONE, ALL_OLD");
     });
   });
 

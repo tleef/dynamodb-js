@@ -1,4 +1,5 @@
 import Type from "./types/Type";
+import Joi from "@hapi/joi";
 
 export interface IObject {
   [key: string]: any;
@@ -8,7 +9,7 @@ export interface IKeys {
   [key: string]: Type<any, any>;
 }
 
-export interface IType<In, Out, S> {
+export interface IType<In, Out, S extends Joi.AnySchema> {
   toDynamo(o: In): Out;
   fromDynamo(o: Out): In;
   validator(options?: IValidationOptions): S;
@@ -50,20 +51,20 @@ export interface IL {
   L: any[];
 }
 
-export interface IValidationResult<T> {
-  error: Error | null;
-  value: T | null;
+export interface ISchemaOptions {
+  stripUnknown?: boolean;
+  convert?: boolean;
+  deleteNull?: boolean;
+  deleteUndefined?: boolean;
 }
 
 export interface IValidationOptions extends ISchemaOptions {
   ignoreRequired?: boolean;
 }
 
-export interface ISchemaOptions {
-  stripUnknown?: boolean;
-  convert?: boolean;
-  deleteNull?: boolean;
-  deleteUndefined?: boolean;
+export interface IValidationResult<T> {
+  error?: Error;
+  value?: T;
 }
 
 export interface IKey {
@@ -74,83 +75,70 @@ export interface IItem {
   [key: string]: any;
 }
 
-export interface IGetItemInput {
+export interface IConsistentReadable {
   consistentRead?: boolean;
 }
 
-export interface IGetItemOutput {
-  item: IItem;
-}
-
-export interface IQueryInput {
-  consistentRead?: boolean;
+export interface IExclusiveStartable {
   exclusiveStartKey?: IKey;
+}
+
+export interface ILimitable {
   limit?: number;
+}
+
+export interface IValuesReturnable {
+  returnValues?: string;
+}
+
+export interface IItemOutput {
+  item?: IItem;
+}
+
+export interface IItemsOutput {
+  items?: IItem[];
+}
+
+export interface IGetItemInput extends IConsistentReadable {}
+export interface IGetItemOutput extends IItemOutput {}
+
+export interface IQueryInput
+  extends IConsistentReadable,
+    IExclusiveStartable,
+    ILimitable {
   scanIndexForward?: boolean;
 }
 
-export interface IQueryOutput {
-  items: IItem[];
+export interface IQueryOutput extends IItemsOutput {
   lastEvaluatedKey?: IKey;
 }
 
-export interface IScanInput {
-  consistentRead?: boolean;
-  exclusiveStartKey?: IKey;
-  limit?: number;
+export interface IScanInput
+  extends IConsistentReadable,
+    IExclusiveStartable,
+    ILimitable {
   segment?: number;
   totalSegments?: number;
 }
 
-export interface IScanOutput {
-  items: IItem[];
+export interface IScanOutput extends IItemsOutput {
   lastEvaluatedKey?: IKey;
 }
 
-export interface IInsertItemInput {
-  returnValues?: string;
-}
+export interface IInsertItemInput extends IValuesReturnable {}
+export interface IInsertItemOutput extends IItemOutput {}
 
-export interface IInsertItemOutput {
-  item: IItem;
-}
+export interface IPutItemInput extends IValuesReturnable {}
+export interface IPutItemOutput extends IItemOutput {}
 
-export interface IPutItemInput {
-  returnValues?: string;
-}
+export interface IReplaceItemInput extends IValuesReturnable {}
+export interface IReplaceItemOutput extends IItemOutput {}
 
-export interface IPutItemOutput {
-  item: IItem;
-}
+export interface IUpdateItemInput extends IValuesReturnable {}
+export interface IUpdateItemOutput extends IItemOutput {}
 
-export interface IReplaceItemInput {
-  returnValues?: string;
-}
+export interface IUpsertItemInput extends IValuesReturnable {}
+export interface IUpsertItemOutput extends IItemOutput {}
 
-export interface IReplaceItemOutput {
-  item: IItem;
-}
-
-export interface IUpdateItemInput {
-  returnValues?: string;
-}
-
-export interface IUpdateItemOutput {
-  item: IItem;
-}
-
-export interface IUpsertItemInput {
-  returnValues?: string;
-}
-
-export interface IUpsertItemOutput {
-  item: IItem;
-}
-
-export interface IDeleteItemInput {
-  returnValues?: string;
-}
-
-export interface IDeleteItemOutput {
-  item: IItem;
-}
+export interface IDeleteItemInput extends IValuesReturnable {}
+export interface IDeleteItemOutput extends IItemOutput {}
