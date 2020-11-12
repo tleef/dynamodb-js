@@ -36,18 +36,14 @@ describe("S", () => {
 
   describe("S.validator()", () => {
     it("should accept a string", () => {
-      const res = S()
-        .validator()
-        .validate("test");
+      const res = S().validator().validate("test");
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.equal("test");
     });
 
     it("should reject null", () => {
-      const res = S()
-        .validator()
-        .validate(null);
+      const res = S().validator().validate(null);
 
       expect(res.error).to.be.instanceof(Error);
     });

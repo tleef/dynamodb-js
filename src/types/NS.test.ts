@@ -42,18 +42,14 @@ describe("NS", () => {
 
   describe("NS.validator()", () => {
     it("should accept an array of numbers", () => {
-      const res = NS()
-        .validator()
-        .validate([1, 2]);
+      const res = NS().validator().validate([1, 2]);
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal([1, 2]);
     });
 
     it("should reject string", () => {
-      const res = NS()
-        .validator()
-        .validate(["one", "two"]);
+      const res = NS().validator().validate(["one", "two"]);
 
       expect(res.error).to.be.instanceof(Error);
     });
@@ -61,20 +57,14 @@ describe("NS", () => {
 
   describe("NS.nInteger()", () => {
     it("should accept an integer set", () => {
-      const res = NS()
-        .nInteger()
-        .validator()
-        .validate([1, 2]);
+      const res = NS().nInteger().validator().validate([1, 2]);
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal([1, 2]);
     });
 
     it("should reject a float set", () => {
-      const res = NS()
-        .nInteger()
-        .validator()
-        .validate([1.1, 2.2]);
+      const res = NS().nInteger().validator().validate([1.1, 2.2]);
 
       expect(res.error).to.be.instanceof(Error);
     });

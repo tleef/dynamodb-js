@@ -149,9 +149,7 @@ export default class ReadOnlyTable {
   protected async _getItem(
     params: AWS.DynamoDB.GetItemInput,
   ): Promise<IGetItemOutput> {
-    const data = await Client.get()
-      .getItem(params)
-      .promise();
+    const data = await Client.get().getItem(params).promise();
 
     let item: IItem | undefined = undefined;
 
@@ -165,9 +163,7 @@ export default class ReadOnlyTable {
   protected async _query(
     params: AWS.DynamoDB.QueryInput,
   ): Promise<IQueryOutput> {
-    const data = await Client.get()
-      .query(params)
-      .promise();
+    const data = await Client.get().query(params).promise();
 
     let items: IItem[] | undefined = undefined;
 
@@ -187,9 +183,7 @@ export default class ReadOnlyTable {
   }
 
   protected async _scan(params: AWS.DynamoDB.ScanInput): Promise<IScanOutput> {
-    const data = await Client.get()
-      .scan(params)
-      .promise();
+    const data = await Client.get().scan(params).promise();
 
     let items: IItem[] | undefined = undefined;
 

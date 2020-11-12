@@ -37,18 +37,14 @@ describe("B", () => {
   describe("B.validator()", () => {
     it("should accept a Buffer", () => {
       const buff = Buffer.from("test");
-      const res = B()
-        .validator()
-        .validate(buff);
+      const res = B().validator().validate(buff);
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.equal(buff);
     });
 
     it("should reject a string", () => {
-      const res = B()
-        .validator()
-        .validate(123);
+      const res = B().validator().validate(123);
 
       expect(res.error).to.be.instanceof(Error);
     });

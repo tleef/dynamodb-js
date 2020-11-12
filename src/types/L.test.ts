@@ -59,9 +59,7 @@ describe("L", () => {
     });
 
     it("should correctly handle primitive types", () => {
-      const av = L()
-        .items(S())
-        .toDynamo(["one", "two"]);
+      const av = L().items(S()).toDynamo(["one", "two"]);
 
       expect(av.L).to.deep.equal([{ S: "one" }, { S: "two" }]);
     });

@@ -111,8 +111,6 @@ export default class Schema {
       keysValidator[key] = type.validator(options);
     });
 
-    return Joi.object()
-      .keys(keysValidator)
-      .required();
+    return Joi.object().keys(keysValidator).required();
   }
 }

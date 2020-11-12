@@ -36,18 +36,14 @@ describe("Bool", () => {
 
   describe("Bool.validator()", () => {
     it("should accept a boolean", () => {
-      const res = Bool()
-        .validator()
-        .validate(true);
+      const res = Bool().validator().validate(true);
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.equal(true);
     });
 
     it("should reject null", () => {
-      const res = Bool()
-        .validator()
-        .validate(null);
+      const res = Bool().validator().validate(null);
 
       expect(res.error).to.be.instanceof(Error);
     });

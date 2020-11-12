@@ -42,18 +42,14 @@ describe("SS", () => {
 
   describe("SS.validator()", () => {
     it("should accept an array of strings", () => {
-      const res = SS()
-        .validator()
-        .validate(["one", "two"]);
+      const res = SS().validator().validate(["one", "two"]);
 
       expect(res.error).to.equal(undefined);
       expect(res.value).to.deep.equal(["one", "two"]);
     });
 
     it("should reject null", () => {
-      const res = SS()
-        .validator()
-        .validate(null);
+      const res = SS().validator().validate(null);
 
       expect(res.error).to.be.instanceof(Error);
     });

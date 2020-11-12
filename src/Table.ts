@@ -278,9 +278,7 @@ export default class Table extends ReadOnlyTable {
     opts?: IDeleteItemInput,
   ): Promise<IDeleteItemOutput> {
     const params = this.deleteItemParams(key, opts);
-    const data = await Client.get()
-      .deleteItem(params)
-      .promise();
+    const data = await Client.get().deleteItem(params).promise();
 
     let item: IItem | undefined = undefined;
 
@@ -294,9 +292,7 @@ export default class Table extends ReadOnlyTable {
   protected async _putItem(
     params: AWS.DynamoDB.PutItemInput,
   ): Promise<IPutItemOutput> {
-    const data = await Client.get()
-      .putItem(params)
-      .promise();
+    const data = await Client.get().putItem(params).promise();
 
     let item: IItem | undefined = undefined;
 
@@ -310,9 +306,7 @@ export default class Table extends ReadOnlyTable {
   protected async _updateItem(
     params: AWS.DynamoDB.UpdateItemInput,
   ): Promise<IUpdateItemOutput> {
-    const data = await Client.get()
-      .updateItem(params)
-      .promise();
+    const data = await Client.get().updateItem(params).promise();
 
     let item: IItem | undefined = undefined;
 
