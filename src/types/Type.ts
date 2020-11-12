@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi";
+import Joi from "joi";
 import { IType, IValidationOptions } from "../typings";
 
 export default abstract class Type<

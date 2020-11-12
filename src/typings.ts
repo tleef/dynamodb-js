@@ -1,5 +1,5 @@
 import Type from "./types/Type";
-import Joi from "@hapi/joi";
+import Joi from "joi";
 
 export interface IObject {
   [key: string]: any;

@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi";
+import Joi from "joi";
 import { ISS, IValidationOptions } from "../typings";
 import Type from "./Type";
 
